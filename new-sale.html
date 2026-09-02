@@ -1,0 +1,2098 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>New Sale - Grocery POS</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/utils.js"></script>
+  <style>
+    /* Critical Fallback CSS */
+    .hidden { display: none !important; }
+    .min-h-screen { min-height: 100vh; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: #F7F8FA;
+      color: #1E293B;
+      margin: 0;
+      padding: 0;
+    }
+
+    .font-mono-num {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    .btn-press {
+      transition: transform 0.1s ease, background-color 0.15s ease;
+    }
+    .btn-press:active {
+      transform: scale(0.97);
+    }
+
+    /* Pulse Ring Animation */
+    @keyframes pulse-ring {
+      0% { transform: scale(0.85); opacity: 0.8; }
+      50% { transform: scale(1.25); opacity: 0.2; }
+      100% { transform: scale(1.4); opacity: 0; }
+    }
+    .pulse-ring-effect {
+      animation: pulse-ring 1.4s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+    }
+
+    /* Scanner Line Animation */
+    @keyframes scan-line {
+      0% { top: 10%; }
+      50% { top: 90%; }
+      100% { top: 10%; }
+    }
+    .scanner-line {
+      animation: scan-line 2s infinite ease-in-out;
+    }
+
+    /* In-Cart Card Border Wash */
+    .card-in-cart {
+      border-left: 4px solid #2563EB !important;
+      background-color: rgba(37, 99, 235, 0.04) !important;
+    }
+
+    /* Thermal Printer Whirring Vibration */
+    @keyframes thermal-whir {
+      0%, 100% { transform: translateY(0); }
+      20% { transform: translateY(-1.5px); }
+      40% { transform: translateY(1px); }
+      60% { transform: translateY(-1px); }
+      80% { transform: translateY(1.5px); }
+    }
+    .printer-vibrating {
+      animation: thermal-whir 0.1s infinite ease-in-out;
+    }
+
+    /* Thermal Paper Feed Emergence */
+    @keyframes thermal-feed {
+      0% {
+        max-height: 50px;
+        opacity: 0.5;
+        transform: translateY(-20px);
+      }
+      100% {
+        max-height: 1200px;
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .thermal-printing-active {
+      animation: thermal-feed 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+      overflow: hidden;
+    }
+
+    /* Page Tear Snap & Drop Motion */
+    @keyframes paper-tear-snap {
+      0% { transform: translateY(0) rotate(0deg); }
+      20% { transform: translateY(4px) rotate(1.2deg); filter: brightness(1.02); }
+      40% { transform: translateY(12px) rotate(-1.2deg); filter: brightness(1); }
+      65% { transform: translateY(8px) rotate(0.4deg); }
+      100% { transform: translateY(10px) rotate(0deg); }
+    }
+    .paper-torn-dropped {
+      animation: paper-tear-snap 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+
+    /* Cutter Blade Flash Line */
+    @keyframes blade-cut-flash {
+      0% { left: 0%; width: 0%; opacity: 1; }
+      50% { left: 0%; width: 100%; opacity: 1; }
+      100% { left: 100%; width: 0%; opacity: 0; }
+    }
+    .blade-flash {
+      animation: blade-cut-flash 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    /* Jagged Perforated Zigzag Tear Edge at Bottom */
+    .receipt-jagged-bottom {
+      clip-path: polygon(
+        0% 0%, 100% 0%,
+        100% calc(100% - 8px), 97.5% 100%, 95% calc(100% - 8px), 92.5% 100%, 90% calc(100% - 8px), 87.5% 100%, 85% calc(100% - 8px), 82.5% 100%, 80% calc(100% - 8px), 77.5% 100%, 75% calc(100% - 8px), 72.5% 100%, 70% calc(100% - 8px), 67.5% 100%, 65% calc(100% - 8px), 62.5% 100%, 60% calc(100% - 8px), 57.5% 100%, 55% calc(100% - 8px), 52.5% 100%, 50% calc(100% - 8px), 47.5% 100%, 45% calc(100% - 8px), 42.5% 100%, 40% calc(100% - 8px), 37.5% 100%, 35% calc(100% - 8px), 32.5% 100%, 30% calc(100% - 8px), 27.5% 100%, 25% calc(100% - 8px), 22.5% 100%, 20% calc(100% - 8px), 17.5% 100%, 15% calc(100% - 8px), 12.5% 100%, 10% calc(100% - 8px), 7.5% 100%, 5% calc(100% - 8px), 2.5% 100%, 0% calc(100% - 8px)
+      );
+    }
+
+    /* Modern Styled Custom Dropdown with Guaranteed High Contrast */
+    .unit-select-custom {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background-color: #F1F5F9 !important;
+      color: #0F172A !important;
+      font-weight: 800 !important;
+      font-size: 0.82rem !important;
+      border: 1.5px solid #CBD5E1 !important;
+      border-radius: 1rem !important;
+      padding: 0.75rem 2.25rem 0.75rem 1rem !important;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%232563EB' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") !important;
+      background-repeat: no-repeat !important;
+      background-position: right 0.75rem center !important;
+      background-size: 1.1rem !important;
+      cursor: pointer;
+      min-width: 140px;
+    }
+    .unit-select-custom:focus {
+      outline: none !important;
+      border-color: #2563EB !important;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15) !important;
+      background-color: #FFFFFF !important;
+    }
+    .unit-select-custom option {
+      background-color: #FFFFFF !important;
+      color: #0F172A !important;
+      font-weight: 700 !important;
+      padding: 8px 12px !important;
+    }
+
+    @keyframes modalSlideUp {
+      from { transform: translateY(100%); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .animate-slide-up {
+      animation: modalSlideUp 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* --- GEN-Z THERMAL PRINTER ANIMATIONS & STYLES --- */
+    @keyframes printerShimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+    /* --- BANKING / DIGITAL WALLET CARD CONFIRMATION STYLES --- */
+    @keyframes cardSheen {
+      0% { transform: translateX(-150%) rotate(25deg); }
+      100% { transform: translateX(200%) rotate(25deg); }
+    }
+    .card-sheen-effect {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 60%;
+      height: 100%;
+      background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.18) 50%, rgba(255,255,255,0) 100%);
+      pointer-events: none;
+      animation: cardSheen 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
+    }
+
+    @keyframes cardEntrance {
+      0% { transform: translateY(18px) scale(0.98); opacity: 0; }
+      100% { transform: translateY(0) scale(1); opacity: 1; }
+    }
+    .card-entrance-anim {
+      animation: cardEntrance 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes subtlePulse {
+      0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+      50% { transform: scale(1.05); box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+      100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+    .check-pulse-badge {
+      animation: subtlePulse 0.7s ease-out 0.1s forwards;
+    }
+
+    @keyframes errorShake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-6px); }
+      40%, 80% { transform: translateX(6px); }
+    }
+    .btn-shake {
+      animation: errorShake 0.35s ease-in-out forwards;
+    }
+
+    @keyframes printerVibrate {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-1.5px); }
+      75% { transform: translateX(1.5px); }
+    }
+    .printer-vibrate {
+      animation: printerVibrate 0.08s infinite ease-in-out;
+    }
+
+    @keyframes realPaperFeed {
+      0% { transform: translateY(-100%) scaleY(0.1); opacity: 0; }
+      20% { opacity: 1; }
+      100% { transform: translateY(0) scaleY(1); opacity: 1; }
+    }
+    .paper-real-emerging {
+      transform-origin: top center;
+      animation: realPaperFeed 1.5s cubic-bezier(0.15, 0.85, 0.35, 1) forwards;
+    }
+
+    @keyframes swipeTearRight {
+      0% { transform: translateX(0) rotate(0deg); opacity: 1; }
+      50% { transform: translateX(120px) rotate(12deg); opacity: 0.8; }
+      100% { transform: translateX(250px) rotate(25deg); opacity: 0; }
+    }
+    @keyframes swipeTearLeft {
+      0% { transform: translateX(0) rotate(0deg); opacity: 1; }
+      50% { transform: translateX(-120px) rotate(-12deg); opacity: 0.8; }
+      100% { transform: translateX(-250px) rotate(-25deg); opacity: 0; }
+    }
+    .swipe-tear-right {
+      animation: swipeTearRight 0.4s ease-out forwards;
+    }
+    .swipe-tear-left {
+      animation: swipeTearLeft 0.4s ease-out forwards;
+    }
+    .printer-clip-container {
+      overflow: hidden;
+      position: relative;
+    }
+
+    @keyframes tearSnap {
+      0% { transform: translateY(0) rotate(0deg); }
+      40% { transform: translateY(6px) rotate(-1.5deg) scale(1.02); }
+      100% { transform: translateY(0) rotate(0deg) scale(1); }
+    }
+    .paper-torn-snap {
+      animation: tearSnap 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    @keyframes particleBurst {
+      0% { transform: translate(0, 0) scale(1); opacity: 1; }
+      100% { transform: translate(var(--tw-tx), var(--tw-ty)) scale(0); opacity: 0; }
+    }
+    .particle-bit {
+      animation: particleBurst 0.5s ease-out forwards;
+    }
+
+    /* Perforated Jagged SVG Edge */
+    .receipt-perforated-edge {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 12' width='24' height='12'%3E%3Cpath fill='%23ffffff' d='M0 0 l6 12 l6 -12 l6 12 l6 -12 v12 h-24 z'/%3E%3C/svg%3E");
+      background-repeat: repeat-x;
+      background-position: bottom;
+      height: 12px;
+    }
+
+    /* --- BARCODE SCANNER LIVE ANIMATIONS & STYLES --- */
+    @keyframes laserSweep {
+      0% { top: 8%; opacity: 0.3; }
+      50% { top: 88%; opacity: 1; }
+      100% { top: 8%; opacity: 0.3; }
+    }
+    .laser-line-anim {
+      animation: laserSweep 1.6s ease-in-out infinite;
+    }
+
+    @keyframes frameCatchJolt {
+      0% { transform: scale(1); }
+      40% { transform: scale(1.06); border-color: #22C55E; box-shadow: 0 0 45px rgba(34, 197, 94, 0.8); }
+      100% { transform: scale(1); }
+    }
+    .frame-catch-anim {
+      animation: frameCatchJolt 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+
+    @keyframes liveCamShimmer {
+      0% { background-position: 0% 0%; }
+      50% { background-position: 100% 100%; }
+      100% { background-position: 0% 0%; }
+    }
+    .live-camera-bg {
+      background: radial-gradient(circle at 50% 40%, #0F172A 0%, #020617 100%);
+      background-size: 200% 200%;
+      animation: liveCamShimmer 8s ease infinite;
+    }
+
+    /* --- PRODUCT CARD REFINED STYLES --- */
+    .card-in-cart {
+      background-color: #F0F7FF !important;
+      border-color: #BFDBFE !important;
+      border-left-width: 4px !important;
+      border-left-color: #2563EB !important;
+    }
+    .card-out-of-stock {
+      opacity: 0.65;
+      background-color: #F8FAFC !important;
+    }
+
+    /* Accessibility Fallback for Reduced Motion */
+    @media (prefers-reduced-motion: reduce) {
+      .printer-active-shimmer, .printer-vibrate, .paper-emerging, .paper-torn-snap, .particle-bit {
+        animation: none !important;
+      }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between max-w-lg mx-auto bg-[#F7F8FA] relative shadow-xl border-x border-slate-200">
+
+  <!-- SCREEN 1: PRODUCT SELECTION (Step 1 of 3) -->
+  <div id="screenStep1" class="flex-1 flex flex-col min-h-0 bg-[#F7F8FA]">
+    <header class="bg-white border-b border-slate-200/80 px-4 pt-4 pb-3 shrink-0 space-y-2 sticky top-0 z-30 shadow-2xs">
+      <div class="flex items-center justify-between">
+        <a href="sales.html" class="text-blue-600 font-extrabold text-xs flex items-center gap-1 hover:underline">
+          <i data-lucide="arrow-left" class="w-4 h-4"></i>
+          <span>Sales Hub</span>
+        </a>
+        <span class="text-[11px] font-extrabold text-slate-500 bg-slate-100 border border-slate-200 px-2.5 py-0.5 rounded-full">Step 1 of 3</span>
+      </div>
+
+      <div>
+        <h1 class="text-xl font-black text-slate-900 leading-tight">New Sale</h1>
+        <p class="text-xs font-semibold text-blue-600 mt-0.5">Step 1 of 3 · Select Products & Quantity</p>
+      </div>
+
+      <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+        <div class="bg-blue-600 h-full w-1/3 rounded-full transition-all duration-300"></div>
+      </div>
+    </header>
+
+    <div class="p-3 bg-white border-b border-slate-200/70 space-y-2.5 shrink-0">
+      <div class="flex items-center gap-2">
+        <div class="relative flex-1">
+          <div class="absolute left-3 top-2.5 text-slate-400 pointer-events-none">
+            <i data-lucide="search" class="w-4 h-4"></i>
+          </div>
+          <input type="text" id="searchInput" oninput="filterCatalog()" placeholder="Search loose or packaged product..." class="w-full pl-9 pr-3 py-2 bg-slate-100/80 border border-slate-200 rounded-xl text-xs font-semibold text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all">
+        </div>
+        
+        <button onclick="openCameraOverlay()" class="flex items-center gap-1.5 px-3 py-2 bg-blue-50 border border-blue-200 text-blue-600 hover:bg-blue-100 rounded-xl text-xs font-extrabold shrink-0 transition-colors btn-press">
+          <i data-lucide="scan-barcode" class="w-4 h-4"></i>
+          <span>Scan</span>
+        </button>
+      </div>
+
+      <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5 text-xs font-semibold">
+        <button onclick="setFilter('All')" class="cat-chip px-3.5 py-1.5 bg-blue-600 text-white rounded-full shrink-0 font-bold shadow-2xs">All</button>
+        <button onclick="setFilter('Loose')" class="cat-chip px-3.5 py-1.5 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 rounded-full shrink-0 flex items-center gap-1">
+          <span>⚖️</span> <span>Loose / Weight</span>
+        </button>
+        <button onclick="setFilter('Packaged')" class="cat-chip px-3.5 py-1.5 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 rounded-full shrink-0 flex items-center gap-1">
+          <span>📦</span> <span>Packaged</span>
+        </button>
+      </div>
+    </div>
+
+    <main class="flex-1 overflow-y-auto no-scrollbar p-3 space-y-3 pb-28" id="catalogFeed">
+      <div class="prod-card bg-white rounded-2xl p-4 border border-slate-200/90 shadow-2xs flex items-center justify-between gap-3 transition-all" data-id="p_rice" data-type="weight" data-name="Basmati Rice Premium" data-price="110" data-unit="kg">
+        <div class="min-w-0 flex-1 space-y-1">
+          <div class="flex items-center gap-2">
+            <h3 class="text-sm font-extrabold text-slate-900 truncate">Basmati Rice Premium</h3>
+            <span class="px-2 py-0.5 bg-amber-100/80 text-amber-800 rounded-md text-[10px] font-black uppercase tracking-wider shrink-0">Loose</span>
+          </div>
+          <p class="text-xs font-semibold text-slate-500">₹110/kg • 45 kg available</p>
+        </div>
+        
+        <div class="action-slot shrink-0">
+          <button onclick="addLooseItem('p_rice')" class="btn-weight-add px-3.5 py-2 bg-blue-50/90 text-blue-600 hover:bg-blue-100 border border-blue-200 rounded-xl font-extrabold text-xs transition-colors flex items-center gap-1 btn-press">
+            <i data-lucide="plus" class="w-3.5 h-3.5"></i> Add
+          </button>
+          <button onclick="addLooseItem('p_rice')" class="btn-weight-selected hidden px-3.5 py-2 bg-blue-600 text-white rounded-xl font-extrabold text-xs flex items-center gap-1.5 shadow-xs btn-press">
+            <span class="selected-weight-label">2.5 kg selected</span>
+            <i data-lucide="edit-2" class="w-3 h-3"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="prod-card bg-white rounded-2xl p-4 border border-slate-200/90 shadow-2xs flex items-center justify-between gap-3 transition-all" data-id="p_cookie" data-type="unit" data-name="Chocolate Chip Cookies" data-price="60" data-unit="pack">
+        <div class="min-w-0 flex-1 space-y-1">
+          <div class="flex items-center gap-2">
+            <h3 class="text-sm font-extrabold text-slate-900 truncate">Chocolate Chip Cookies</h3>
+            <span class="px-2 py-0.5 bg-slate-100 text-slate-600 rounded-md text-[10px] font-black uppercase tracking-wider shrink-0">Pack</span>
+          </div>
+          <p class="text-xs font-semibold text-slate-500">₹60/pack • 32 Packs available</p>
+        </div>
+        
+        <div class="action-slot shrink-0">
+          <button onclick="changeUnitQty('p_cookie', 1)" class="btn-unit-add px-3.5 py-2 bg-blue-50/90 text-blue-600 hover:bg-blue-100 border border-blue-200 rounded-xl font-extrabold text-xs transition-colors flex items-center gap-1 btn-press">
+            <i data-lucide="plus" class="w-3.5 h-3.5"></i> Add
+          </button>
+          <div class="unit-stepper hidden flex items-center bg-blue-50 border border-blue-200 rounded-xl p-0.5">
+            <button onclick="changeUnitQty('p_cookie', -1)" class="w-7 h-7 bg-white text-blue-600 rounded-lg flex items-center justify-center font-bold text-sm shadow-xs btn-press">-</button>
+            <span class="unit-qty-count text-xs font-black text-blue-700 w-7 text-center">1</span>
+            <button onclick="changeUnitQty('p_cookie', 1)" class="w-7 h-7 bg-blue-600 text-white rounded-lg flex items-center justify-center font-bold text-sm shadow-xs btn-press">+</button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="bg-white border-t border-slate-200/80 p-3.5 shrink-0 shadow-lg fixed bottom-0 left-0 right-0 max-w-lg mx-auto z-20 space-y-2.5">
+      <div class="flex items-center justify-between px-1">
+        <div class="text-xs">
+          <span class="text-slate-500 font-medium">Cart Summary:</span>
+          <span id="cartCountLabel" class="font-bold text-slate-800 ml-1">0 items</span>
+        </div>
+        <div class="text-base font-black text-blue-600 transition-transform font-mono-num" id="cartTotalLabel">₹0.00</div>
+      </div>
+      
+      <button id="btnContinue" disabled onclick="goToStep(2)" class="w-full py-3.5 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-200 disabled:text-slate-400 text-white font-extrabold text-xs rounded-2xl flex items-center justify-center gap-2 shadow-sm transition-all btn-press">
+        <span>Continue to Customer & Payment</span>
+        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+      </button>
+    </footer>
+  </div>
+
+  <!-- SCREEN 2: CUSTOMER & PAYMENT (Step 2 of 3) -->
+  <div id="screenStep2" class="flex-1 flex flex-col min-h-0 bg-[#F7F8FA] hidden" style="display: none;">
+    <header class="bg-white border-b border-slate-200/80 px-4 pt-4 pb-3 shrink-0 space-y-2 sticky top-0 z-30 shadow-2xs">
+      <div class="flex items-center justify-between">
+        <button onclick="goToStep(1)" class="text-blue-600 font-extrabold text-xs flex items-center gap-1 hover:underline">
+          <i data-lucide="arrow-left" class="w-4 h-4"></i>
+          <span>Back to Products</span>
+        </button>
+        <span class="text-[11px] font-extrabold text-slate-500 bg-slate-100 border border-slate-200 px-2.5 py-0.5 rounded-full">Step 2 of 3</span>
+      </div>
+
+      <div>
+        <h1 class="text-xl font-black text-slate-900 leading-tight">New Sale</h1>
+        <p class="text-xs font-semibold text-blue-600 mt-0.5">Step 2 of 3 · Customer Details & Payment</p>
+      </div>
+
+      <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+        <div class="bg-blue-600 h-full w-2/3 rounded-full transition-all duration-300"></div>
+      </div>
+    </header>
+
+    <main class="flex-1 overflow-y-auto no-scrollbar p-3 space-y-3 pb-28">
+      <div class="bg-white rounded-2xl border border-slate-200/80 shadow-2xs overflow-hidden">
+        <button onclick="toggleOrderDetails()" class="w-full p-3 flex items-center justify-between text-left hover:bg-slate-50 transition-colors">
+          <div class="flex items-center gap-2">
+            <span class="w-6 h-6 rounded-full bg-blue-100 text-blue-600 font-bold text-xs flex items-center justify-center" id="stripItemCount">0</span>
+            <span class="text-xs font-bold text-slate-900">Order Summary</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <span class="text-xs font-extrabold text-blue-600 font-mono-num" id="stripTotal">₹0.00</span>
+            <i data-lucide="chevron-down" id="stripChevron" class="w-4 h-4 text-slate-400 transition-transform"></i>
+          </div>
+        </button>
+
+        <div id="orderDetailsPane" class="hidden px-3 pb-3 border-t border-slate-100 pt-2 space-y-1.5 text-xs text-slate-600"></div>
+      </div>
+
+      <!-- CUSTOMER SELECTION CARD (Clean Single State, No Redundant Search Box when Selected) -->
+      <div class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-2xs space-y-3 relative">
+        <div class="flex items-center justify-between">
+          <label class="text-[11px] font-extrabold uppercase tracking-wider text-slate-500">Customer</label>
+          <button onclick="selectWalkInCustomer()" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-[11px] font-bold rounded-lg transition-colors btn-press">
+            ⚡ Walk-in Customer
+          </button>
+        </div>
+
+        <!-- Dynamic Search Input Box (Only visible when changing customer or no customer selected) -->
+        <div id="custSearchBoxWrapper" class="relative hidden">
+          <div class="absolute left-3 top-3 text-slate-400 pointer-events-none">
+            <i data-lucide="user-search" class="w-4 h-4"></i>
+          </div>
+          <input type="text" id="custSearchInput" oninput="handleCustSearch()" placeholder="Type Customer Name or Phone..." class="w-full pl-9 pr-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all">
+
+          <div id="custDropdown" class="hidden absolute top-full left-0 right-0 mt-1.5 bg-white rounded-2xl shadow-xl border border-slate-200/90 z-30 overflow-hidden text-xs">
+            <div id="custResultsList" class="max-h-48 overflow-y-auto divide-y divide-slate-100"></div>
+            <button onclick="openAddCustModal()" class="w-full p-3 bg-blue-50/60 hover:bg-blue-50 text-blue-600 font-bold text-xs border-t border-slate-100 flex items-center gap-2 transition-colors">
+              <div class="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs">+</div>
+              <span id="addNewCustOptionText">+ Add New Customer</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Selected Customer Card State (Sole focus when customer is set) -->
+        <div id="selectedCustCard" class="p-3 bg-blue-50/70 border border-blue-200/80 rounded-2xl flex items-center justify-between transition-all">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 text-white font-extrabold text-xs flex items-center justify-center shrink-0 shadow-xs" id="selectedCustAvatar">RK</div>
+            <div>
+              <div class="font-extrabold text-slate-900 text-xs tracking-tight" id="selectedCustName">Ramesh Kumar</div>
+              <div class="text-[11px] font-medium text-slate-500 font-mono" id="selectedCustPhone">+91 98765 43210</div>
+            </div>
+          </div>
+          <button type="button" onclick="showCustSearchInput()" class="text-xs text-blue-600 font-extrabold hover:underline px-2 py-1">Change</button>
+        </div>
+      </div>
+
+      <!-- PAYMENT METHOD CARDS (Spacious 4-Chip Row with Smooth Transitions) -->
+      <div class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-2xs space-y-3">
+        <label class="text-[11px] font-extrabold uppercase tracking-wider text-slate-500 block">Payment Method</label>
+        
+        <div class="grid grid-cols-4 gap-2" id="paymentModeChips">
+          <button onclick="setPaymentMode('Cash')" id="pm-Cash" class="pm-chip bg-blue-600 text-white p-3 rounded-2xl border border-blue-600 flex flex-col items-center justify-center gap-1.5 font-bold text-xs shadow-md transition-all duration-200 btn-press">
+            <i data-lucide="banknote" class="w-5 h-5"></i>
+            <span class="text-[11px]">Cash</span>
+          </button>
+          <button onclick="setPaymentMode('UPI')" id="pm-UPI" class="pm-chip bg-slate-50 text-slate-700 hover:bg-slate-100 p-3 rounded-2xl border border-slate-200 flex flex-col items-center justify-center gap-1.5 font-bold text-xs transition-all duration-200 btn-press">
+            <i data-lucide="qr-code" class="w-5 h-5"></i>
+            <span class="text-[11px]">UPI</span>
+          </button>
+          <button onclick="setPaymentMode('Card')" id="pm-Card" class="pm-chip bg-slate-50 text-slate-700 hover:bg-slate-100 p-3 rounded-2xl border border-slate-200 flex flex-col items-center justify-center gap-1.5 font-bold text-xs transition-all duration-200 btn-press">
+            <i data-lucide="credit-card" class="w-5 h-5"></i>
+            <span class="text-[11px]">Card</span>
+          </button>
+          <button onclick="setPaymentMode('Partial / Credit')" id="pm-Credit" class="pm-chip bg-slate-50 text-slate-700 hover:bg-slate-100 p-3 rounded-2xl border border-slate-200 flex flex-col items-center justify-center gap-1.5 font-bold text-xs transition-all duration-200 btn-press">
+            <i data-lucide="clock" class="w-5 h-5"></i>
+            <span class="text-[11px] text-center leading-tight">Credit / Partial</span>
+          </button>
+        </div>
+
+        <!-- ELEVATED SPLIT PAYMENT / PARTIAL CREDIT DRAWER -->
+        <div id="splitPaymentDrawer" class="hidden p-4 bg-amber-50/70 border border-amber-200/90 rounded-2xl space-y-3.5 transition-all">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-extrabold uppercase tracking-wider text-amber-950 flex items-center gap-1.5">
+              <i data-lucide="split" class="w-4 h-4 text-amber-600"></i> Split Payment / Partial Credit
+            </span>
+            <span class="text-xs font-mono font-bold text-amber-900 bg-amber-200/80 px-2.5 py-1 rounded-lg border border-amber-300/80" id="splitTotalBadge">Total: ₹0.00</span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3 text-xs">
+            <div>
+              <label class="text-[11px] font-bold text-slate-700 block mb-1.5">Paid Now (₹)</label>
+              <input type="number" id="splitPaidNowInput" oninput="handleSplitPaymentInput()" placeholder="0.00" class="w-full px-3.5 py-3 bg-white border border-slate-300 rounded-xl font-black text-slate-900 font-mono text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none transition-all">
+            </div>
+            <div>
+              <label class="text-[11px] font-bold text-slate-700 block mb-1.5">Balance Due / Credit (₹)</label>
+              <input type="number" id="splitBalanceDueInput" oninput="handleSplitBalanceInput()" placeholder="0.00" class="w-full px-3.5 py-3 bg-white border border-slate-300 rounded-xl font-black text-amber-900 font-mono text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none transition-all">
+            </div>
+          </div>
+
+          <!-- Live Validation Feedback Badge -->
+          <div id="splitValidationFeedback" class="p-2 rounded-xl text-xs font-bold flex items-center gap-2 bg-emerald-100/80 text-emerald-800 border border-emerald-300/80">
+            <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600"></i>
+            <span id="splitValidationText">Amounts match total perfectly ✓</span>
+          </div>
+
+          <p class="text-[11px] text-amber-900/80 font-medium leading-relaxed">
+            💡 The remaining balance will automatically be logged into this customer's credit ledger.
+          </p>
+        </div>
+      </div>
+    </main>
+
+    <footer class="bg-white border-t border-slate-200/80 p-3.5 shrink-0 shadow-lg fixed bottom-0 left-0 right-0 max-w-lg mx-auto z-20">
+      <button id="btnReviewConfirm" onclick="handleReviewConfirmClick()" class="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs rounded-2xl flex items-center justify-center gap-2 shadow-md transition-all btn-press">
+        <span>Review & Confirm</span>
+        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+      </button>
+    </footer>
+  </div>
+
+  <!-- SCREEN 3: REVIEW & CONFIRM (Step 3 of 3) -->
+  <div id="screenStep3" class="flex-1 flex flex-col min-h-0 bg-[#F7F8FA] hidden" style="display: none;">
+    <header class="bg-white border-b border-slate-200/80 px-4 pt-4 pb-3 shrink-0 space-y-2 sticky top-0 z-30 shadow-2xs">
+      <div class="flex items-center justify-between">
+        <button onclick="goToStep(2)" class="text-blue-600 font-extrabold text-xs flex items-center gap-1 hover:underline">
+          <i data-lucide="arrow-left" class="w-4 h-4"></i>
+          <span>Back to Details</span>
+        </button>
+        <span class="text-[11px] font-extrabold text-emerald-600 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">Final Step</span>
+      </div>
+
+      <div>
+        <h1 class="text-xl font-black text-slate-900 leading-tight">Review Sale</h1>
+        <p class="text-xs font-semibold text-emerald-600 mt-0.5">Step 3 of 3 · Final Confirmation</p>
+      </div>
+
+      <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+        <div class="bg-blue-600 h-full w-full rounded-full"></div>
+      </div>
+    </header>
+
+    <main class="flex-1 overflow-y-auto no-scrollbar p-3 space-y-3 pb-28">
+      <div class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-2xs space-y-3">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+          <div>
+            <span class="text-[10px] font-extrabold uppercase text-slate-400">Customer</span>
+            <div class="text-xs font-extrabold text-slate-900" id="revCustName">Ramesh Kumar</div>
+            <div class="text-[11px] font-medium text-slate-500 font-mono-num" id="revCustPhone">+91 98765 43210</div>
+          </div>
+          <button onclick="goToStep(2)" class="text-xs text-blue-600 font-bold hover:underline">Edit</button>
+        </div>
+
+        <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+          <div>
+            <span class="text-[10px] font-extrabold uppercase text-slate-400">Payment Mode</span>
+            <div class="text-xs font-extrabold text-slate-900 flex items-center gap-1.5 mt-0.5">
+              <span class="px-2 py-0.5 bg-blue-50 text-blue-600 rounded-md" id="revPaymentMode">Cash</span>
+            </div>
+          </div>
+          <button onclick="goToStep(2)" class="text-xs text-blue-600 font-bold hover:underline">Edit</button>
+        </div>
+
+        <div class="space-y-2 pt-1">
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] font-extrabold uppercase text-slate-400">Itemized Order</span>
+            <button onclick="goToStep(1)" class="text-xs text-blue-600 font-bold hover:underline">Edit Items</button>
+          </div>
+          <div class="space-y-1.5 text-xs" id="revLineItems"></div>
+        </div>
+
+        <div class="pt-3 border-t border-slate-200 flex items-center justify-between text-slate-900">
+          <span class="text-xs font-extrabold uppercase tracking-wider">Total Payable</span>
+          <span class="text-lg font-black text-blue-600 font-mono-num" id="revTotalPayable">₹0.00</span>
+        </div>
+      </div>
+    </main>
+
+    <footer class="bg-white border-t border-slate-200/80 p-3.5 shrink-0 shadow-lg fixed bottom-0 left-0 right-0 max-w-lg mx-auto z-20">
+      <button onclick="triggerSuccessFlow()" class="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs rounded-2xl flex items-center justify-center gap-2 shadow-md transition-all btn-press">
+        <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+        <span id="btnConfirmText">Confirm Sale · ₹0.00</span>
+      </button>
+    </footer>
+  </div>
+
+  <!-- SCREEN 4: DIGITAL PAYMENT CARD CONFIRMATION (Step 4 of 3) -->
+  <div id="screenStep4" class="flex-1 flex flex-col min-h-0 bg-[#FAFAF8] hidden" style="display: none;">
+    <header class="px-4 py-3 shrink-0 flex items-center justify-between sticky top-0 z-30 bg-[#FAFAF8]/90 backdrop-blur-md">
+      <a href="sales.html" class="text-slate-400 hover:text-slate-700 font-extrabold text-xs flex items-center gap-1 transition-colors">
+        <i data-lucide="arrow-left" class="w-4 h-4"></i>
+        <span>Sales Hub</span>
+      </a>
+      <span class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 font-mono">PAYMENT CONFIRMED</span>
+    </header>
+
+    <main class="flex-1 overflow-y-auto no-scrollbar p-4 space-y-6 pb-28 relative max-w-sm mx-auto w-full">
+      
+      <!-- Single Accent Success Badge & Label -->
+      <div class="text-center space-y-1.5 pt-1">
+        <div class="w-10 h-10 rounded-full bg-blue-50 text-blue-600 border border-blue-200/80 flex items-center justify-center mx-auto shadow-2xs check-pulse-badge">
+          <i data-lucide="check" class="w-5 h-5 stroke-[2.5px]"></i>
+        </div>
+        <p class="text-xs font-extrabold text-slate-500 tracking-wide uppercase">Payment Successful</p>
+      </div>
+
+      <!-- HERO DIGITAL PAYMENT CARD (Deep Charcoal & Navy Gradient Anchor) -->
+      <div id="heroPaymentCard" class="bg-gradient-to-br from-slate-900 via-slate-950 to-blue-950 text-white rounded-[1.75rem] p-6 shadow-2xl relative overflow-hidden border border-slate-800/90 card-entrance-anim">
+        <!-- Subtle Metallic Light Sheen Sweep Overlay -->
+        <div class="card-sheen-effect"></div>
+
+        <!-- Card Top Bar: Shop Name + Single Accent Blue PAID Glass Tag -->
+        <div class="flex items-center justify-between relative z-10">
+          <div class="flex items-center gap-2">
+            <div class="w-7 h-7 rounded-xl bg-white/10 backdrop-blur-md border border-white/10 flex items-center justify-center text-xs">🛒</div>
+            <span class="font-black text-xs text-slate-200 tracking-tight">My Grocery Shop</span>
+          </div>
+          <span class="px-2.5 py-1 bg-blue-500/15 border border-blue-400/30 text-blue-400 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider backdrop-blur-xs flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span> PAID
+          </span>
+        </div>
+
+        <!-- Card Center: Hero Balance / Total Paid -->
+        <div class="my-6 space-y-1 relative z-10">
+          <span class="text-[10px] font-mono font-extrabold uppercase tracking-widest text-slate-400 block">TOTAL PAID</span>
+          <div class="text-3xl font-black tracking-tight text-white font-mono" id="cardHeroTotal">₹0.00</div>
+        </div>
+
+        <!-- Horizontal Divider -->
+        <div class="w-full h-px bg-white/10 my-4 relative z-10"></div>
+
+        <!-- Card Bottom Meta: Customer + Masked Ref + Translucent Glass Payment Chip -->
+        <div class="flex items-end justify-between relative z-10 text-xs">
+          <div class="space-y-0.5">
+            <div class="font-bold text-slate-200 text-xs" id="cardCustName">Ramesh Kumar</div>
+            <div class="text-[11px] font-mono text-slate-400 tracking-wider" id="cardMaskedRef">INV •• 8042</div>
+          </div>
+          
+          <div class="text-right space-y-1">
+            <div class="text-[10px] text-slate-400 font-mono" id="cardDateTime">02 Sep 2026, 08:20 AM</div>
+            <div class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white/10 border border-white/10 rounded-xl text-[10px] font-extrabold text-slate-200 backdrop-blur-md" id="cardPaymentMethodChip">
+              <i data-lucide="banknote" class="w-3 h-3 text-blue-400"></i>
+              <span>Cash</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Collapsible Itemized Details Row -->
+      <div class="bg-white rounded-2xl border border-slate-200/80 shadow-2xs overflow-hidden">
+        <button type="button" onclick="toggleItemizedCardDetails()" class="w-full p-4 flex items-center justify-between text-left hover:bg-slate-50 transition-colors">
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-bold text-slate-700" id="cardItemCountLabel">0 items</span>
+            <span class="text-slate-300">•</span>
+            <span class="text-xs font-extrabold text-blue-600 hover:underline">View details</span>
+          </div>
+          <i data-lucide="chevron-down" id="cardChevron" class="w-4 h-4 text-slate-400 transition-transform"></i>
+        </button>
+
+        <div id="cardItemizedPane" class="hidden px-4 pb-4 border-t border-slate-100 pt-3 space-y-2 text-xs">
+          <div class="space-y-2 font-medium" id="invItemsList"></div>
+          
+          <div class="pt-2.5 border-t border-slate-100 flex justify-between items-center text-xs font-bold text-slate-800">
+            <span>Subtotal</span>
+            <span class="font-mono" id="invSubtotal">₹0.00</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Refined Action Icons Row (Matching Accent Tinted Circles) -->
+      <div class="pt-1 space-y-2">
+        <label class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 block text-center">Share Confirmation</label>
+        
+        <div class="flex items-center justify-around px-2 py-2">
+          <!-- WhatsApp (Brand Green Icon Glyph, Matching Blue Tint Circle) -->
+          <button onclick="shareWhatsApp()" type="button" class="flex flex-col items-center gap-1.5 group btn-press">
+            <div class="w-11 h-11 rounded-2xl bg-blue-50/80 text-emerald-600 border border-blue-100 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-all shadow-2xs">
+              <i data-lucide="message-circle" class="w-5 h-5"></i>
+            </div>
+            <span class="text-[11px] font-bold text-slate-600">WhatsApp</span>
+          </button>
+
+          <!-- Share -->
+          <button onclick="shareBillNative()" type="button" class="flex flex-col items-center gap-1.5 group btn-press">
+            <div class="w-11 h-11 rounded-2xl bg-blue-50/80 text-blue-600 border border-blue-100 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-all shadow-2xs">
+              <i data-lucide="share-2" class="w-5 h-5"></i>
+            </div>
+            <span class="text-[11px] font-bold text-slate-600">Share</span>
+          </button>
+
+          <!-- Download -->
+          <button onclick="downloadPdf()" type="button" class="flex flex-col items-center gap-1.5 group btn-press">
+            <div class="w-11 h-11 rounded-2xl bg-blue-50/80 text-blue-600 border border-blue-100 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-all shadow-2xs">
+              <i data-lucide="download" class="w-5 h-5"></i>
+            </div>
+            <span class="text-[11px] font-bold text-slate-600">Download</span>
+          </button>
+
+          <!-- Print -->
+          <button onclick="window.print()" type="button" class="flex flex-col items-center gap-1.5 group btn-press">
+            <div class="w-11 h-11 rounded-2xl bg-blue-50/80 text-blue-600 border border-blue-100 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-all shadow-2xs">
+              <i data-lucide="printer" class="w-5 h-5"></i>
+            </div>
+            <span class="text-[11px] font-bold text-slate-600">Print</span>
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <footer class="bg-[#FAFAF8] border-t border-slate-200/60 p-4 shrink-0 fixed bottom-0 left-0 right-0 max-w-lg mx-auto z-30 space-y-2.5">
+      <a href="new-sale.html" class="w-full py-3.5 bg-blue-600 hover:bg-blue-700 active:scale-[0.99] text-white font-extrabold text-xs rounded-2xl flex items-center justify-center gap-2 shadow-md transition-all btn-press">
+        <i data-lucide="plus-circle" class="w-4 h-4"></i>
+        <span>Start New Sale</span>
+      </a>
+      <a href="sales.html" class="block text-center text-xs font-bold text-slate-400 hover:text-slate-700 py-0.5 transition-colors">Back to Sales Hub</a>
+    </footer>
+  </div>
+
+  <!-- OVERLAY: CAMERA BARCODE SCANNER MODAL (LIGHT THEME MATCHING APP) -->
+  <div id="cameraScanModal" class="fixed inset-0 bg-[#F8FAFC] z-50 flex flex-col justify-between p-4 hidden" style="display: none;">
+    <!-- Top Bar: Live Status + Flashlight Toggle + Close Button -->
+    <header class="flex items-center justify-between z-20 text-slate-800 shrink-0">
+      <div class="flex items-center gap-2 px-3 py-1.5 bg-white border border-slate-200/90 rounded-full shadow-2xs">
+        <div class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></div>
+        <span class="font-extrabold text-[10px] tracking-widest uppercase font-mono text-slate-700">LIVE BARCODE SCANNER</span>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <!-- Torch Flashlight Toggle Button -->
+        <button type="button" onclick="toggleScannerTorch()" id="btnScannerTorch" class="w-9 h-9 rounded-full bg-white hover:bg-slate-100 active:scale-95 text-slate-700 flex items-center justify-center transition-all border border-slate-200 shadow-2xs" title="Toggle Flashlight">
+          <i data-lucide="zap-off" class="w-4 h-4" id="torchIcon"></i>
+        </button>
+
+        <!-- Close Button -->
+        <button type="button" onclick="closeCameraOverlay()" class="w-9 h-9 rounded-full bg-white hover:bg-slate-100 active:scale-95 text-slate-700 flex items-center justify-center transition-all border border-slate-200 shadow-2xs" title="Close Scanner">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Viewfinder Area with Real HTML5 WebCam Stream -->
+    <div class="flex-1 flex flex-col items-center justify-center relative my-auto space-y-4">
+      
+      <!-- Scan Frame with Real HTML5 Video Stream & Laser Line -->
+      <div id="scannerViewportFrame" class="w-64 h-64 border-2 border-blue-600 rounded-3xl relative flex items-center justify-center overflow-hidden shadow-2xl transition-all duration-200 bg-slate-900">
+        <!-- Real HTML5 Video Tag for Live Device Camera Stream -->
+        <video id="scannerVideoFeed" autoplay playsinline muted class="absolute inset-0 w-full h-full object-cover"></video>
+        
+        <!-- Camera Error / Fallback State overlay -->
+        <div id="cameraErrorFallback" class="hidden absolute inset-0 bg-slate-900/90 flex flex-col items-center justify-center text-center p-4 space-y-2 z-10">
+          <div class="w-10 h-10 rounded-full bg-slate-800 text-slate-300 flex items-center justify-center">📷</div>
+          <p class="text-[11px] font-bold text-slate-200 leading-tight">Camera Feed Simulator Active</p>
+          <p class="text-[10px] text-slate-400">Use quick chips below or allow camera permissions</p>
+        </div>
+
+        <!-- Continuous Laser Sweep Line -->
+        <div id="scannerLaserLine" class="w-full h-1 bg-gradient-to-r from-transparent via-cyan-400 to-transparent absolute laser-line-anim shadow-[0_0_15px_rgba(34,211,238,0.9)] z-20"></div>
+        
+        <!-- Frame Corner Bracket Markers -->
+        <div class="absolute top-3 left-3 w-6 h-6 border-t-4 border-l-4 border-blue-400 rounded-tl-lg z-20"></div>
+        <div class="absolute top-3 right-3 w-6 h-6 border-t-4 border-r-4 border-blue-400 rounded-tr-lg z-20"></div>
+        <div class="absolute bottom-3 left-3 w-6 h-6 border-b-4 border-l-4 border-blue-400 rounded-bl-lg z-20"></div>
+        <div class="absolute bottom-3 right-3 w-6 h-6 border-b-4 border-r-4 border-blue-400 rounded-br-lg z-20"></div>
+        
+        <!-- Center Status Text / Catch Icon -->
+        <div id="scannerFrameCenterText" class="text-center px-3 py-1.5 bg-slate-900/80 border border-slate-800 rounded-full text-[11px] font-bold text-slate-100 flex items-center gap-1.5 z-20 shadow-md">
+          <i data-lucide="scan-line" class="w-3.5 h-3.5 text-blue-400"></i>
+          <span>Align barcode inside frame</span>
+        </div>
+      </div>
+
+      <!-- Helper Text directly under scan frame -->
+      <p class="text-xs text-slate-500 font-medium text-center">Point camera at product barcode for auto-add</p>
+
+      <!-- Instant Scan Confirmation Card Popup (Slides up on scan catch) -->
+      <div id="scanProductFoundCard" class="hidden w-full max-w-xs bg-white border border-slate-200/90 rounded-2xl p-3 shadow-xl flex items-center justify-between transition-all">
+        <div class="flex items-center gap-2.5 min-w-0">
+          <div class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-700 border border-emerald-200 flex items-center justify-center font-bold text-sm shrink-0">✓</div>
+          <div class="min-w-0">
+            <div class="font-extrabold text-slate-900 text-xs truncate" id="scannedProdName">Chocolate Chip Cookies</div>
+            <div class="text-[10px] text-slate-500 font-mono" id="scannedProdMeta">+1 Pack added • ₹60.00</div>
+          </div>
+        </div>
+        <span class="text-xs font-black text-emerald-800 bg-emerald-100 px-2 py-1 rounded-lg shrink-0">Added ✓</span>
+      </div>
+
+      <!-- CAN'T SCAN? QUICK ADD / MANUAL FALLBACK CHIPS -->
+      <div class="w-full max-w-xs space-y-2 pt-1">
+        <div class="flex items-center justify-between px-1">
+          <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-500 font-mono">CAN'T SCAN? QUICK ADD</span>
+          <button type="button" onclick="promptManualBarcodeEntry()" class="text-[10px] font-bold text-blue-600 hover:underline">Manual Code</button>
+        </div>
+
+        <div class="flex flex-wrap justify-center gap-2">
+          <button type="button" onclick="simulateBarcodeScan('p_cookie')" class="px-3 py-1.5 bg-white hover:bg-slate-50 border border-slate-200 rounded-xl text-slate-800 text-xs font-bold transition-all shadow-2xs btn-press flex items-center gap-1">
+            <span>Cookies</span> <span class="text-[10px] text-slate-500 font-mono">₹60</span>
+          </button>
+          <button type="button" onclick="simulateBarcodeScan('p_handwash')" class="px-3 py-1.5 bg-white hover:bg-slate-50 border border-slate-200 rounded-xl text-slate-800 text-xs font-bold transition-all shadow-2xs btn-press flex items-center gap-1">
+            <span>Handwash</span> <span class="text-[10px] text-slate-500 font-mono">₹99</span>
+          </button>
+          <button type="button" onclick="simulateBarcodeScan('p_tea')" class="px-3 py-1.5 bg-white hover:bg-slate-50 border border-slate-200 rounded-xl text-slate-800 text-xs font-bold transition-all shadow-2xs btn-press flex items-center gap-1">
+            <span>Green Tea</span> <span class="text-[10px] text-slate-500 font-mono">₹180</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Persistent Scanned-Items Summary Drawer & Bottom Bar -->
+    <footer class="w-full max-w-sm mx-auto z-20 space-y-2 shrink-0">
+      
+      <!-- Collapsible / Expandable Scanned Items Strip -->
+      <div id="scannedDrawerContainer" class="bg-white border border-slate-200/90 rounded-2xl overflow-hidden shadow-xl transition-all">
+        <!-- Collapsed Strip Button -->
+        <button type="button" onclick="toggleScannedDrawer()" class="w-full p-3 flex items-center justify-between hover:bg-slate-50 transition-colors">
+          <div class="flex items-center gap-2 text-xs font-bold text-slate-800">
+            <i data-lucide="shopping-bag" class="w-4 h-4 text-blue-600"></i>
+            <span id="scannerCartSummaryLabel">0 items scanned</span>
+            <span class="text-slate-300">•</span>
+            <span class="text-blue-600 font-mono font-black" id="scannerCartTotalLabel">₹0.00</span>
+          </div>
+          <div class="flex items-center gap-1">
+            <span class="text-[10px] text-slate-400 font-semibold" id="drawerToggleHintText">Tap to review</span>
+            <i data-lucide="chevron-up" id="drawerChevron" class="w-4 h-4 text-slate-400 transition-transform"></i>
+          </div>
+        </button>
+
+        <!-- Expanded Scanned Items List Panel -->
+        <div id="scannedDrawerPane" class="hidden px-3 pb-3 border-t border-slate-100 pt-2 space-y-2 text-xs max-h-48 overflow-y-auto no-scrollbar">
+          <div id="scannedDrawerList" class="space-y-1.5">
+            <div class="text-slate-400 text-center py-3">No items scanned yet in this session</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Done Scanning Primary Action -->
+      <button type="button" onclick="closeCameraOverlay()" class="w-full py-3.5 bg-blue-600 hover:bg-blue-700 active:scale-[0.99] text-white font-extrabold text-xs rounded-2xl shadow-md flex items-center justify-center gap-2 transition-all btn-press">
+        <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+        <span>Done Scanning</span>
+      </button>
+    </footer>
+  </div>
+
+  <!-- OVERLAY: SUCCESS CONFIRMATION MODAL -->
+  <div id="successModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-xs z-50 items-center justify-center p-6 hidden" style="display: none;">
+    <div class="bg-white rounded-3xl p-6 w-full max-w-xs text-center space-y-5 shadow-2xl relative overflow-hidden">
+      
+      <div class="relative w-20 h-20 mx-auto flex items-center justify-center">
+        <div class="absolute inset-0 rounded-full bg-emerald-400/30 pulse-ring-effect"></div>
+        <div class="w-16 h-16 bg-emerald-500 text-white rounded-full flex items-center justify-center shadow-lg check-pop relative z-10">
+          <i data-lucide="check" class="w-9 h-9 stroke-[3px]"></i>
+        </div>
+      </div>
+
+      <div class="space-y-1">
+        <h3 class="text-lg font-black text-slate-900">Sale Completed!</h3>
+        <p class="text-xs text-slate-500 font-semibold" id="succInvNum">Invoice #INV-2026-0842 generated</p>
+      </div>
+
+      <div class="p-3 bg-slate-50 border border-slate-200/80 rounded-2xl flex items-center justify-between">
+        <span class="text-xs font-bold text-slate-500">Total Paid:</span>
+        <div class="text-right">
+          <div class="text-lg font-black text-blue-600 font-mono-num" id="succAmountRecap">₹110.00</div>
+          <span class="text-[10px] font-extrabold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-md" id="succPaymentTag">Cash</span>
+        </div>
+      </div>
+
+      <div class="space-y-2 pt-1">
+        <button onclick="startPrintingSequence()" class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs rounded-xl shadow-md flex items-center justify-center gap-1.5 btn-press">
+          <i data-lucide="printer" class="w-4 h-4"></i>
+          <span>Print & View Bill</span>
+        </button>
+        <a href="new-sale.html" onclick="closeSuccessModal()" class="block w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl">Start Next Sale</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- OVERLAY: WEIGHT & LOOSE QUANTITY SELECTION SHEET MODAL -->
+  <div id="weightSheetModal" class="fixed inset-0 bg-slate-950/75 backdrop-blur-xs z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 hidden" style="display: none;" onclick="if(event.target === this) closeWeightSheet();">
+    <div class="bg-white rounded-t-[2.25rem] sm:rounded-[2.25rem] p-6 w-full max-w-md space-y-5 shadow-2xl relative animate-slide-up border border-slate-100 transition-all duration-300">
+      
+      <!-- Center Drag Handle -->
+      <div class="w-12 h-1.5 bg-slate-200 rounded-full mx-auto -mt-2 mb-1"></div>
+
+      <!-- Header Row -->
+      <div class="flex items-start justify-between border-b border-slate-100 pb-3.5">
+        <div class="space-y-0.5">
+          <h3 class="text-base font-black text-slate-900 leading-snug" id="weightSheetTitle">Basmati Rice Premium</h3>
+          <p class="text-xs font-bold text-blue-600" id="weightSheetRate">₹110 / Kilogram</p>
+        </div>
+        <button onclick="closeWeightSheet()" type="button" aria-label="Close" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-500 font-bold flex items-center justify-center transition-all">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- Unified Stepper + Input + Segmented Unit Switch -->
+      <div class="space-y-2">
+        <div class="flex items-center gap-2">
+          <!-- Flanking Decrement Stepper Button -->
+          <button type="button" onclick="stepQuantity(-1)" aria-label="Decrease quantity" class="w-12 h-14 rounded-2xl bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-800 font-black text-xl flex items-center justify-center border border-slate-200/80 transition-all shadow-2xs btn-press">
+            <i data-lucide="minus" class="w-5 h-5 stroke-[3px]"></i>
+          </button>
+
+          <!-- Unified Input Container with Attached Right Segmented Unit Toggle -->
+          <div class="flex-1 flex items-center bg-slate-50 border-2 border-slate-200 rounded-2xl overflow-hidden focus-within:border-blue-600 focus-within:bg-white focus-within:ring-4 focus-within:ring-blue-500/15 transition-all shadow-inner relative">
+            <input type="number" id="weightSheetInput" min="0.01" step="any" value="250" onfocus="this.select()" oninput="handleInputManualTyping()" class="w-full pl-4 pr-2 py-3.5 bg-transparent text-xl font-black text-slate-900 font-mono-num text-center focus:outline-none placeholder:text-slate-300">
+            
+            <!-- Compact Attached Segmented Unit Switch (g | kg or mL | L) -->
+            <div class="flex items-center p-1 bg-slate-200/80 rounded-xl mr-1.5 shrink-0" id="attachedUnitToggle">
+              <button type="button" onclick="toggleUnitSwitch('g')" id="unit-switch-g" class="px-2.5 py-1.5 rounded-lg text-xs font-black bg-blue-600 text-white shadow-2xs transition-all">g</button>
+              <button type="button" onclick="toggleUnitSwitch('kg')" id="unit-switch-kg" class="px-2.5 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:text-slate-900 transition-all">kg</button>
+            </div>
+          </div>
+
+          <!-- Flanking Increment Stepper Button -->
+          <button type="button" onclick="stepQuantity(1)" aria-label="Increase quantity" class="w-12 h-14 rounded-2xl bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-800 font-black text-xl flex items-center justify-center border border-slate-200/80 transition-all shadow-2xs btn-press">
+            <i data-lucide="plus" class="w-5 h-5 stroke-[3px]"></i>
+          </button>
+        </div>
+
+        <!-- Inline Stock Validation Warning Message -->
+        <div id="stockValidationWarning" class="hidden text-xs font-bold text-red-600 flex items-center gap-1.5 pt-1 px-1 transition-all">
+          <i data-lucide="alert-circle" class="w-3.5 h-3.5 shrink-0"></i>
+          <span id="stockWarningText">Only 15 kg available</span>
+        </div>
+      </div>
+
+      <!-- Quick Select Chips Grid (Single Source of Truth) -->
+      <div class="space-y-2">
+        <label class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 block px-0.5">Quick Select</label>
+        
+        <div class="grid grid-cols-3 gap-2 text-xs font-bold" id="presetChipsGrid">
+          <button type="button" data-amount="250" data-unit="g" onclick="selectQuickChip(250, 'g')" class="quick-chip-btn py-3 bg-slate-50 hover:bg-slate-100 border border-slate-200/90 rounded-2xl text-slate-700 transition-all btn-press text-center">250g</button>
+          <button type="button" data-amount="500" data-unit="g" onclick="selectQuickChip(500, 'g')" class="quick-chip-btn py-3 bg-slate-50 hover:bg-slate-100 border border-slate-200/90 rounded-2xl text-slate-700 transition-all btn-press text-center">500g</button>
+          <button type="button" data-amount="1" data-unit="kg" onclick="selectQuickChip(1, 'kg')" class="quick-chip-btn py-3 bg-slate-50 hover:bg-slate-100 border border-slate-200/90 rounded-2xl text-slate-700 transition-all btn-press text-center">1kg</button>
+          <button type="button" data-amount="2" data-unit="kg" onclick="selectQuickChip(2, 'kg')" class="quick-chip-btn py-3 bg-slate-50 hover:bg-slate-100 border border-slate-200/90 rounded-2xl text-slate-700 transition-all btn-press text-center">2kg</button>
+          <button type="button" data-amount="5" data-unit="kg" onclick="selectQuickChip(5, 'kg')" class="quick-chip-btn py-3 bg-slate-50 hover:bg-slate-100 border border-slate-200/90 rounded-2xl text-slate-700 transition-all btn-press text-center">5kg</button>
+          <button type="button" data-amount="10" data-unit="kg" onclick="selectQuickChip(10, 'kg')" class="quick-chip-btn py-3 bg-slate-50 hover:bg-slate-100 border border-slate-200/90 rounded-2xl text-slate-700 transition-all btn-press text-center">10kg</button>
+        </div>
+      </div>
+
+      <!-- Calculated Total Live Card -->
+      <div class="p-4 bg-blue-50/90 border border-blue-200/80 rounded-2xl flex items-center justify-between shadow-2xs">
+        <span class="text-xs font-extrabold text-blue-950">Calculated Total</span>
+        <span class="text-xl font-black text-blue-600 font-mono-num transition-all duration-200" id="weightSheetPriceTotal">₹0.00</span>
+      </div>
+
+      <!-- Primary Action Button with Micro-State -->
+      <div class="flex items-center gap-2 pt-1">
+        <button type="button" onclick="removeWeightSheetItem()" id="btnWeightRemove" class="px-4 py-3.5 bg-red-50 text-red-600 hover:bg-red-100 font-extrabold text-xs rounded-2xl border border-red-200 hidden transition-all">Remove</button>
+        <button type="button" id="btnSaveWeightItem" onclick="saveWeightSheetItem()" class="flex-1 py-3.5 bg-blue-600 hover:bg-blue-700 active:scale-[0.99] text-white font-extrabold text-xs rounded-2xl shadow-md transition-all flex items-center justify-center gap-2 btn-press">
+          <i data-lucide="plus-circle" id="btnSaveIcon" class="w-4 h-4"></i>
+          <span id="btnSaveLabel">Add to Sale</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let itemsDb = {};
+
+    function loadDynamicCatalog() {
+      const feed = document.getElementById('catalogFeed');
+      if (!feed) return;
+
+      let rawProducts = [];
+      if (typeof Storage !== 'undefined' && typeof Storage.getProducts === 'function') {
+        rawProducts = Storage.getProducts();
+        if ((!rawProducts || rawProducts.length === 0) && typeof Storage.loadDemoData === 'function') {
+          Storage.loadDemoData();
+          rawProducts = Storage.getProducts();
+        }
+      }
+
+      if (!rawProducts || rawProducts.length === 0) {
+        rawProducts = [
+          { id: "p_rice", productName: "Basmati Rice Premium", sellingRate: 110, unit: "Kilogram", currentQuantity: 25 },
+          { id: "p_oil", productName: "Refined Cooking Oil", sellingRate: 145, unit: "Liter", currentQuantity: 4.5 },
+          { id: "p_milk", productName: "Toned Fresh Milk", sellingRate: 30, unit: "Packet", currentQuantity: 8 },
+          { id: "p_sugar", productName: "Refined White Sugar", sellingRate: 45, unit: "Kilogram", currentQuantity: 12 },
+          { id: "p_handwash", productName: "Liquid Handwash Refill", sellingRate: 99, unit: "Piece", currentQuantity: 15 },
+          { id: "p_cookie", productName: "Chocolate Chip Cookies", sellingRate: 20, unit: "Pack", currentQuantity: 40 },
+          { id: "p_atta", productName: "Whole Wheat Atta 5kg", sellingRate: 235, unit: "Pack", currentQuantity: 18 },
+          { id: "p_ghee", productName: "Pure Cow Ghee 500ml", sellingRate: 340, unit: "Bottle", currentQuantity: 14 },
+          { id: "p_tea", productName: "Green Tea Bags (25 Pack)", sellingRate: 180, unit: "Box", currentQuantity: 22 },
+          { id: "p_oats", productName: "Instant Oats 1kg", sellingRate: 190, unit: "Pack", currentQuantity: 16 }
+        ];
+      }
+
+      itemsDb = {};
+      rawProducts.forEach((p, idx) => {
+        const prodId = p.id || `p_item_${idx}`;
+        const u = (p.unit || '').toLowerCase();
+        const isLoose = ['kg', 'g', 'kilogram', 'gram', 'liter', 'l', 'ml'].includes(u);
+        itemsDb[prodId] = {
+          id: prodId,
+          name: p.productName,
+          price: parseFloat(p.sellingRate) || 0,
+          type: isLoose ? 'weight' : 'unit',
+          unit: p.unit || (isLoose ? 'kg' : 'pack'),
+          quantity: parseFloat(p.currentQuantity) || 0
+        };
+      });
+
+      renderCatalogList();
+    }
+
+    let activeCategoryFilter = 'All';
+
+    function setFilter(cat) {
+      activeCategoryFilter = cat;
+      document.querySelectorAll('.cat-chip').forEach(chip => {
+        if (chip.textContent.trim().toLowerCase().includes(cat.toLowerCase())) {
+          chip.className = 'cat-chip px-3.5 py-1.5 bg-blue-600 text-white rounded-full shrink-0 font-bold shadow-2xs';
+        } else {
+          chip.className = 'cat-chip px-3.5 py-1.5 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 rounded-full shrink-0 flex items-center gap-1';
+        }
+      });
+      filterCatalog();
+    }
+
+    function filterCatalog() {
+      renderCatalogList();
+    }
+
+    function renderCatalogList() {
+      const feed = document.getElementById('catalogFeed');
+      if (!feed) return;
+
+      const query = (document.getElementById('searchInput')?.value || '').toLowerCase().trim();
+      
+      const productList = Object.values(itemsDb).filter(p => {
+        const matchesQuery = !query || p.name.toLowerCase().includes(query);
+        let matchesCat = true;
+        if (activeCategoryFilter === 'Loose') matchesCat = (p.type === 'weight');
+        if (activeCategoryFilter === 'Packaged') matchesCat = (p.type === 'unit');
+        return matchesQuery && matchesCat;
+      });
+
+      if (productList.length === 0) {
+        feed.innerHTML = `
+          <div class="text-center py-12 space-y-3 bg-white rounded-2xl border border-slate-200/80">
+            <div class="w-12 h-12 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mx-auto text-xl">🔍</div>
+            <p class="text-xs font-bold text-slate-500">No products found matching your search</p>
+          </div>
+        `;
+        return;
+      }
+
+      feed.innerHTML = productList.map(p => {
+        const cartItem = cart[p.id];
+        const inCart = cartItem && cartItem.qty > 0;
+        const availableStock = parseFloat(p.quantity) || 0;
+        const isOutOfStock = availableStock <= 0;
+        const isLoose = (p.type === 'weight');
+
+        let cardClass = 'prod-card bg-white rounded-2xl p-4 border border-slate-200/80 shadow-2xs flex items-center justify-between gap-3 transition-all duration-200 min-h-[82px]';
+        if (inCart) {
+          cardClass += ' card-in-cart';
+        } else if (isOutOfStock) {
+          cardClass += ' card-out-of-stock';
+        }
+
+        let actionHtml = '';
+        if (isOutOfStock) {
+          actionHtml = `
+            <button onclick="showToast('Currently out of stock')" type="button" class="px-3.5 py-2 bg-slate-200/80 text-slate-400 rounded-xl font-bold text-xs cursor-not-allowed flex items-center gap-1">
+              <span>Out of Stock</span>
+            </button>
+          `;
+        } else if (isLoose) {
+          actionHtml = `
+            <button onclick="addLooseItem('${p.id}')" class="btn-weight-add ${inCart ? 'hidden' : ''} px-3.5 py-2 bg-blue-50/90 text-blue-600 hover:bg-blue-100 border border-blue-200 rounded-xl font-extrabold text-xs transition-colors flex items-center gap-1 btn-press">
+              <i data-lucide="plus" class="w-3.5 h-3.5"></i> Add
+            </button>
+            <button onclick="addLooseItem('${p.id}')" class="btn-weight-selected ${inCart ? '' : 'hidden'} px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-extrabold text-xs flex items-center gap-1.5 shadow-2xs transition-colors btn-press">
+              <span class="selected-weight-label font-mono">${inCart ? `${cartItem.qty} ${cartItem.displayUnit || p.unit}` : ''}</span>
+              <i data-lucide="pencil" class="w-3 h-3"></i>
+            </button>
+          `;
+        } else {
+          actionHtml = `
+            <button onclick="changeUnitQty('${p.id}', 1)" class="btn-unit-add ${inCart ? 'hidden' : ''} px-3.5 py-2 bg-blue-50/90 text-blue-600 hover:bg-blue-100 border border-blue-200 rounded-xl font-extrabold text-xs transition-colors flex items-center gap-1 btn-press">
+              <i data-lucide="plus" class="w-3.5 h-3.5"></i> Add
+            </button>
+            <div class="unit-stepper ${inCart ? '' : 'hidden'} flex items-center bg-white border border-blue-200 rounded-xl p-0.5 shadow-2xs">
+              <button onclick="changeUnitQty('${p.id}', -1)" class="w-7 h-7 bg-slate-100 text-blue-600 rounded-lg flex items-center justify-center font-bold text-sm btn-press">-</button>
+              <span class="unit-qty-count text-xs font-black text-blue-700 w-7 text-center font-mono">${inCart ? cartItem.qty : 1}</span>
+              <button onclick="changeUnitQty('${p.id}', 1)" class="w-7 h-7 bg-blue-600 text-white rounded-lg flex items-center justify-center font-bold text-sm btn-press">+</button>
+            </div>
+          `;
+        }
+
+        const stockText = isOutOfStock
+          ? `<span class="text-rose-600 font-extrabold">0 ${p.unit} available (Out of stock)</span>`
+          : `<span class="text-slate-500 font-semibold">${p.quantity} ${p.unit} available</span>`;
+
+        return `
+          <div class="${cardClass}" data-id="${p.id}">
+            <div class="min-w-0 flex-1 space-y-1">
+              <div class="flex items-baseline gap-2 flex-wrap">
+                <h3 class="text-sm font-extrabold text-slate-900 leading-snug break-words">${p.name}</h3>
+                <span class="px-2 py-0.5 ${isLoose ? 'bg-amber-100/80 text-amber-800' : 'bg-slate-100 text-slate-600'} rounded-md text-[10px] font-black uppercase tracking-wider shrink-0">${isLoose ? 'Loose' : 'Pack'}</span>
+              </div>
+              <p class="text-xs font-medium text-slate-500 font-mono-num">₹${p.price}/${p.unit} • ${stockText}</p>
+            </div>
+            <div class="action-slot shrink-0 flex items-center">
+              ${actionHtml}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
+
+    const cart = {};
+    let selectedCust = { name: "Ramesh Kumar", phone: "+91 98765 43210" };
+    let selectedPayment = "Cash";
+    let currentWeightProdId = null;
+    let activeUnitMode = 'kg';
+    let currentWeightKg = 1.0;
+    let currentInvoiceNo = "INV-2026-0842";
+    let printingTimeout = null;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadDynamicCatalog();
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+      if (typeof selectCust === 'function') {
+        selectCust("Ramesh Kumar", "+91 98765 43210", "RK");
+      }
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const stepParam = parseInt(urlParams.get('step'));
+      if (stepParam >= 1 && stepParam <= 4) {
+        goToStep(stepParam);
+      } else {
+        goToStep(1);
+      }
+    });
+
+    let scannerMediaStream = null;
+
+    function openCameraOverlay() {
+      const modal = document.getElementById('cameraScanModal');
+      const video = document.getElementById('scannerVideoFeed');
+      const fallback = document.getElementById('cameraErrorFallback');
+
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.style.display = 'flex';
+        renderScannedItemsDrawer();
+      }
+
+      // Request Web Camera Stream (Real Camera Stream)
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
+          .then(stream => {
+            scannerMediaStream = stream;
+            if (video) {
+              video.srcObject = stream;
+              video.play();
+            }
+            if (fallback) fallback.classList.add('hidden');
+          })
+          .catch(err => {
+            console.log('Camera permission or device fallback active:', err);
+            if (fallback) fallback.classList.remove('hidden');
+          });
+      } else {
+        if (fallback) fallback.classList.remove('hidden');
+      }
+    }
+
+    function closeCameraOverlay() {
+      const modal = document.getElementById('cameraScanModal');
+      const video = document.getElementById('scannerVideoFeed');
+
+      if (scannerMediaStream) {
+        scannerMediaStream.getTracks().forEach(track => track.stop());
+        scannerMediaStream = null;
+      }
+      if (video) {
+        video.srcObject = null;
+      }
+
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.style.display = 'none';
+      }
+      renderCatalogList();
+      updateCartSummary();
+    }
+
+    function toggleScannerTorch() {
+      isScannerTorchOn = !isScannerTorchOn;
+      const btn = document.getElementById('btnScannerTorch');
+      const icon = document.getElementById('torchIcon');
+      if (btn && icon) {
+        if (isScannerTorchOn) {
+          btn.className = 'w-9 h-9 rounded-full bg-amber-400 text-slate-950 flex items-center justify-center transition-all shadow-[0_0_15px_rgba(251,191,36,0.8)] border border-amber-300';
+          icon.setAttribute('data-lucide', 'zap');
+          showToast("Flashlight Turned ON 💡");
+        } else {
+          btn.className = 'w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 active:scale-95 text-slate-300 flex items-center justify-center transition-all border border-white/10';
+          icon.setAttribute('data-lucide', 'zap-off');
+          showToast("Flashlight OFF");
+        }
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+      }
+    }
+
+    function toggleScannedDrawer() {
+      const pane = document.getElementById('scannedDrawerPane');
+      const chevron = document.getElementById('drawerChevron');
+      const hint = document.getElementById('drawerToggleHintText');
+      if (pane) {
+        const isHidden = pane.classList.contains('hidden');
+        if (isHidden) {
+          pane.classList.remove('hidden');
+          if (chevron) chevron.classList.add('rotate-180');
+          if (hint) hint.textContent = "Tap to collapse";
+        } else {
+          pane.classList.add('hidden');
+          if (chevron) chevron.classList.remove('rotate-180');
+          if (hint) hint.textContent = "Tap to review";
+        }
+      }
+    }
+
+    function simulateBarcodeScan(prodId) {
+      const frame = document.getElementById('scannerViewportFrame');
+      const popCard = document.getElementById('scanProductFoundCard');
+      const nameEl = document.getElementById('scannedProdName');
+      const metaEl = document.getElementById('scannedProdMeta');
+
+      if (!itemsDb[prodId]) return;
+      const item = itemsDb[prodId];
+
+      // 1. Detected State Frame Catch Jolt (Frame flashes green with bounce animation)
+      if (frame) {
+        frame.classList.add('frame-catch-anim');
+        setTimeout(() => frame.classList.remove('frame-catch-anim'), 350);
+      }
+
+      // Haptic Vibration Feedback if supported
+      if (navigator.vibrate) {
+        navigator.vibrate([40, 30, 40]);
+      }
+
+      // 2. Add / Increment Item in Cart
+      if (item.type === 'weight') {
+        openWeightSheet(prodId);
+        return;
+      } else {
+        changeUnitQty(prodId, 1);
+      }
+
+      // 3. Product-Found Confirmation Card Popup
+      if (nameEl) nameEl.textContent = item.name;
+      if (metaEl) metaEl.textContent = `+1 ${item.unit} added • ₹${item.price.toFixed(2)}`;
+      
+      if (popCard) {
+        popCard.classList.remove('hidden');
+        setTimeout(() => popCard.classList.add('hidden'), 1600);
+      }
+
+      // 4. Update Persistent Scanned Items Drawer
+      renderScannedItemsDrawer();
+    }
+
+    function renderScannedItemsDrawer() {
+      const drawerList = document.getElementById('scannedDrawerList');
+      const countLabel = document.getElementById('scannerCartSummaryLabel');
+      const totalLabel = document.getElementById('scannerCartTotalLabel');
+
+      let count = 0;
+      let total = 0;
+      let rowsHtml = '';
+
+      Object.keys(cart).forEach(id => {
+        const item = itemsDb[id];
+        const c = cart[id];
+        count += 1;
+        total += c.total;
+
+        const qStr = c.displayUnit ? `${c.qty} ${c.displayUnit}` : `${c.qty} ${item.unit}`;
+        rowsHtml += `
+          <div class="flex items-center justify-between py-1.5 px-2 bg-slate-950/60 rounded-xl border border-slate-800/80">
+            <div class="min-w-0 pr-2">
+              <div class="font-bold text-slate-100 truncate">${item.name}</div>
+              <div class="text-[10px] text-slate-400 font-mono">${qStr} @ ₹${item.price}/${item.unit}</div>
+            </div>
+            <div class="flex items-center gap-2 shrink-0">
+              <span class="font-black text-emerald-400 font-mono">₹${c.total.toFixed(2)}</span>
+              <button type="button" onclick="changeUnitQty('${id}', -1); renderScannedItemsDrawer();" class="w-6 h-6 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center font-bold text-xs">-</button>
+            </div>
+          </div>
+        `;
+      });
+
+      if (drawerList) {
+        drawerList.innerHTML = rowsHtml || '<div class="text-slate-500 text-center py-3">No items scanned yet in this session</div>';
+      }
+      if (countLabel) countLabel.textContent = `${count} item${count === 1 ? '' : 's'} scanned`;
+      if (totalLabel) totalLabel.textContent = `₹${total.toFixed(2)}`;
+    }
+
+    function promptManualBarcodeEntry() {
+      const code = prompt("Enter 8-digit or 13-digit Product Barcode Number:");
+      if (code) {
+        simulateBarcodeScan('p_cookie');
+      }
+    }
+
+    function openWeightSheet(id) {
+      const item = itemsDb[id];
+      if (!item) return;
+      currentWeightProdId = id;
+
+      const modal = document.getElementById('weightSheetModal');
+      const title = document.getElementById('weightSheetTitle');
+      const rate = document.getElementById('weightSheetRate');
+      const input = document.getElementById('weightSheetInput');
+      const removeBtn = document.getElementById('btnWeightRemove');
+      const warningEl = document.getElementById('stockValidationWarning');
+
+      if (title) title.textContent = item.name;
+      if (rate) rate.textContent = `₹${item.price} / ${item.unit}`;
+      if (warningEl) warningEl.classList.add('hidden');
+
+      const isVolume = isLiquidUnit(item.unit);
+      const defaultPrimaryUnit = isVolume ? 'mL' : 'g';
+
+      const cartItem = cart[id];
+      if (cartItem) {
+        activeUnitMode = cartItem.displayUnit || defaultPrimaryUnit;
+        if (input) input.value = cartItem.qty;
+        if (removeBtn) removeBtn.classList.remove('hidden');
+      } else {
+        activeUnitMode = defaultPrimaryUnit;
+        if (input) input.value = isVolume ? 250 : 250;
+        if (removeBtn) removeBtn.classList.add('hidden');
+      }
+
+      updateUnitToggleUI();
+      renderPresetChips();
+      updateWeightSheetCalculations();
+      
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.style.display = 'flex';
+      }
+    }
+
+    function closeWeightSheet() {
+      const modal = document.getElementById('weightSheetModal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.style.display = 'none';
+      }
+      currentWeightProdId = null;
+    }
+
+    // Attached Segmented Switch (g | kg or mL | L) with Auto-conversion
+    function toggleUnitSwitch(newUnit) {
+      if (activeUnitMode === newUnit) return;
+      const input = document.getElementById('weightSheetInput');
+      const currentVal = parseFloat(input?.value) || 0;
+
+      if (currentVal > 0) {
+        if ((activeUnitMode === 'g' && newUnit === 'kg') || (activeUnitMode === 'mL' && newUnit === 'L')) {
+          input.value = (currentVal / 1000).toString();
+        } else if ((activeUnitMode === 'kg' && newUnit === 'g') || (activeUnitMode === 'L' && newUnit === 'mL')) {
+          input.value = Math.round(currentVal * 1000).toString();
+        }
+      }
+
+      activeUnitMode = newUnit;
+      updateUnitToggleUI();
+      updateWeightSheetCalculations();
+    }
+
+    function isLiquidUnit(unitStr) {
+      const u = (unitStr || '').toLowerCase().trim();
+      return ['liter', 'litre', 'l', 'ml', 'milliliter', 'millilitre'].includes(u) || (u.includes('liter') || u.includes('litre')) || u === 'l' || u === 'ml';
+    }
+
+    function updateUnitToggleUI() {
+      const uStr = itemsDb[currentWeightProdId]?.unit || '';
+      const isVolume = isLiquidUnit(uStr);
+      const attachedToggle = document.getElementById('attachedUnitToggle');
+      
+      if (attachedToggle) {
+        const primaryUnit = isVolume ? 'mL' : 'g';
+        const secondaryUnit = isVolume ? 'L' : 'kg';
+        
+        attachedToggle.innerHTML = `
+          <button type="button" onclick="toggleUnitSwitch('${primaryUnit}')" id="unit-switch-primary" class="px-2.5 py-1.5 rounded-lg text-xs font-black transition-all ${activeUnitMode === primaryUnit ? 'bg-blue-600 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'}">${primaryUnit}</button>
+          <button type="button" onclick="toggleUnitSwitch('${secondaryUnit}')" id="unit-switch-secondary" class="px-2.5 py-1.5 rounded-lg text-xs font-black transition-all ${activeUnitMode === secondaryUnit ? 'bg-blue-600 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'}">${secondaryUnit}</button>
+        `;
+      }
+    }
+
+    function renderPresetChips() {
+      const uStr = itemsDb[currentWeightProdId]?.unit || '';
+      const isVolume = isLiquidUnit(uStr);
+      const grid = document.getElementById('presetChipsGrid');
+      if (!grid) return;
+
+      if (isVolume) {
+        grid.innerHTML = `
+          <button type="button" data-amount="250" data-unit="mL" onclick="selectQuickChip(250, 'mL')" class="quick-chip-btn py-3 bg-slate-50 hover:bg-slate-100 border border-slate-200/90 rounded-2xl text-slate-700 transition-all btn-press text-center">250mL</button>
+          <button type="button" data-amount="500" data-unit="mL" onclick="selectQuickChip(500, 'mL')" class="quick-chip-btn py-3 bg-slate-50 hover:bg-slate-100 border border-slate-200/90 rounded-2xl text-slate-700 transition-all btn-press text-center">500mL</button>
+          <button type="button" data-amount="1" data-unit="L" onclick="selectQuickChip(1, 'L')" class="quick-chip-btn py-3 bg-slate-50 hover:bg-slate-100 border border-slate-200/90 rounded-2xl text-slate-700 transition-all btn-press text-center">1L</button>
+          <button type="button" data-amount="2" data-unit="L" onclick="selectQuickChip(2, 'L')" class="quick-chip-btn py-3 bg-slate-50 hover:bg-slate-100 border border-slate-200/90 rounded-2xl text-slate-700 transition-all btn-press text-center">2L</button>
+          <button type="button" data-amount="5" data-unit="L" onclick="selectQuickChip(5, 'L')" class="quick-chip-btn py-3 bg-slate-50 hover:bg-slate-100 border border-slate-200/90 rounded-2xl text-slate-700 transition-all btn-press text-center">5L</button>
+          <button type="button" data-amount="10" data-unit="L" onclick="selectQuickChip(10, 'L')" class="quick-chip-btn py-3 bg-slate-50 hover:bg-slate-100 border border-slate-200/90 rounded-2xl text-slate-700 transition-all btn-press text-center">10L</button>
+        `;
+      } else {
+        grid.innerHTML = `
+          <button type="button" data-amount="250" data-unit="g" onclick="selectQuickChip(250, 'g')" class="quick-chip-btn py-3 bg-slate-50 hover:bg-slate-100 border border-slate-200/90 rounded-2xl text-slate-700 transition-all btn-press text-center">250g</button>
+          <button type="button" data-amount="500" data-unit="g" onclick="selectQuickChip(500, 'g')" class="quick-chip-btn py-3 bg-slate-50 hover:bg-slate-100 border border-slate-200/90 rounded-2xl text-slate-700 transition-all btn-press text-center">500g</button>
+          <button type="button" data-amount="1" data-unit="kg" onclick="selectQuickChip(1, 'kg')" class="quick-chip-btn py-3 bg-slate-50 hover:bg-slate-100 border border-slate-200/90 rounded-2xl text-slate-700 transition-all btn-press text-center">1kg</button>
+          <button type="button" data-amount="2" data-unit="kg" onclick="selectQuickChip(2, 'kg')" class="quick-chip-btn py-3 bg-slate-50 hover:bg-slate-100 border border-slate-200/90 rounded-2xl text-slate-700 transition-all btn-press text-center">2kg</button>
+          <button type="button" data-amount="5" data-unit="kg" onclick="selectQuickChip(5, 'kg')" class="quick-chip-btn py-3 bg-slate-50 hover:bg-slate-100 border border-slate-200/90 rounded-2xl text-slate-700 transition-all btn-press text-center">5kg</button>
+          <button type="button" data-amount="10" data-unit="kg" onclick="selectQuickChip(10, 'kg')" class="quick-chip-btn py-3 bg-slate-50 hover:bg-slate-100 border border-slate-200/90 rounded-2xl text-slate-700 transition-all btn-press text-center">10kg</button>
+        `;
+      }
+    }
+
+    // Quick Select Chips (Single Source of Truth)
+    function selectQuickChip(amount, unit) {
+      const input = document.getElementById('weightSheetInput');
+      activeUnitMode = unit;
+      if (input) input.value = amount;
+      updateUnitToggleUI();
+      updateWeightSheetCalculations();
+    }
+
+    // Manual typing handler to deselect chips if custom number doesn't match
+    function handleInputManualTyping() {
+      updateWeightSheetCalculations();
+    }
+
+    // Flanking Stepper Buttons (+ / -)
+    function stepQuantity(delta) {
+      const input = document.getElementById('weightSheetInput');
+      if (!input) return;
+      let val = parseFloat(input.value) || 0;
+      
+      let stepVal = (activeUnitMode === 'g' || activeUnitMode === 'mL') ? 50 : 0.25;
+      val = Math.max((activeUnitMode === 'g' || activeUnitMode === 'mL') ? 50 : 0.05, val + (delta * stepVal));
+      
+      input.value = val;
+      updateWeightSheetCalculations();
+    }
+
+    function updateWeightSheetCalculations() {
+      if (!currentWeightProdId || !itemsDb[currentWeightProdId]) return;
+      const item = itemsDb[currentWeightProdId];
+      const input = document.getElementById('weightSheetInput');
+      const priceTotalEl = document.getElementById('weightSheetPriceTotal');
+      const warningEl = document.getElementById('stockValidationWarning');
+      const warningText = document.getElementById('stockWarningText');
+      const saveBtn = document.getElementById('btnSaveWeightItem');
+      const saveLabel = document.getElementById('btnSaveLabel');
+
+      const qty = parseFloat(input?.value) || 0;
+      let multiplier = (activeUnitMode === 'g' || activeUnitMode === 'mL') ? 0.001 : 1.0;
+      const qtyInBaseUnits = qty * multiplier;
+      const maxAvailable = parseFloat(item.quantity) || 0;
+
+      const isExceedingStock = qtyInBaseUnits > maxAvailable || qty <= 0;
+
+      // Validate Stock & Control Button State
+      if (qtyInBaseUnits > maxAvailable) {
+        if (warningEl) warningEl.classList.remove('hidden');
+        if (warningText) warningText.textContent = `Only ${maxAvailable} ${item.unit} available`;
+      } else {
+        if (warningEl) warningEl.classList.add('hidden');
+      }
+
+      if (saveBtn) {
+        saveBtn.disabled = isExceedingStock;
+        if (isExceedingStock) {
+          saveBtn.className = 'flex-1 py-3.5 bg-slate-200 text-slate-400 font-extrabold text-xs rounded-2xl shadow-none cursor-not-allowed flex items-center justify-center gap-2 transition-all';
+          if (saveLabel) saveLabel.textContent = qtyInBaseUnits > maxAvailable ? 'Out of Stock' : 'Add to Sale';
+        } else {
+          saveBtn.className = 'flex-1 py-3.5 bg-blue-600 hover:bg-blue-700 active:scale-[0.99] text-white font-extrabold text-xs rounded-2xl shadow-md transition-all flex items-center justify-center gap-2 btn-press';
+          if (saveLabel) saveLabel.textContent = 'Add to Sale';
+        }
+      }
+
+      // Sync Chips Highlight
+      syncChipsHighlight(qty, activeUnitMode);
+
+      const total = qtyInBaseUnits * item.price;
+      if (priceTotalEl) {
+        priceTotalEl.textContent = `₹${total.toFixed(2)}`;
+      }
+    }
+
+    function syncChipsHighlight(qty, unit) {
+      document.querySelectorAll('.quick-chip-btn').forEach(btn => {
+        const amt = parseFloat(btn.dataset.amount);
+        const u = btn.dataset.unit;
+        if (amt === qty && u === unit) {
+          btn.className = 'quick-chip-btn py-3 bg-blue-600 text-white shadow-xs rounded-2xl text-xs font-black transition-all btn-press text-center';
+        } else {
+          btn.className = 'quick-chip-btn py-3 bg-slate-50 hover:bg-slate-100 border border-slate-200/90 rounded-2xl text-slate-700 transition-all btn-press text-center';
+        }
+      });
+    }
+
+    function saveWeightSheetItem() {
+      if (!currentWeightProdId || !itemsDb[currentWeightProdId]) return;
+      const id = currentWeightProdId;
+      const item = itemsDb[id];
+      const input = document.getElementById('weightSheetInput');
+      const btn = document.getElementById('btnSaveWeightItem');
+      const btnLabel = document.getElementById('btnSaveLabel');
+      const btnIcon = document.getElementById('btnSaveIcon');
+
+      const qty = parseFloat(input?.value) || 0;
+      let multiplier = (activeUnitMode === 'g' || activeUnitMode === 'mL') ? 0.001 : 1.0;
+
+      if (qty <= 0) {
+        delete cart[id];
+        closeWeightSheet();
+        renderCatalogList();
+        updateCartSummary();
+        return;
+      }
+
+      // Micro-animation checkmark flash
+      if (btnLabel && btnIcon) {
+        btnLabel.textContent = "Added ✓";
+        btnIcon.setAttribute('data-lucide', 'check');
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+      }
+
+      cart[id] = {
+        qty: qty,
+        weightKg: qty * multiplier,
+        displayUnit: activeUnitMode,
+        total: qty * multiplier * item.price
+      };
+
+      setTimeout(() => {
+        if (btnLabel && btnIcon) {
+          btnLabel.textContent = "Add to Sale";
+          btnIcon.setAttribute('data-lucide', 'plus-circle');
+        }
+        closeWeightSheet();
+        renderCatalogList();
+        updateCartSummary();
+      }, 250);
+    }
+
+    function removeWeightSheetItem() {
+      if (currentWeightProdId && cart[currentWeightProdId]) {
+        delete cart[currentWeightProdId];
+      }
+      closeWeightSheet();
+      renderCatalogList();
+      updateCartSummary();
+    }
+
+    function addLooseItem(id) {
+      openWeightSheet(id);
+    }
+
+    function changeUnitQty(id, delta) {
+      if (!itemsDb[id]) return;
+      if (!cart[id]) cart[id] = { qty: 0, total: 0 };
+      cart[id].qty += delta;
+      if (cart[id].qty <= 0) delete cart[id];
+      else cart[id].total = cart[id].qty * itemsDb[id].price;
+      
+      updateProductCard(id);
+      updateCartSummary();
+    }
+
+    function updateProductCard(id) {
+      renderCatalogList();
+    }
+
+    function updateCartSummary() {
+      let count = 0;
+      let total = 0;
+
+      Object.keys(cart).forEach(id => {
+        count += 1;
+        total += cart[id].total;
+      });
+
+      const countLabel = document.getElementById('cartCountLabel');
+      const totalLabel = document.getElementById('cartTotalLabel');
+      const btnContinue = document.getElementById('btnContinue');
+
+      countLabel.textContent = `${count} item${count === 1 ? '' : 's'}`;
+      totalLabel.textContent = `₹${total.toFixed(2)}`;
+      btnContinue.disabled = (count === 0);
+    }
+
+    function renderOrderSummary() {
+      const pane = document.getElementById('orderDetailsPane');
+      const countEl = document.getElementById('stripItemCount');
+      const totalEl = document.getElementById('stripTotal');
+      let count = 0, total = 0, html = '';
+
+      Object.keys(cart).forEach(id => {
+        const item = itemsDb[id];
+        const c = cart[id];
+        count += 1;
+        total += c.total;
+        const qStr = c.displayUnit ? `${c.qty} ${c.displayUnit}` : `${c.qty} ${item.unit}`;
+        html += `<div class="flex justify-between"><span>${item.name} (${qStr})</span><span class="font-mono-num font-bold">₹${c.total.toFixed(2)}</span></div>`;
+      });
+
+      if (pane) pane.innerHTML = html || '<div class="text-slate-400">No items selected</div>';
+      if (countEl) countEl.textContent = count;
+      if (totalEl) totalEl.textContent = `₹${total.toFixed(2)}`;
+    }
+
+    function renderReviewScreen() {
+      const nameEl = document.getElementById('revCustName');
+      const phoneEl = document.getElementById('revCustPhone');
+      const modeEl = document.getElementById('revPaymentMode');
+      const totalEl = document.getElementById('revTotalPayable');
+      const btnConfirmText = document.getElementById('btnConfirmText');
+      const itemsEl = document.getElementById('revLineItems');
+
+      if (nameEl) nameEl.textContent = selectedCust.name;
+      if (phoneEl) phoneEl.textContent = selectedCust.phone;
+      if (modeEl) modeEl.textContent = selectedPayment;
+
+      let total = 0, html = '';
+      Object.keys(cart).forEach(id => {
+        const item = itemsDb[id];
+        const c = cart[id];
+        total += c.total;
+        const qStr = c.displayUnit ? `${c.qty} ${c.displayUnit}` : `${c.qty} ${item.unit}`;
+        html += `<div class="flex justify-between py-1 border-b border-slate-50"><span>${item.name} x ${qStr}</span><span class="font-bold font-mono-num">₹${c.total.toFixed(2)}</span></div>`;
+      });
+
+      if (itemsEl) itemsEl.innerHTML = html;
+      if (totalEl) totalEl.textContent = `₹${total.toFixed(2)}`;
+      if (btnConfirmText) btnConfirmText.textContent = `Confirm Sale · ₹${total.toFixed(2)}`;
+    }
+
+    function showCustSearchInput() {
+      const wrapper = document.getElementById('custSearchBoxWrapper');
+      const input = document.getElementById('custSearchInput');
+      if (wrapper) wrapper.classList.remove('hidden');
+      if (input) {
+        input.value = '';
+        input.focus();
+      }
+    }
+
+    function selectCust(name, phone, initials) {
+      selectedCust = { name, phone };
+      const wrapper = document.getElementById('custSearchBoxWrapper');
+      const dropdown = document.getElementById('custDropdown');
+      const card = document.getElementById('selectedCustCard');
+
+      if (wrapper) wrapper.classList.add('hidden');
+      if (card) {
+        const nameEl = document.getElementById('selectedCustName');
+        const phoneEl = document.getElementById('selectedCustPhone');
+        const avatarEl = document.getElementById('selectedCustAvatar');
+        if (nameEl) nameEl.textContent = name;
+        if (phoneEl) phoneEl.textContent = phone;
+        if (avatarEl) avatarEl.textContent = initials || name.substring(0,2).toUpperCase();
+        card.classList.remove('hidden');
+      }
+      if (dropdown) dropdown.classList.add('hidden');
+    }
+
+    function clearSelectedCust() {
+      showCustSearchInput();
+      selectCust("Walk-in Customer", "+91 00000 00000", "WC");
+    }
+
+    function selectWalkInCustomer() {
+      selectCust("Walk-in Customer", "+91 00000 00000", "WC");
+    }
+
+    let isSplitValid = true;
+
+    function setPaymentMode(mode) {
+      selectedPayment = mode;
+      const drawer = document.getElementById('splitPaymentDrawer');
+      const paidInput = document.getElementById('splitPaidNowInput');
+      const badge = document.getElementById('splitTotalBadge');
+
+      ['Cash', 'UPI', 'Card', 'Credit'].forEach(m => {
+        const chip = document.getElementById(`pm-${m}`);
+        if (chip) {
+          if (m === mode || (mode.includes('Credit') && m === 'Credit') || (mode.includes('Partial') && m === 'Credit')) {
+            chip.className = 'pm-chip bg-blue-600 text-white p-3 rounded-2xl border border-blue-600 flex flex-col items-center justify-center gap-1.5 font-bold text-xs shadow-md transition-all duration-200 btn-press';
+          } else {
+            chip.className = 'pm-chip bg-slate-50 text-slate-700 hover:bg-slate-100 p-3 rounded-2xl border border-slate-200 flex flex-col items-center justify-center gap-1.5 font-bold text-xs transition-all duration-200 btn-press';
+          }
+        }
+      });
+
+      if (mode.includes('Credit') || mode.includes('Partial')) {
+        if (drawer) drawer.classList.remove('hidden');
+        let cartTotal = 0;
+        Object.keys(cart).forEach(id => cartTotal += cart[id].total);
+        if (badge) badge.textContent = `Total: ₹${cartTotal.toFixed(2)}`;
+        if (paidInput && (!paidInput.value || parseFloat(paidInput.value) === 0)) {
+          paidInput.value = (cartTotal * 0.5).toFixed(2);
+        }
+        handleSplitPaymentInput();
+      } else {
+        if (drawer) drawer.classList.add('hidden');
+        isSplitValid = true;
+        updateReviewConfirmBtnState();
+      }
+    }
+
+    function handleSplitPaymentInput() {
+      let cartTotal = 0;
+      Object.keys(cart).forEach(id => cartTotal += cart[id].total);
+      
+      const paidInput = document.getElementById('splitPaidNowInput');
+      const dueInput = document.getElementById('splitBalanceDueInput');
+      
+      let paidNow = parseFloat(paidInput?.value) || 0;
+      let balanceDue = cartTotal - paidNow;
+      if (dueInput) dueInput.value = balanceDue >= 0 ? balanceDue.toFixed(2) : '0.00';
+
+      validateSplitSum(paidNow, balanceDue, cartTotal);
+    }
+
+    function handleSplitBalanceInput() {
+      let cartTotal = 0;
+      Object.keys(cart).forEach(id => cartTotal += cart[id].total);
+      
+      const paidInput = document.getElementById('splitPaidNowInput');
+      const dueInput = document.getElementById('splitBalanceDueInput');
+      
+      let balanceDue = parseFloat(dueInput?.value) || 0;
+      let paidNow = cartTotal - balanceDue;
+      if (paidInput) paidInput.value = paidNow >= 0 ? paidNow.toFixed(2) : '0.00';
+
+      validateSplitSum(paidNow, balanceDue, cartTotal);
+    }
+
+    function validateSplitSum(paidNow, balanceDue, cartTotal) {
+      const feedback = document.getElementById('splitValidationFeedback');
+      const text = document.getElementById('splitValidationText');
+      const paidInput = document.getElementById('splitPaidNowInput');
+      const dueInput = document.getElementById('splitBalanceDueInput');
+
+      const sum = Math.round((paidNow + balanceDue) * 100) / 100;
+      const target = Math.round(cartTotal * 100) / 100;
+
+      if (Math.abs(sum - target) < 0.01 && paidNow >= 0 && balanceDue >= 0) {
+        isSplitValid = true;
+        if (feedback) feedback.className = 'p-2 rounded-xl text-xs font-bold flex items-center gap-2 bg-emerald-100/80 text-emerald-800 border border-emerald-300/80';
+        if (text) text.textContent = 'Amounts match total perfectly ✓';
+        if (paidInput) paidInput.className = 'w-full px-3.5 py-3 bg-white border-2 border-emerald-500 rounded-xl font-black text-slate-900 font-mono text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none transition-all';
+        if (dueInput) dueInput.className = 'w-full px-3.5 py-3 bg-white border-2 border-emerald-500 rounded-xl font-black text-amber-900 font-mono text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none transition-all';
+
+        if (paidNow > 0 && balanceDue > 0) {
+          selectedPayment = `Paid ₹${paidNow.toFixed(0)} • Due ₹${balanceDue.toFixed(0)}`;
+        } else if (paidNow >= cartTotal) {
+          selectedPayment = `Cash (Full Paid ₹${cartTotal.toFixed(0)})`;
+        } else {
+          selectedPayment = `Credit / Full Due (₹${cartTotal.toFixed(0)})`;
+        }
+      } else {
+        isSplitValid = false;
+        if (feedback) feedback.className = 'p-2 rounded-xl text-xs font-bold flex items-center gap-2 bg-rose-100/80 text-rose-800 border border-rose-300/80';
+        if (text) text.textContent = `Sum (₹${sum.toFixed(2)}) must equal Total (₹${target.toFixed(2)})`;
+        if (paidInput) paidInput.className = 'w-full px-3.5 py-3 bg-white border-2 border-rose-500 rounded-xl font-black text-slate-900 font-mono text-sm focus:ring-2 focus:ring-rose-500 focus:outline-none transition-all';
+        if (dueInput) dueInput.className = 'w-full px-3.5 py-3 bg-white border-2 border-rose-500 rounded-xl font-black text-rose-900 font-mono text-sm focus:ring-2 focus:ring-rose-500 focus:outline-none transition-all';
+      }
+
+      updateReviewConfirmBtnState();
+    }
+
+    function updateReviewConfirmBtnState() {
+      const btn = document.getElementById('btnReviewConfirm');
+      if (!btn) return;
+      if (isSplitValid) {
+        btn.className = 'w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs rounded-2xl flex items-center justify-center gap-2 shadow-md transition-all btn-press';
+      } else {
+        btn.className = 'w-full py-3.5 bg-slate-300 text-slate-500 font-extrabold text-xs rounded-2xl flex items-center justify-center gap-2 shadow-none cursor-not-allowed transition-all';
+      }
+    }
+
+    function handleReviewConfirmClick() {
+      const btn = document.getElementById('btnReviewConfirm');
+      if (!isSplitValid) {
+        if (btn) {
+          btn.classList.add('btn-shake');
+          setTimeout(() => btn.classList.remove('btn-shake'), 400);
+        }
+        showToast("Please make sure Paid + Due equals the Total amount!");
+        return;
+      }
+      goToStep(3);
+    }
+
+    function handleCustSearch() {
+      const q = (document.getElementById('custSearchInput')?.value || '').toLowerCase().trim();
+      const dropdown = document.getElementById('custDropdown');
+      const list = document.getElementById('custResultsList');
+      if (!dropdown || !list) return;
+
+      if (!q) {
+        dropdown.classList.add('hidden');
+        return;
+      }
+
+      dropdown.classList.remove('hidden');
+      
+      let customers = [];
+      if (typeof Storage !== 'undefined' && typeof Storage.getCustomers === 'function') {
+        customers = Storage.getCustomers();
+      }
+
+      if (!customers || customers.length === 0) {
+        customers = [
+          { name: "Ramesh Kumar", phone: "+91 98765 43210", initials: "RK" },
+          { name: "Anita Sharma", phone: "+91 98123 45678", initials: "AS" },
+          { name: "Priya Patel", phone: "+91 99887 76655", initials: "PP" },
+          { name: "Suresh Gupta", phone: "+91 97654 32109", initials: "SG" },
+          { name: "Vikram Singh", phone: "+91 95432 10987", initials: "VS" },
+          { name: "Kavita Reddy", phone: "+91 94321 09876", initials: "KR" }
+        ];
+      }
+
+      // Powerful Search Engine: Search across Name, Phone, and Initials (case insensitive, partial match)
+      const matches = customers.filter(c => {
+        const name = (c.name || c.customerName || '').toLowerCase();
+        const phone = (c.phone || c.mobile || '').replace(/[^0-9]/g, '');
+        const queryClean = q.replace(/[^0-9a-z]/g, '');
+        
+        return name.includes(q) || phone.includes(queryClean) || (c.initials && c.initials.toLowerCase().includes(q));
+      });
+
+      list.innerHTML = matches.map(c => {
+        const cName = c.name || c.customerName;
+        const cPhone = c.phone || c.mobile;
+        const cInit = c.initials || cName.substring(0, 2).toUpperCase();
+        return `
+          <div onclick="selectCust('${cName.replace(/'/g, "\\'")}', '${cPhone}', '${cInit}')" class="p-3 hover:bg-blue-50/80 cursor-pointer flex items-center justify-between transition-colors border-b border-slate-100/70">
+            <div class="flex items-center gap-2.5">
+              <div class="w-7 h-7 rounded-full bg-blue-100 text-blue-700 font-extrabold text-[10px] flex items-center justify-center">${cInit}</div>
+              <div>
+                <span class="font-extrabold text-slate-900 text-xs block">${cName}</span>
+                <span class="text-slate-400 text-[10px] font-mono-num block">${cPhone}</span>
+              </div>
+            </div>
+            <span class="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-md">Select</span>
+          </div>
+        `;
+      }).join('') || `<div class="p-3.5 text-slate-400 text-center font-bold text-xs">No matching customer found</div>`;
+    }
+
+    function openAddCustModal() {}
+    function toggleOrderDetails() {
+      const pane = document.getElementById('orderDetailsPane');
+      if (pane) pane.classList.toggle('hidden');
+    }
+
+    function goToStep(stepNum) {
+      [1, 2, 3, 4].forEach(s => {
+        const screen = document.getElementById(`screenStep${s}`);
+        if (screen) {
+          screen.classList.add('hidden');
+          screen.style.display = 'none';
+        }
+      });
+
+      const activeStep = document.getElementById(`screenStep${stepNum}`);
+      if (activeStep) {
+        activeStep.classList.remove('hidden');
+        activeStep.style.display = 'flex';
+      }
+
+      if (stepNum === 2) renderOrderSummary();
+      if (stepNum === 3) renderReviewScreen();
+      if (stepNum === 4) renderGeneratedInvoice();
+
+      window.scrollTo(0, 0);
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
+
+    function triggerSuccessFlow() {
+      currentInvoiceNo = "INV-2026-" + Math.floor(1000 + Math.random() * 9000);
+      let total = 0;
+      Object.keys(cart).forEach(id => total += cart[id].total);
+
+      document.getElementById('succInvNum').textContent = `Invoice #${currentInvoiceNo} generated`;
+      document.getElementById('succPaymentTag').textContent = selectedPayment;
+      
+      const modal = document.getElementById('successModal');
+      modal.classList.remove('hidden');
+      modal.style.display = 'flex';
+
+      animateCountUp(document.getElementById('succAmountRecap'), 0, total, 700);
+    }
+
+    function closeSuccessModal() {
+      const modal = document.getElementById('successModal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.style.display = 'none';
+      }
+    }
+
+    function animateCountUp(element, start, end, duration) {
+      let startTime = null;
+      function step(timestamp) {
+        if (!startTime) startTime = timestamp;
+        const progress = Math.min((timestamp - startTime) / duration, 1);
+        const current = start + progress * (end - start);
+        element.textContent = `₹${current.toFixed(2)}`;
+        if (progress < 1) window.requestAnimationFrame(step);
+      }
+      window.requestAnimationFrame(step);
+    }
+
+    function toggleItemizedCardDetails() {
+      const pane = document.getElementById('cardItemizedPane');
+      const chevron = document.getElementById('cardChevron');
+      if (pane) pane.classList.toggle('hidden');
+      if (chevron) chevron.classList.toggle('rotate-180');
+    }
+
+    function startPrintingSequence() {
+      closeSuccessModal();
+      renderGeneratedInvoice();
+      goToStep(4);
+    }
+
+    function renderGeneratedInvoice() {
+      const cardHeroTotal = document.getElementById('cardHeroTotal');
+      const cardCustName = document.getElementById('cardCustName');
+      const cardMaskedRef = document.getElementById('cardMaskedRef');
+      const cardDateTime = document.getElementById('cardDateTime');
+      const cardItemCountLabel = document.getElementById('cardItemCountLabel');
+      const cardPaymentMethodChip = document.getElementById('cardPaymentMethodChip');
+
+      let total = 0;
+      let count = 0;
+      let itemsHtml = '';
+
+      Object.keys(cart).forEach(id => {
+        const item = itemsDb[id];
+        const cartItem = cart[id];
+        count += 1;
+        total += cartItem.total;
+        
+        const qtyStr = cartItem.displayUnit ? `${cartItem.weightKg} ${cartItem.displayUnit}` : `${cartItem.qty} ${item.unit}`;
+        itemsHtml += `
+          <div class="flex justify-between items-center py-1.5 border-b border-slate-50">
+            <div>
+              <div class="font-extrabold text-slate-900">${item.name}</div>
+              <div class="text-[10px] text-slate-400 font-medium">${qtyStr} @ ₹${item.price}/${item.unit}</div>
+            </div>
+            <span class="font-black text-slate-900 font-mono">₹${cartItem.total.toFixed(2)}</span>
+          </div>
+        `;
+      });
+
+      const invListEl = document.getElementById('invItemsList');
+      const invSubtotalEl = document.getElementById('invSubtotal');
+      if (invListEl) invListEl.innerHTML = itemsHtml || '<div class="text-slate-400 text-center py-2">No items selected</div>';
+      if (invSubtotalEl) invSubtotalEl.textContent = `₹${total.toFixed(2)}`;
+      
+      if (cardCustName) cardCustName.textContent = selectedCust.name || "Walk-in Customer";
+      const shortRef = currentInvoiceNo ? currentInvoiceNo.split('-').pop() : '8042';
+      if (cardMaskedRef) cardMaskedRef.textContent = `INV •• ${shortRef}`;
+      
+      const now = new Date();
+      const dateStr = now.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+      const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+      if (cardDateTime) cardDateTime.textContent = `${dateStr}, ${timeStr}`;
+      
+      if (cardItemCountLabel) cardItemCountLabel.textContent = `${count} item${count === 1 ? '' : 's'}`;
+      
+      let pmIcon = 'banknote';
+      if (selectedPayment === 'UPI') pmIcon = 'qr-code';
+      if (selectedPayment === 'Card') pmIcon = 'credit-card';
+      if (selectedPayment.includes('Credit')) pmIcon = 'clock';
+
+      if (cardPaymentMethodChip) {
+        cardPaymentMethodChip.innerHTML = `<i data-lucide="${pmIcon}" class="w-3 h-3 text-emerald-400"></i><span>${selectedPayment}</span>`;
+      }
+
+      // Smooth Balance Count Up Animation
+      if (cardHeroTotal) {
+        animateCountUp(cardHeroTotal, 0, total, 450);
+      }
+
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
+
+    function shareWhatsApp() {
+      const phone = selectedCust.phone.replace(/[^0-9]/g, '');
+      const total = document.getElementById('cardHeroTotal')?.textContent || '₹0.00';
+      const text = encodeURIComponent(`Hi ${selectedCust.name}, thank you for shopping at My Grocery Shop! Your payment of ${total} (${currentInvoiceNo}) is confirmed.`);
+      
+      showToast(`Opening WhatsApp for ${selectedCust.phone}...`);
+      window.open(`https://wa.me/${phone}?text=${text}`, '_blank');
+    }
+
+    function shareBillNative() {
+      if (navigator.share) {
+        navigator.share({
+          title: `Invoice ${currentInvoiceNo}`,
+          text: `My Grocery Shop Bill for ${selectedCust.name} - Total: ${document.getElementById('invGrandTotal').textContent}`,
+          url: window.location.href
+        }).catch(() => {});
+      } else {
+        showToast("Bill link copied to clipboard! ✓");
+      }
+    }
+
+    function downloadPdf() {
+      showToast("Invoice PDF downloaded ✓");
+    }
+
+    function showToast(msg) {
+      let toast = document.getElementById('scanToast');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'scanToast';
+        toast.className = 'fixed top-4 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-xs font-extrabold px-4 py-2.5 rounded-full shadow-2xl z-50 flex items-center gap-2 border border-slate-700 animate-bounce';
+        document.body.appendChild(toast);
+      }
+      toast.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400"></span>${msg}`;
+      toast.style.display = 'flex';
+      setTimeout(() => { toast.style.display = 'none'; }, 2800);
+    }
+  </script>
+</body>
+</html>

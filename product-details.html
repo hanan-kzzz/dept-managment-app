@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Greenway Groceries - Product Details</title>
+    <!-- Jakarta Font & Lucide Icons -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Base Styles -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/settings.css">
+    <link rel="stylesheet" href="css/stock.css">
+    <link rel="stylesheet" href="css/market-prices.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <meta name="theme-color" content="#07090d">
+</head>
+<body data-page="product-details">
+
+    <!-- Injected Global Header -->
+    <div id="app-header"></div>
+
+    <main class="container" style="padding-bottom: 90px;">
+        <!-- Back Navigation Header -->
+        <a href="stock.html" class="back-nav-settings" style="margin-bottom: 12px; display: inline-flex; align-items: center; gap: 6px; font-size: 0.8rem; font-weight: 700; color: var(--accent);">
+            <i data-lucide="arrow-left" style="width: 14px; height: 14px;"></i> Inventory
+        </a>
+
+        <!-- Product Hero Card Header -->
+        <div class="card" style="padding: 20px; margin-bottom: 16px; border-radius: 20px; background: var(--surface); border: 1px solid var(--border); box-shadow: var(--shadow-sm);">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px;">
+                <div style="flex: 1; padding-right: 12px;">
+                    <h1 class="profile-name-lg" id="prod-details-name" style="text-align: left; font-size: 1.35rem; font-weight: 800; color: var(--text); line-height: 1.25; margin: 0;">Product Name</h1>
+                    <div style="display: flex; items-center; gap: 8px; margin-top: 8px; flex-wrap: wrap;">
+                        <span class="status-pill" id="prod-details-status" style="font-size: 10px; font-weight: 900; padding: 4px 10px; border-radius: 8px;">IN STOCK</span>
+                        <span id="prod-details-cat-tag" style="font-size: 11px; font-weight: 800; color: var(--text-muted); background: var(--surface-sec); border: 1px solid var(--border); padding: 3px 10px; border-radius: 8px;">Groceries</span>
+                    </div>
+                </div>
+                <div style="text-align: right; shrink-0;">
+                    <div id="prod-details-qty" style="font-size: 1.65rem; font-weight: 900; color: var(--text); font-family: monospace; letter-spacing: -0.5px;">0</div>
+                    <div id="prod-details-unit" style="font-size: 0.7rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase;">Piece</div>
+                </div>
+            </div>
+            
+            <!-- Contextual Full-Width Action Row -->
+            <div style="margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border);">
+                <button class="btn btn-primary" id="btn-stock-adjust" onclick="if(typeof openStockAdjustmentModal==='function') openStockAdjustmentModal(activeProductId)" style="width: 100%; height: 46px; border-radius: 12px; font-weight: 800; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                    <i data-lucide="sliders-horizontal" style="width: 18px; height: 18px;"></i> Adjust Stock
+                </button>
+            </div>
+        </div>
+
+        <!-- Segmented Tab Navigation Bar -->
+        <div class="filter-tabs-segmented" style="margin-bottom: 16px; background: var(--surface-sec); border: 1px solid var(--border); padding: 4px; border-radius: 14px; display: flex; gap: 4px;">
+            <button type="button" class="filter-tab-seg active" id="tab-btn-overview" onclick="switchProductTab('overview')" style="flex: 1; height: 38px; border-radius: 10px; font-size: 0.8rem; font-weight: 800;">Overview</button>
+            <button type="button" class="filter-tab-seg" id="tab-btn-market" onclick="switchProductTab('market')" style="flex: 1; height: 38px; border-radius: 10px; font-size: 0.8rem; font-weight: 800;">Market Price</button>
+            <button type="button" class="filter-tab-seg" id="tab-btn-history" onclick="switchProductTab('history')" style="flex: 1; height: 38px; border-radius: 10px; font-size: 0.8rem; font-weight: 800;">History</button>
+        </div>
+
+        <!-- TAB 1: OVERVIEW TAB CONTENT -->
+        <div id="tab-content-overview" class="product-tab-pane">
+            
+            <!-- Specifications Grid Card -->
+            <div class="card" style="padding: 18px; margin-bottom: 16px; border-radius: 18px; background: var(--surface); border: 1px solid var(--border);">
+                <div style="font-size: 0.72rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 14px;">Product Specifications</div>
+                
+                <div class="stock-prop-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
+                    <div class="stock-prop-box" style="padding: 10px 12px; border: 1px solid var(--border); background: var(--surface-sec); border-radius: 12px;">
+                        <span class="stock-prop-label" style="font-size: 0.65rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Selling Rate</span>
+                        <div class="stock-prop-val" id="prop-selling" style="font-size: 0.95rem; font-weight: 900; color: var(--accent); font-family: monospace; margin-top: 2px;">₹0.00</div>
+                    </div>
+                    <div class="stock-prop-box" style="padding: 10px 12px; border: 1px solid var(--border); background: var(--surface-sec); border-radius: 12px;">
+                        <span class="stock-prop-label" style="font-size: 0.65rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Purchase Rate</span>
+                        <div class="stock-prop-val" id="prop-purchase" style="font-size: 0.95rem; font-weight: 900; color: var(--text); font-family: monospace; margin-top: 2px;">₹0.00</div>
+                    </div>
+                    <div class="stock-prop-box" style="padding: 10px 12px; border: 1px solid var(--border); background: var(--surface-sec); border-radius: 12px;">
+                        <span class="stock-prop-label" style="font-size: 0.65rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Category</span>
+                        <div class="stock-prop-val" id="prop-category" style="font-size: 0.85rem; font-weight: 800; color: var(--text); margin-top: 2px;">General</div>
+                    </div>
+                    <div class="stock-prop-box" style="padding: 10px 12px; border: 1px solid var(--border); background: var(--surface-sec); border-radius: 12px;" id="box-supplier-wrapper">
+                        <span class="stock-prop-label" style="font-size: 0.65rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Supplier</span>
+                        <div class="stock-prop-val" id="prop-supplier" style="font-size: 0.85rem; font-weight: 800; color: var(--text); margin-top: 2px;">Not Set</div>
+                    </div>
+                    <div class="stock-prop-box" style="padding: 10px 12px; border: 1px solid var(--border); background: var(--surface-sec); border-radius: 12px;">
+                        <span class="stock-prop-label" style="font-size: 0.65rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Reorder Threshold</span>
+                        <div class="stock-prop-val" id="prop-reorder-level" style="font-size: 0.85rem; font-weight: 800; color: var(--text); font-family: monospace; margin-top: 2px;">5 pc</div>
+                    </div>
+                    <div class="stock-prop-box" style="padding: 10px 12px; border: 1px solid var(--border); background: var(--surface-sec); border-radius: 12px;" id="box-expiry-wrapper">
+                        <span class="stock-prop-label" style="font-size: 0.65rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Expiry Date</span>
+                        <div class="stock-prop-val" id="prop-expiry" style="font-size: 0.85rem; font-weight: 800; color: var(--text); margin-top: 2px;">Non-perishable</div>
+                    </div>
+                    <div class="stock-prop-box" style="padding: 10px 12px; border: 1px solid var(--border); background: var(--surface-sec); border-radius: 12px; grid-column: span 2;">
+                        <span class="stock-prop-label" style="font-size: 0.65rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">SKU Identifier</span>
+                        <div class="stock-prop-val" id="prop-code" style="font-size: 0.85rem; font-weight: 800; color: var(--text); font-family: monospace; margin-top: 2px;">SKU-8042</div>
+                    </div>
+                </div>
+
+                <!-- Barcode Information Strip -->
+                <div style="padding: 12px; border: 1px dashed var(--border); background: var(--surface-sec); border-radius: 14px; margin-top: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+                    <div>
+                        <span class="stock-prop-label" style="font-size: 0.65rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; block;">Barcode Number</span>
+                        <div class="stock-prop-val" id="prop-barcode-val" style="font-size: 0.9rem; font-family: monospace; font-weight: 800; color: var(--text); margin-top: 2px;">GROC-890123</div>
+                    </div>
+                    <div style="display: flex; gap: 6px; align-items: center;">
+                        <button type="button" class="btn btn-secondary btn-sm" id="btn-show-barcode" style="height: 36px; padding: 0 12px; font-size: 0.75rem; border-radius: 10px; font-weight: 800;">
+                            <i data-lucide="barcode" style="width: 14px; height: 14px;"></i> Show Barcode
+                        </button>
+                        <button type="button" class="btn btn-outline btn-sm" id="btn-scan-test-barcode" style="height: 36px; padding: 0 12px; font-size: 0.75rem; border-radius: 10px; font-weight: 800;" title="Test Scanning">
+                            <i data-lucide="scan-barcode" style="width: 14px; height: 14px;"></i> Scan Test
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SMART INVENTORY & STOCK INSIGHT CARD (Explicit Skeleton & State Handlers) -->
+            <section class="card" id="smart-stock-card" style="padding: 18px; margin-bottom: 16px; border-radius: 18px; background: var(--surface); border: 1px solid var(--border);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                        <i data-lucide="sparkles" style="width: 16px; height: 16px; color: var(--accent);"></i>
+                        <h2 style="font-size: 0.75rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; margin: 0;">Stock Intelligence</h2>
+                    </div>
+                    <span class="status-pill status-pill-healthy" id="smart-stock-status-pill">CALCULATED</span>
+                </div>
+
+                <!-- Smart Metrics Grid -->
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 12px;">
+                    <div class="stock-prop-box" style="padding: 10px; background: var(--surface-sec); border: 1px solid var(--border); border-radius: 12px;">
+                        <span class="stock-prop-label" style="font-size: 0.65rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Average Daily Sales</span>
+                        <div class="stock-prop-val" id="smart-daily-sales-val" style="font-size: 0.95rem; font-weight: 900; color: var(--text); font-family: monospace; margin-top: 2px;">-</div>
+                    </div>
+                    <div class="stock-prop-box" style="padding: 10px; background: var(--surface-sec); border: 1px solid var(--border); border-radius: 12px;">
+                        <span class="stock-prop-label" style="font-size: 0.65rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Estimated Runway</span>
+                        <div class="stock-prop-val" id="smart-days-remaining-val" style="font-size: 0.95rem; font-weight: 900; color: var(--text); font-family: monospace; margin-top: 2px;">-</div>
+                    </div>
+                    <div class="stock-prop-box" style="padding: 10px; background: var(--surface-sec); border: 1px solid var(--border); border-radius: 12px;">
+                        <span class="stock-prop-label" style="font-size: 0.65rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Target Stock</span>
+                        <div class="stock-prop-val" id="smart-target-stock-val" style="font-size: 0.95rem; font-weight: 900; color: var(--text); font-family: monospace; margin-top: 2px;">-</div>
+                    </div>
+                    <div class="stock-prop-box" style="padding: 10px; background: var(--surface-sec); border: 1px solid var(--border); border-radius: 12px;">
+                        <span class="stock-prop-label" style="font-size: 0.65rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Recommended Reorder</span>
+                        <div class="stock-prop-val" id="smart-reorder-qty-val" style="font-size: 0.95rem; font-weight: 900; color: var(--accent); font-family: monospace; margin-top: 2px;">-</div>
+                    </div>
+                </div>
+
+                <!-- Alert Banner -->
+                <div id="smart-reorder-alert-banner" style="display: none; padding: 12px; background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.25); border-radius: 12px; margin-bottom: 10px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+                        <div>
+                            <div style="font-size: 0.75rem; font-weight: 800; color: var(--info, #3b82f6); text-transform: uppercase;" id="smart-alert-banner-title">REORDER SOON</div>
+                            <div style="font-size: 0.75rem; color: var(--text); margin-top: 2px;" id="smart-alert-banner-msg">-</div>
+                        </div>
+                        <button type="button" class="btn btn-primary btn-sm" onclick="openAddStockModal(activeProductId)" style="font-size: 0.75rem; padding: 4px 10px; height: 32px; border-radius: 8px;">
+                            + Add Stock
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Explanation -->
+                <div style="font-size: 0.72rem; color: var(--text-muted); line-height: 1.35; padding-top: 8px; border-top: 1px dashed var(--border);" id="smart-stock-explanation">
+                    Calculating stock velocity...
+                </div>
+            </section>
+
+            <!-- Utility Management Actions Grid -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px;">
+                <button class="btn btn-outline" id="btn-edit-product" onclick="if(typeof openAddProductModal==='function') openAddProductModal(activeProductId)" style="min-height: 44px; font-size: 0.8rem; border-radius: 12px; font-weight: 800;">
+                    <i data-lucide="pencil" style="width: 14px; height: 14px;"></i> Edit Product
+                </button>
+                <button class="btn btn-outline btn-danger" id="btn-delete-product" onclick="handleDeleteProductAction(activeProductId)" style="min-height: 44px; font-size: 0.8rem; background-color: rgba(239,68,68,0.1); color: var(--danger); border-color: rgba(239,68,68,0.2); border-radius: 12px; font-weight: 800;">
+                    <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i> Delete Product
+                </button>
+            </div>
+        </div>
+
+        <!-- TAB 2: MARKET PRICE REFERENCE CONTENT -->
+        <div id="tab-content-market" class="product-tab-pane" style="display: none;">
+            <section class="card" id="market-price-card" style="padding: 18px; margin-bottom: 16px; border-radius: 18px; background: var(--surface); border: 1px solid var(--border);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 8px;">
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                        <i data-lucide="scale" style="width: 16px; height: 16px; color: var(--accent);"></i>
+                        <h2 style="font-size: 0.75rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; margin: 0;">Market Price Reference</h2>
+                    </div>
+                    <span class="market-card-badge" id="market-ref-source-badge" style="font-size: 10px; font-weight: 800; padding: 2px 8px; background: var(--surface-sec); border: 1px solid var(--border); border-radius: 6px; color: var(--text-muted);">Govt Reference</span>
+                </div>
+
+                <!-- Mapping Controls -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px;">
+                    <div>
+                        <label style="font-size: 0.65rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 4px;">Market Commodity</label>
+                        <select id="prod-market-commodity-select" class="form-control" style="height: 40px; font-size: 0.82rem; font-weight: 800; border-radius: 10px;">
+                            <option value="">-- Not Configured --</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="font-size: 0.65rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 4px;">Market Location</label>
+                        <select id="prod-market-location-select" class="form-control" style="height: 40px; font-size: 0.82rem; font-weight: 800; border-radius: 10px;">
+                            <option value="Kerala">Kerala</option>
+                            <option value="All India">All India</option>
+                            <option value="Tamil Nadu">Tamil Nadu</option>
+                            <option value="Karnataka">Karnataka</option>
+                            <option value="Maharashtra">Maharashtra</option>
+                            <option value="Delhi">Delhi NCR</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- UNCONFIGURED STATE CONTAINER (FIRST-CLASS CITIZEN) -->
+                <div id="market-unconfigured-empty-state" class="text-center py-6 px-4 bg-slate-900/50 border border-dashed border-slate-700/80 rounded-2xl space-y-3" style="margin-bottom: 14px;">
+                    <div class="w-12 h-12 rounded-full bg-slate-800 text-slate-400 flex items-center justify-center mx-auto text-xl">⚖️</div>
+                    <div>
+                        <h3 class="text-sm font-extrabold text-slate-200">No Market Commodity Linked</h3>
+                        <p class="text-xs text-slate-400 font-medium max-w-xs mx-auto mt-1">Link this product to government commodity benchmarks to track price variance.</p>
+                    </div>
+                    <button type="button" onclick="autoLinkMarketCommodity()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-extrabold text-xs shadow-md transition-all">
+                        Auto-Link Commodity
+                    </button>
+                </div>
+
+                <!-- Price Comparison Matrix (Visible when configured) -->
+                <div id="market-comparison-matrix" style="display: none; padding: 14px; background: var(--surface-sec); border: 1px solid var(--border); border-radius: 14px; margin-bottom: 12px;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 10px;">
+                        <div>
+                            <span style="font-size: 0.65rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase;">Your Selling Price</span>
+                            <div id="compare-your-price" style="font-size: 1.25rem; font-weight: 900; color: var(--text); font-family: monospace; margin-top: 2px;">₹0.00</div>
+                        </div>
+                        <div>
+                            <span style="font-size: 0.65rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase;">Market Reference</span>
+                            <div id="compare-market-price" style="font-size: 1.25rem; font-weight: 900; color: var(--accent); font-family: monospace; margin-top: 2px;">₹0.00</div>
+                        </div>
+                    </div>
+
+                    <!-- Difference & Status Strip -->
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 10px; border-top: 1px dashed var(--border); flex-wrap: wrap; gap: 6px;">
+                        <div>
+                            <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 600;">Difference:</span>
+                            <strong id="compare-diff-amount" style="font-size: 0.85rem; margin-left: 4px; font-family: monospace; font-weight: 800;">+₹0.00</strong>
+                        </div>
+                        <span class="badge" id="compare-diff-badge" style="font-size: 0.72rem; font-weight: 800; padding: 3px 8px; border-radius: 6px;">
+                            Reference Available
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Unit Conversion Info & Timestamp -->
+                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.72rem; color: var(--text-muted); font-weight: 600; flex-wrap: wrap; gap: 6px;">
+                    <span id="market-unit-conversion-note">Standard unit match (1:1)</span>
+                    <span id="market-ref-freshness-text">Updated today</span>
+                </div>
+
+                <!-- Information Disclaimer -->
+                <div style="font-size: 0.68rem; color: var(--text-muted); margin-top: 12px; line-height: 1.35; padding-top: 10px; border-top: 1px solid var(--border);">
+                    <em>Reference only: Market prices are published benchmark government values. Your shop prices remain independent business decisions and are never altered automatically.</em>
+                </div>
+            </section>
+        </div>
+
+        <!-- TAB 3: STOCK HISTORY LOGS CONTENT -->
+        <div id="tab-content-history" class="product-tab-pane" style="display: none;">
+            <section class="card" style="padding: 18px; border-radius: 18px; background: var(--surface); border: 1px solid var(--border);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                    <h2 class="stock-ledger-title" style="font-size: 0.75rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; margin: 0;">Stock Movement Logs</h2>
+                    <span style="font-size: 11px; font-weight: 800; color: var(--text-muted);" id="history-log-count-badge">0 entries</span>
+                </div>
+
+                <div class="stock-timeline" id="stock-ledger-list-feed">
+                    <!-- Dynamic Log Items injected via JS -->
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Injected Global Bottom Navigation -->
+
+    <!-- Injected Global Bottom Navigation -->
+    <nav id="app-navigation"></nav>
+
+    <!-- REDESIGNED STOCK ADJUSTMENT MODAL (BOTTOM SHEET) -->
+    <div class="modal-overlay" id="modal-stock-adjust" onclick="if(event.target===this) closeModal(this)">
+        <div class="modal-container" style="max-height: 80vh;" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h3 class="modal-title">Adjust Stock</h3>
+                <button type="button" class="modal-close" id="modal-adjust-close" onclick="closeModal(document.getElementById('modal-stock-adjust'))" aria-label="Close Modal"><i data-lucide="x"></i></button>
+            </div>
+            <form id="form-stock-adjust" novalidate>
+                <input type="hidden" id="adjust-prod-id" value="">
+                <input type="hidden" id="adjust-direction" value="add">
+
+                <!-- Current Stock Label -->
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 0.85rem; color: var(--text-muted);">
+                    <span>Current Stock:</span>
+                    <strong style="color: var(--text);" id="adjust-current-stock-label">0 pc</strong>
+                </div>
+
+                <!-- Quantity adjustment control with [-] [qty] [+] -->
+                <div class="form-group" style="margin-bottom: 16px;">
+                    <label style="text-align: center;">Adjustment Quantity</label>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 8px;">
+                        <button type="button" class="btn btn-outline" id="btn-adjust-qty-minus" onclick="let q=document.getElementById('adjust-quantity'); if(q){q.value=Math.max(0.01, (parseFloat(q.value)||0)-1); updateAdjustmentPreview();}" style="width: 44px; height: 44px; border-radius: 50%; font-size: 1.25rem; font-weight: 800; padding: 0;">-</button>
+                        <input type="number" id="adjust-quantity" class="form-control" value="1" min="0.01" step="0.01" oninput="updateAdjustmentPreview()" required style="width: 110px; text-align: center; font-size: 1.2rem; font-weight: 800; height: 44px;">
+                        <button type="button" class="btn btn-outline" id="btn-adjust-qty-plus" onclick="let q=document.getElementById('adjust-quantity'); if(q){q.value=(parseFloat(q.value)||0)+1; updateAdjustmentPreview();}" style="width: 44px; height: 44px; border-radius: 50%; font-size: 1.25rem; font-weight: 800; padding: 0;">+</button>
+                    </div>
+
+                    <!-- Quick Preset Quantity Chips -->
+                    <div style="display: flex; justify-content: center; gap: 6px; margin-top: 10px; flex-wrap: wrap;">
+                        <button type="button" class="btn btn-outline btn-sm" onclick="let q=document.getElementById('adjust-quantity'); if(q){q.value=0.25; updateAdjustmentPreview();}" style="padding: 3px 8px; font-size: 11px; font-weight: 800; border-radius: 8px;">+0.25</button>
+                        <button type="button" class="btn btn-outline btn-sm" onclick="let q=document.getElementById('adjust-quantity'); if(q){q.value=0.5; updateAdjustmentPreview();}" style="padding: 3px 8px; font-size: 11px; font-weight: 800; border-radius: 8px;">+0.5</button>
+                        <button type="button" class="btn btn-outline btn-sm" onclick="let q=document.getElementById('adjust-quantity'); if(q){q.value=1; updateAdjustmentPreview();}" style="padding: 3px 8px; font-size: 11px; font-weight: 800; border-radius: 8px;">+1</button>
+                        <button type="button" class="btn btn-outline btn-sm" onclick="let q=document.getElementById('adjust-quantity'); if(q){q.value=5; updateAdjustmentPreview();}" style="padding: 3px 8px; font-size: 11px; font-weight: 800; border-radius: 8px;">+5</button>
+                        <button type="button" class="btn btn-outline btn-sm" onclick="let q=document.getElementById('adjust-quantity'); if(q){q.value=10; updateAdjustmentPreview();}" style="padding: 3px 8px; font-size: 11px; font-weight: 800; border-radius: 8px;">+10</button>
+                    </div>
+
+                    <div class="invalid-feedback" id="adjust-qty-feedback" style="text-align: center; margin-top: 4px;">Quantity must be greater than zero.</div>
+                </div>
+
+                <!-- Reason dropdown -->
+                <div class="form-group" style="margin-bottom: 16px;">
+                    <label for="adjust-reason">Reason *</label>
+                    <select id="adjust-reason" class="form-control" required>
+                        <option value="Manual correction">Manual correction</option>
+                        <option value="Sale correction">Sale correction</option>
+                        <option value="Damaged">Damaged</option>
+                        <option value="Expired">Expired</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <!-- Target Preview -->
+                <div style="margin-bottom: 16px; padding: 10px 12px; background-color: var(--accent-tint); color: var(--accent); border-radius: var(--radius-sm); font-size: 0.85rem; font-weight: 700; display: flex; justify-content: space-between;">
+                    <span>New Stock:</span>
+                    <span id="adjust-target-preview">0 pc</span>
+                </div>
+
+                <div class="modal-footer" style="padding-top: 10px;">
+                    <button type="button" class="btn btn-secondary" id="btn-adjust-cancel" onclick="closeModal(document.getElementById('modal-stock-adjust'))" style="flex: 1; height: 48px; border-radius: var(--radius-btn);">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="btn-adjust-save" style="flex: 1; height: 48px; border-radius: var(--radius-btn);">Save Adjustment</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ADD STOCK MODAL DIALOG (BOTTOM SHEET) -->
+    <div class="modal-overlay" id="modal-add-stock">
+        <div class="modal-container" style="max-height: 80vh;">
+            <div class="modal-header">
+                <h3 class="modal-title">Add Stock</h3>
+                <button class="modal-close" id="modal-add-stock-close"><i data-lucide="x"></i></button>
+            </div>
+            
+            <!-- Step 1: Select Product (hidden in details context but here for layout/consistency) -->
+            <div id="add-stock-step-1" class="add-stock-step" style="display: none;">
+                <div class="form-group">
+                    <label>Select Product *</label>
+                    <div class="custom-search-wrapper" style="margin-bottom: 8px;">
+                        <i data-lucide="search" class="custom-search-icon"></i>
+                        <input type="text" id="add-stock-prod-lookup" class="custom-search-input" placeholder="Search product..." autocomplete="off">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: Input Details -->
+            <div id="add-stock-step-2" class="add-stock-step">
+                <!-- Selected Product Preview -->
+                <div style="padding: 12px; border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--surface-sec); margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <strong id="add-stock-selected-name" style="font-size: 0.9rem; color: var(--text);">-</strong>
+                        <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;">Current stock: <span id="add-stock-selected-current">0</span> <span id="add-stock-selected-unit">pc</span></div>
+                    </div>
+                </div>
+
+                <form id="form-add-stock" novalidate>
+                    <input type="hidden" id="add-stock-prod-id">
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label for="add-stock-qty">Quantity to Add *</label>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <input type="number" id="add-stock-qty" class="form-control" placeholder="0" min="0.01" step="0.01" required style="flex: 1;">
+                                <span id="add-stock-unit-badge" style="font-weight: 700; color: var(--text-muted); font-size: 0.85rem; padding: 0 4px;">pc</span>
+                            </div>
+                            <div class="invalid-feedback">Required (>= 0.01).</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="add-stock-purchase-rate">Purchase Rate (₹) *</label>
+                            <input type="number" id="add-stock-purchase-rate" class="form-control" placeholder="Cost price" min="0" step="0.01" required>
+                            <div class="invalid-feedback">Required (>= 0).</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Target Stock Preview -->
+                    <div style="margin-bottom: 14px; padding: 10px 12px; background-color: var(--accent-tint); color: var(--accent); border-radius: var(--radius-sm); font-size: 0.8rem; font-weight: 700; display: flex; justify-content: space-between;">
+                        <span>New target stock:</span>
+                        <span id="add-stock-target-preview">0 pc</span>
+                    </div>
+
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label for="add-stock-supplier">Supplier (Optional)</label>
+                            <input type="text" id="add-stock-supplier" class="form-control" placeholder="Supplier name">
+                        </div>
+                        <div class="form-group">
+                            <label for="add-stock-expiry">Expiry Date (Optional)</label>
+                            <input type="date" id="add-stock-expiry" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="modal-footer" style="padding-top: 10px; margin-top: 10px;">
+                        <button type="button" class="btn btn-secondary" id="btn-add-stock-cancel" style="flex: 1; height: 48px; border-radius: var(--radius-btn);">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="btn-add-stock-save" style="flex: 1; height: 48px; border-radius: var(--radius-btn);">Add Stock</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>    <!-- ADD / EDIT PRODUCT MODAL (REDESIGNED PREMIUM MOBILE BOTTOM SHEET & CENTERED MODAL) -->
+    <div class="modal-overlay" id="modal-product-edit" onclick="if(event.target===this) requestCloseProductModal()">
+        <div class="modal-container prod-modal-container" onclick="event.stopPropagation()">
+            <!-- Fixed Non-Scrolling Header -->
+            <div class="modal-header prod-modal-header">
+                <div class="prod-modal-header-left">
+                    <div class="prod-modal-icon-badge">
+                        <i data-lucide="package-plus" id="prod-modal-title-icon"></i>
+                    </div>
+                    <div>
+                        <h3 class="modal-title" id="modal-prod-title">Edit Product Details</h3>
+                        <p class="prod-modal-subtitle" id="modal-prod-subtitle">Update product information and inventory rates</p>
+                    </div>
+                </div>
+                <button type="button" class="modal-close" id="modal-prod-edit-close" onclick="requestCloseProductModal()" aria-label="Close modal">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+
+            <!-- Scrollable Form Body Content ONLY -->
+            <form id="form-product-edit" novalidate class="modal-body prod-modal-body">
+                <input type="hidden" id="edit-prod-id">
+
+                <!-- SECTION 1: PRODUCT INFORMATION -->
+                <div class="prod-form-section">
+                    <div class="prod-section-header">
+                        <span class="prod-section-title">PRODUCT INFORMATION</span>
+                    </div>
+
+                    <!-- Product Name -->
+                    <div class="settings-form-group">
+                        <label for="edit-prod-name">Product Name <span class="req-star">*</span></label>
+                        <input type="text" id="edit-prod-name" class="settings-form-control" placeholder="e.g. Basmati Rice 5kg" autocomplete="off" required>
+                        <div class="invalid-feedback" id="edit-prod-name-feedback">Product name is required.</div>
+                    </div>
+
+                    <!-- Category Dropdown Trigger -->
+                    <div class="settings-form-group">
+                        <label id="label-prod-category">Category <span class="req-star">*</span></label>
+                        <div class="custom-select-box" id="category-custom-select">
+                            <button type="button" class="custom-select-trigger" id="btn-select-category" onclick="openCustomPicker('category', document.getElementById('edit-prod-category')?.value || 'Groceries', (val) => updateSelectedCategory(val))" aria-haspopup="listbox" aria-expanded="false">
+                                <span class="custom-select-label" id="category-select-label">Groceries</span>
+                                <i data-lucide="chevron-down" class="custom-select-chevron"></i>
+                            </button>
+                            <input type="hidden" id="edit-prod-category" value="Groceries" required>
+                        </div>
+                        <div class="invalid-feedback" id="edit-prod-category-feedback">Category is required.</div>
+                    </div>
+
+                    <!-- Hidden Custom Category Input Field Group -->
+                    <div class="settings-form-group" id="edit-prod-custom-category-group" style="display: none;">
+                        <label for="edit-prod-custom-category">Custom Category Name <span class="req-star">*</span></label>
+                        <input type="text" id="edit-prod-custom-category" class="settings-form-control" placeholder="e.g. Spices, Bakery" autocomplete="off">
+                        <div class="invalid-feedback">Please specify custom category name.</div>
+                    </div>
+
+                    <!-- Unit Dropdown Trigger -->
+                    <div class="settings-form-group">
+                        <label id="label-prod-unit">Unit <span class="req-star">*</span></label>
+                        <div class="custom-select-box" id="unit-custom-select">
+                            <button type="button" class="custom-select-trigger" id="btn-select-unit" onclick="openCustomPicker('unit', document.getElementById('edit-prod-unit')?.value || 'Piece', (val) => updateSelectedUnit(val))" aria-haspopup="listbox" aria-expanded="false">
+                                <span class="custom-select-label" id="unit-select-label">Piece (pc)</span>
+                                <i data-lucide="chevron-down" class="custom-select-chevron"></i>
+                            </button>
+                            <input type="hidden" id="edit-prod-unit" value="Piece" required>
+                        </div>
+                        <div class="invalid-feedback" id="edit-prod-unit-feedback">Unit is required.</div>
+                    </div>
+                </div>
+
+                <!-- SECTION 2: PRICING -->
+                <div class="prod-form-section">
+                    <div class="prod-section-header">
+                        <span class="prod-section-title">PRICING</span>
+                    </div>
+                    <div class="prod-grid-2">
+                        <div class="settings-form-group">
+                            <label for="edit-prod-purchase">Purchase Rate (₹) <span class="req-star">*</span></label>
+                            <div class="input-currency-prefix-wrap">
+                                <span class="input-currency-prefix">₹</span>
+                                <input type="number" id="edit-prod-purchase" class="settings-form-control input-with-prefix" placeholder="0.00" min="0" step="0.01" inputmode="decimal" required>
+                            </div>
+                            <div class="invalid-feedback">Required (≥ 0).</div>
+                        </div>
+                        <div class="settings-form-group">
+                            <label for="edit-prod-selling">Selling Rate (₹) <span class="req-star">*</span></label>
+                            <div class="input-currency-prefix-wrap">
+                                <span class="input-currency-prefix">₹</span>
+                                <input type="number" id="edit-prod-selling" class="settings-form-control input-with-prefix" placeholder="0.00" min="0" step="0.01" inputmode="decimal" required>
+                            </div>
+                            <div class="invalid-feedback">Required (≥ 0).</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECTION 3: STOCK -->
+                <div class="prod-form-section" id="edit-qty-section">
+                    <div class="prod-section-header">
+                        <span class="prod-section-title">STOCK</span>
+                    </div>
+                    <div class="prod-grid-2">
+                        <div class="settings-form-group">
+                            <label for="edit-prod-qty">Opening Stock <span class="req-star">*</span></label>
+                            <div class="input-unit-suffix-wrap">
+                                <input type="number" id="edit-prod-qty" class="settings-form-control input-with-suffix" placeholder="0" min="0" step="0.01" inputmode="decimal" required>
+                                <span class="input-unit-suffix" id="badge-stock-unit">pc</span>
+                            </div>
+                            <div class="invalid-feedback">Required (≥ 0).</div>
+                        </div>
+                        <div class="settings-form-group">
+                            <label for="edit-prod-min">Reorder Level <span class="req-star">*</span></label>
+                            <div class="input-unit-suffix-wrap">
+                                <input type="number" id="edit-prod-min" class="settings-form-control input-with-suffix" placeholder="Alert threshold" min="0" step="0.01" inputmode="decimal" required>
+                                <span class="input-unit-suffix" id="badge-reorder-unit">pc</span>
+                            </div>
+                            <div class="invalid-feedback">Required (≥ 0).</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECTION 4: IDENTIFICATION -->
+                <div class="prod-form-section">
+                    <div class="prod-section-header">
+                        <span class="prod-section-title">IDENTIFICATION</span>
+                    </div>
+                    <div class="prod-grid-2">
+                        <div class="settings-form-group">
+                            <label for="edit-prod-sku">SKU Code</label>
+                            <input type="text" id="edit-prod-sku" class="settings-form-control" placeholder="e.g. BG-RICE-5K" autocomplete="off">
+                            <span class="form-helper-text">Optional · Used for quick product lookup</span>
+                        </div>
+                        <div class="settings-form-group">
+                            <label for="edit-prod-barcode">Barcode</label>
+                            <div class="input-with-action">
+                                <input type="text" id="edit-prod-barcode" class="settings-form-control" placeholder="e.g. 8901234567890" autocomplete="off">
+                                <button type="button" class="btn-barcode-action" id="btn-generate-barcode-form" title="Generate Unique Barcode">
+                                    <i data-lucide="sparkles"></i>
+                                    <span>Generate</span>
+                                </button>
+                                <button type="button" class="btn-barcode-action" id="btn-scan-barcode-form" title="Scan Barcode using Camera">
+                                    <i data-lucide="scan-barcode"></i>
+                                </button>
+                            </div>
+                            <div class="invalid-feedback" id="edit-prod-barcode-feedback">Barcode already assigned to another product.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECTION 5: SUPPLIER -->
+                <div class="prod-form-section">
+                    <div class="prod-section-header">
+                        <span class="prod-section-title">SUPPLIER</span>
+                    </div>
+                    <div class="prod-grid-2">
+                        <div class="settings-form-group">
+                            <label for="edit-prod-supplier">Supplier</label>
+                            <div class="supplier-autocomplete-wrap">
+                                <input type="text" id="edit-prod-supplier" class="settings-form-control" placeholder="Search supplier or enter new..." autocomplete="off">
+                                <div class="supplier-suggestions-panel" id="supplier-suggestions-panel" style="display: none;"></div>
+                            </div>
+                            <span class="form-helper-text">Optional supplier name</span>
+                        </div>
+                        <div class="settings-form-group">
+                            <label for="edit-prod-expiry">Expiry Date</label>
+                            <input type="date" id="edit-prod-expiry" class="settings-form-control">
+                            <span class="form-helper-text">Optional product expiry</span>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Fixed Sticky Action Bar (Never Scrolls Out of View) -->
+            <div class="modal-footer prod-modal-footer">
+                <button type="button" class="prod-modal-btn-cancel" id="btn-prod-edit-cancel" onclick="requestCloseProductModal()">Cancel</button>
+                <button type="button" class="prod-modal-btn-save" id="btn-prod-edit-save" onclick="handleProductFormSubmit(event)">
+                    <i data-lucide="check"></i>
+                    <span id="btn-prod-edit-save-text">Save Changes</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- REUSABLE CUSTOM PICKER SHEET / POPOVER FOR CATEGORY & UNIT -->
+    <div class="modal-overlay custom-picker-overlay" id="modal-custom-picker">
+        <div class="modal-container custom-picker-container">
+            <div class="modal-header custom-picker-header">
+                <div class="custom-picker-header-left">
+                    <h3 class="modal-title" id="custom-picker-title">Select Category</h3>
+                </div>
+                <button type="button" class="modal-close" id="custom-picker-close" onclick="closeModal(document.getElementById('modal-custom-picker'))" aria-label="Close picker">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            
+            <!-- Search bar inside picker -->
+            <div class="custom-picker-search-wrap">
+                <i data-lucide="search" class="custom-picker-search-icon"></i>
+                <input type="text" id="custom-picker-search" class="custom-picker-search-input" placeholder="Search..." autocomplete="off">
+                <button type="button" class="custom-picker-search-clear" id="custom-picker-search-clear" style="display: none;">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+
+            <!-- List of options -->
+            <div class="custom-picker-options-list" id="custom-picker-options" role="listbox">
+                <!-- Dynamically populated -->
+            </div>
+
+            <!-- Action footer for adding custom category if picker is category -->
+            <div class="custom-picker-footer" id="custom-picker-footer" style="display: none;">
+                <button type="button" class="custom-picker-add-btn" id="custom-picker-add-btn">
+                    <i data-lucide="plus"></i>
+                    <span id="custom-picker-add-label">+ Add Custom Category</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SHOW BARCODE MODAL DIALOG (BOTTOM SHEET / CENTERED) -->
+    <div class="modal-overlay" id="modal-show-barcode">
+        <div class="modal-container" style="max-height: 85vh; max-width: 440px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Product Barcode</h3>
+                <button class="modal-close" id="modal-show-barcode-close"><i data-lucide="x"></i></button>
+            </div>
+            <div style="padding: 10px 0;">
+                <div class="barcode-viewer-card">
+                    <div class="barcode-viewer-name" id="barcode-modal-prod-name">Basmati Rice Premium</div>
+                    <div class="barcode-viewer-meta" id="barcode-modal-prod-meta">₹110.00 / Kilogram</div>
+                    <div class="barcode-viewer-svg-wrap">
+                        <svg id="barcode-modal-svg"></svg>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 16px;">
+                    <button type="button" class="btn btn-primary" id="btn-download-barcode-png" style="flex: 1; height: 46px; font-weight: 700; font-size: 0.85rem;">
+                        <i data-lucide="download"></i> Download PNG
+                    </button>
+                    <button type="button" class="btn btn-secondary" id="btn-download-barcode-svg" style="flex: 1; height: 46px; font-weight: 700; font-size: 0.85rem;">
+                        <i data-lucide="file-code"></i> Download SVG
+                    </button>
+                </div>
+                <div style="margin-top: 10px;">
+                    <button type="button" class="btn btn-outline" id="btn-print-barcode-label" style="width: 100%; height: 44px; font-weight: 700; font-size: 0.85rem;">
+                        <i data-lucide="printer"></i> Print Sticker Label
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- External Barcode & Scanner Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+
+    <!-- Application Scripts -->
+    <script src="js/storage.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/barcode.js"></script>
+    <script src="js/scanner.js"></script>
+    <script src="js/marketPriceService.js"></script>
+    <script src="js/notifications.js"></script>
+    <script src="js/stock.js"></script>
+</body>
+</html>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Greenway Groceries - Barcode Management</title>
+    <!-- Jakarta Font & Lucide Icons -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Base Styles -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/stock.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <meta name="theme-color" content="#07090d">
+</head>
+<body data-page="barcode-management">
+
+    <!-- Injected Global Header -->
+    <div id="app-header"></div>
+
+    <main class="container">
+        <!-- Back Navigation & Page Title -->
+        <div class="page-header" style="margin-bottom: 14px;">
+            <a href="stock.html" class="back-nav">
+                <i data-lucide="arrow-left" style="width: 14px; height: 14px; stroke-width: 2.5px;"></i> Inventory Stock
+            </a>
+            <div class="stock-header-wrap" style="margin-top: 4px;">
+                <div class="page-title-container" style="margin-bottom: 0;">
+                    <h1 class="page-title" style="margin-bottom: 2px;">Barcode Management</h1>
+                    <div class="page-title-accent"></div>
+                    <p class="page-subtitle" style="margin-bottom: 0;">Generate, view, and print product barcode labels</p>
+                </div>
+                <div class="stock-header-actions">
+                    <button type="button" class="btn btn-primary" id="btn-bulk-generate-missing">
+                        <i data-lucide="wand-sparkles" style="width: 16px; height: 16px;"></i> Generate Missing Barcodes
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="custom-search-wrapper" style="margin-bottom: 10px;">
+            <i data-lucide="search" class="custom-search-icon"></i>
+            <input type="text" id="barcode-search-input" class="custom-search-input" placeholder="Search products, SKU or barcode..." autocomplete="off">
+            <button class="custom-search-clear" id="barcode-search-clear" style="display: none;" title="Clear search">
+                <i data-lucide="x" style="width: 14px; height: 14px;"></i>
+            </button>
+        </div>
+
+        <!-- Segmented Filter Tabs -->
+        <div class="filter-tabs-segmented" style="margin-bottom: 12px;">
+            <button type="button" class="filter-tab-seg active" data-filter="all" id="tab-b-all">All 0</button>
+            <button type="button" class="filter-tab-seg" data-filter="with_barcode" id="tab-b-with">With Barcode 0</button>
+            <button type="button" class="filter-tab-seg" data-filter="without_barcode" id="tab-b-without">Without Barcode 0</button>
+        </div>
+
+        <!-- Batch Action Toolbar -->
+        <div class="barcode-batch-actions-bar">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <label style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 700; cursor: pointer; color: var(--text);">
+                    <input type="checkbox" id="select-all-barcodes" style="width: 18px; height: 18px; accent-color: var(--primary); cursor: pointer;">
+                    <span>Select All</span>
+                </label>
+                <span id="selected-barcodes-count" style="font-size: 0.78rem; color: var(--text-muted); font-weight: 600;">(0 selected)</span>
+            </div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <button type="button" class="btn btn-secondary btn-sm" id="btn-download-selected" disabled style="opacity: 0.5;">
+                    <i data-lucide="download" style="width: 14px; height: 14px;"></i> Download Selected
+                </button>
+                <button type="button" class="btn btn-outline btn-sm" id="btn-print-selected" disabled style="opacity: 0.5;">
+                    <i data-lucide="printer" style="width: 14px; height: 14px;"></i> Print Selected
+                </button>
+            </div>
+        </div>
+
+        <!-- Barcode Products Feed -->
+        <div id="barcode-products-feed" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 30px;">
+            <!-- Dynamically populated rows -->
+        </div>
+    </main>
+
+    <!-- Global App-Navigation -->
+    <nav id="app-navigation"></nav>
+
+    <!-- SHOW BARCODE MODAL DIALOG -->
+    <div class="modal-overlay" id="modal-show-barcode">
+        <div class="modal-container" style="max-height: 85vh; max-width: 440px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Product Barcode</h3>
+                <button class="modal-close" id="modal-show-barcode-close"><i data-lucide="x"></i></button>
+            </div>
+            <div style="padding: 10px 0;">
+                <div class="barcode-viewer-card">
+                    <div class="barcode-viewer-name" id="barcode-modal-prod-name">Product Name</div>
+                    <div class="barcode-viewer-meta" id="barcode-modal-prod-meta">₹0.00 / pc</div>
+                    <div class="barcode-viewer-svg-wrap">
+                        <svg id="barcode-modal-svg"></svg>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 16px;">
+                    <button type="button" class="btn btn-primary" id="btn-download-barcode-png" style="flex: 1; height: 46px; font-weight: 700; font-size: 0.85rem;">
+                        <i data-lucide="download"></i> Download PNG
+                    </button>
+                    <button type="button" class="btn btn-secondary" id="btn-download-barcode-svg" style="flex: 1; height: 46px; font-weight: 700; font-size: 0.85rem;">
+                        <i data-lucide="file-code"></i> Download SVG
+                    </button>
+                </div>
+                <div style="margin-top: 10px;">
+                    <button type="button" class="btn btn-outline" id="btn-print-barcode-label" style="width: 100%; height: 44px; font-weight: 700; font-size: 0.85rem;">
+                        <i data-lucide="printer"></i> Print Sticker Label
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- External Barcode & Scanner Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+
+    <!-- Application Scripts -->
+    <script src="js/storage.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/barcode.js"></script>
+    <script src="js/scanner.js"></script>
+    <script src="js/notifications.js"></script>
+    <script src="js/barcode-management.js"></script>
+</body>
+</html>

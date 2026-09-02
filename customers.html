@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Greenway Groceries - Customers & Credit Management</title>
+    <!-- Jakarta Font & Lucide Icons -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Base Styles -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/customers.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <meta name="theme-color" content="#07090d">
+</head>
+<body data-page="customers">
+
+    <!-- Injected Global Header -->
+    <div id="app-header"></div>
+
+    <main class="container" style="padding-bottom: 110px;">
+        <!-- Back Navigation & Page Header -->
+        <div class="page-header" style="margin-bottom: 16px;">
+            <a href="index.html" class="back-nav-link">
+                <i data-lucide="arrow-left" style="width: 14px; height: 14px; stroke-width: 2.5px;"></i> Dashboard
+            </a>
+            <div class="page-title-row">
+                <div class="page-title-container">
+                    <h1 class="page-title-main">Customers</h1>
+                    <p class="page-subtitle-muted">Track credit balances, payment logs & customer ledger</p>
+                </div>
+                <div class="page-title-action">
+                    <button class="btn-add-customer-primary" id="btn-add-customer-header">
+                        <i data-lucide="user-plus" style="width: 16px; height: 16px;"></i> + Add Customer
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hero Summary Card — Outstanding Receivables -->
+        <div class="customers-hero-card">
+            <div class="hero-card-glow-bg"></div>
+            <div class="hero-balance-header">
+                <div>
+                    <div class="hero-balance-label">
+                        <i data-lucide="alert-circle" style="width: 14px; height: 14px; color: #F87171;"></i>
+                        TOTAL OUTSTANDING RECEIVABLES
+                    </div>
+                    <div class="hero-balance-val tabular-nums" id="sum-total-outstanding">₹2,690.00</div>
+                </div>
+            </div>
+            <div class="hero-chips-grid">
+                <div class="hero-stat-chip">
+                    <div class="hero-stat-icon warning">
+                        <i data-lucide="user" style="width: 16px; height: 16px;"></i>
+                    </div>
+                    <div class="hero-stat-meta">
+                        <span class="hero-stat-num tabular-nums" id="sum-due-customers-count">2</span>
+                        <span class="hero-stat-title">Due Accounts</span>
+                    </div>
+                </div>
+                <div class="hero-stat-chip">
+                    <div class="hero-stat-icon danger">
+                        <i data-lucide="alert-triangle" style="width: 16px; height: 16px;"></i>
+                    </div>
+                    <div class="hero-stat-meta">
+                        <span class="hero-stat-num tabular-nums" id="sum-overdue-customers-count">2</span>
+                        <span class="hero-stat-title">Overdue Alerts</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search + Sort Row -->
+        <div class="customers-toolbar">
+            <div class="custom-search-pill">
+                <i data-lucide="search" class="search-icon"></i>
+                <input type="text" id="customer-search" placeholder="Search by name or phone number..." autocomplete="off">
+                <button class="clear-btn" id="search-clear-trigger" title="Clear search">
+                    <i data-lucide="x" style="width: 14px; height: 14px;"></i>
+                </button>
+            </div>
+            <div class="sort-dropdown-wrap">
+                <select id="customer-sort-select" class="sort-select-pill">
+                    <option value="highest_due">Sort: Highest Due</option>
+                    <option value="name_asc">Sort: Name (A–Z)</option>
+                    <option value="oldest_due">Sort: Oldest Due</option>
+                    <option value="recently_active">Sort: Recently Active</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="filter-pills-row">
+            <button type="button" class="filter-pill-btn active" data-filter="all" onclick="setCustomerFilterTab(this, 'all')">All <span class="pill-count" id="tab-c-all">0</span></button>
+            <button type="button" class="filter-pill-btn" data-filter="due" onclick="setCustomerFilterTab(this, 'due')">Due <span class="pill-count" id="tab-c-due">0</span></button>
+            <button type="button" class="filter-pill-btn" data-filter="overdue" onclick="setCustomerFilterTab(this, 'overdue')">Overdue <span class="pill-count" id="tab-c-overdue">0</span></button>
+            <button type="button" class="filter-pill-btn" data-filter="zero" onclick="setCustomerFilterTab(this, 'zero')">Settled <span class="pill-count" id="tab-c-zero">0</span></button>
+        </div>
+
+        <!-- Customer List Feed -->
+        <div class="customers-card-list" id="customers-list-feed">
+            <div class="empty-state">
+                <div class="empty-state-icon"><i data-lucide="users"></i></div>
+                <h3 class="empty-state-title">No Customers Found</h3>
+                <p class="empty-state-text">Add your first customer to track their credit ledger and payments.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Global App-Navigation -->
+    <nav id="app-navigation"></nav>
+
+    <!-- ADD / EDIT CUSTOMER PROFILE MODAL -->
+    <div class="modal-overlay" id="modal-customer-edit">
+        <div class="modal-container" style="max-width: 440px;">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modal-cust-title">Add New Customer</h3>
+                <button class="modal-close" id="modal-cust-edit-close"><i data-lucide="x"></i></button>
+            </div>
+            <form id="form-customer-edit" novalidate>
+                <input type="hidden" id="edit-cust-id">
+                <div class="form-group">
+                    <label for="edit-cust-name">Customer Name *</label>
+                    <input type="text" id="edit-cust-name" class="form-control" placeholder="e.g. Rahul Sharma" required>
+                    <div class="invalid-feedback">Name is required.</div>
+                </div>
+                <div class="form-group">
+                    <label for="edit-cust-phone">Phone Number *</label>
+                    <input type="tel" id="edit-cust-phone" class="form-control" placeholder="e.g. +91 98765 43210" required>
+                    <div class="invalid-feedback" id="edit-cust-phone-feedback">Enter a valid 10-15 digit phone number.</div>
+                </div>
+                <div class="form-group" id="duplicate-customer-alert" style="display: none; background: var(--danger-tint); border: 1px solid rgba(239, 68, 68, 0.2); padding: 10px; border-radius: var(--radius-sm); margin-top: 4px;">
+                    <div style="font-size: 0.8rem; color: var(--danger); font-weight: 600;">A customer with this phone number already exists.</div>
+                    <button type="button" class="btn btn-outline btn-sm" id="btn-view-duplicate-customer" style="margin-top: 6px; height: 30px; font-size: 0.75rem; font-weight: 700;">
+                        <i data-lucide="user"></i> View Customer Profile
+                    </button>
+                </div>
+                <div class="form-group">
+                    <label for="edit-cust-address">Address (Optional)</label>
+                    <input type="text" id="edit-cust-address" class="form-control" placeholder="e.g. Flat 204, Rose Apartments">
+                </div>
+                <div class="form-group" id="edit-opening-due-group">
+                    <label for="edit-cust-opening-due">Opening Due Balance (₹)</label>
+                    <input type="number" id="edit-cust-opening-due" class="form-control" placeholder="0.00" min="0" step="0.01" value="0">
+                </div>
+                <div class="form-group">
+                    <label for="edit-cust-notes">Notes (Optional)</label>
+                    <textarea id="edit-cust-notes" class="form-control form-control-textarea" placeholder="e.g. Prefers UPI, regular morning buyer" style="height: 70px;"></textarea>
+                </div>
+                <div class="modal-footer" style="padding-top: 10px;">
+                    <button type="button" class="btn btn-secondary" id="btn-cust-edit-cancel" style="flex: 1; height: 46px;">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="btn-cust-edit-save" style="flex: 1; height: 46px;">Save Customer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- RECORD PAYMENT MODAL -->
+    <div class="modal-overlay" id="modal-record-payment">
+        <div class="modal-container" style="max-width: 440px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Record Payment</h3>
+                <button class="modal-close" id="modal-payment-close"><i data-lucide="x"></i></button>
+            </div>
+            <form id="form-record-payment" novalidate>
+                <input type="hidden" id="payment-customer-id">
+                
+                <div class="card" style="background: var(--surface-sec); padding: 12px; margin-bottom: 12px; border: 1px solid var(--border);">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">Customer:</span>
+                        <strong id="payment-customer-name" style="font-size: 0.9rem; color: var(--text);">-</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px; border-top: 1px dashed var(--border); padding-top: 6px;">
+                        <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">Outstanding Balance:</span>
+                        <strong id="payment-due-val" style="font-size: 1.15rem; color: var(--danger); font-weight: 800;">₹0.00</strong>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="payment-amount">Payment Amount (₹) *</label>
+                    <input type="number" id="payment-amount" class="form-control" placeholder="0.00" min="0.01" step="0.01" style="height: 48px; font-size: 1.25rem; font-weight: 800;" required>
+                    <div class="invalid-feedback" id="payment-amount-feedback">Amount must be greater than zero.</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="payment-method">Payment Method *</label>
+                    <div class="payment-method-selector-grid" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;">
+                        <button type="button" class="btn btn-outline btn-pay-method active" data-method="Cash" style="height: 40px; font-size: 0.85rem; font-weight: 700;">Cash</button>
+                        <button type="button" class="btn btn-outline btn-pay-method" data-method="UPI" style="height: 40px; font-size: 0.85rem; font-weight: 700;">UPI</button>
+                        <button type="button" class="btn btn-outline btn-pay-method" data-method="Card" style="height: 40px; font-size: 0.85rem; font-weight: 700;">Card</button>
+                    </div>
+                    <input type="hidden" id="payment-method-value" value="Cash">
+                </div>
+
+                <div class="form-group">
+                    <label for="payment-date">Payment Date</label>
+                    <input type="date" id="payment-date" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label for="payment-notes">Notes / Reference (Optional)</label>
+                    <input type="text" id="payment-notes" class="form-control" placeholder="e.g. GPay UPI Ref 987123">
+                </div>
+
+                <div class="modal-footer" style="padding-top: 10px;">
+                    <button type="button" class="btn btn-secondary" id="btn-payment-cancel" style="flex: 1; height: 46px;">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="btn-payment-submit" style="flex: 1; height: 46px; font-weight: 800;">
+                        <i data-lucide="check"></i> Record Payment
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- PAYMENT RECEIPT SUCCESS DIALOG -->
+    <div class="modal-overlay" id="modal-payment-receipt">
+        <div class="modal-container" style="max-width: 440px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Payment Recorded</h3>
+                <button class="modal-close" id="modal-receipt-close"><i data-lucide="x"></i></button>
+            </div>
+            <div style="padding: 10px 0; text-align: center;">
+                <div style="width: 56px; height: 56px; border-radius: 50%; background: var(--success-bg); color: var(--success); display: flex; align-items: center; justify-content: center; margin: 0 auto 10px;">
+                    <i data-lucide="check-circle" style="width: 32px; height: 32px; stroke-width: 2.5px;"></i>
+                </div>
+                <span style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: var(--success); letter-spacing: 0.5px;">Payment Received</span>
+                <div id="receipt-amount-display" style="font-size: 2rem; font-weight: 800; color: var(--text); margin: 2px 0 4px;">₹0.00</div>
+                <div id="receipt-payment-id" style="font-size: 0.8rem; font-family: monospace; font-weight: 700; color: var(--accent); background: var(--surface-sec); padding: 2px 8px; border-radius: 4px; display: inline-block; border: 1px solid var(--border); margin-bottom: 14px;">PAY-000000</div>
+
+                <div class="card" style="padding: 14px; text-align: left; display: flex; flex-direction: column; gap: 8px; font-size: 0.85rem; background: var(--surface-sec); border: 1px solid var(--border); margin-bottom: 16px;">
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="color: var(--text-muted);">Customer:</span>
+                        <strong id="receipt-customer-name" style="color: var(--text);">-</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="color: var(--text-muted);">Payment Method:</span>
+                        <strong id="receipt-method" style="color: var(--text);">Cash</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="color: var(--text-muted);">Date & Time:</span>
+                        <span id="receipt-date" style="font-weight: 600; color: var(--text);">-</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; border-top: 1px dashed var(--border); padding-top: 8px; margin-top: 2px;">
+                        <span style="color: var(--text); font-weight: 700;">Remaining Due:</span>
+                        <strong id="receipt-remaining-due" style="color: var(--danger); font-size: 1rem; font-weight: 800;">₹0.00</strong>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 10px; margin-bottom: 8px;">
+                    <button type="button" class="btn btn-primary" id="btn-share-receipt" style="flex: 1; height: 44px; font-weight: 700; font-size: 0.85rem;">
+                        <i data-lucide="share-2"></i> Share Receipt
+                    </button>
+                    <button type="button" class="btn btn-outline" id="btn-print-receipt" style="flex: 1; height: 44px; font-weight: 700; font-size: 0.85rem;">
+                        <i data-lucide="printer"></i> Print Receipt
+                    </button>
+                </div>
+                <button type="button" class="btn btn-secondary" id="btn-receipt-done" style="width: 100%; height: 42px; font-weight: 700;">Done</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Script -->
+    <script src="js/storage.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/notifications.js"></script>
+    <script src="js/customers.js"></script>
+</body>
+</html>

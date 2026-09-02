@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Greenway Groceries - Inventory</title>
+    <!-- Jakarta Font & Lucide Icons -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Base Styles -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/settings.css">
+    <link rel="stylesheet" href="css/stock.css">
+    <link rel="stylesheet" href="css/market-prices.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <meta name="theme-color" content="#07090d">
+</head>
+<body data-page="stock">
+
+    <!-- Injected Global Header -->
+    <div id="app-header"></div>
+
+    <main class="stock-container">
+        <!-- Back Navigation Header -->
+        <a href="index.html" class="back-nav-settings">
+            <i data-lucide="arrow-left"></i> Dashboard
+        </a>
+        
+        <!-- Page Title & Subtitle -->
+        <div class="stock-header-wrap">
+            <h1 class="stock-header-title">Inventory</h1>
+            <p class="stock-header-subtitle">Manage your products and stock levels</p>
+        </div>
+
+        <!-- Primary Contextual Actions -->
+        <div class="stock-primary-actions">
+            <button type="button" class="stock-btn-primary" id="btn-add-stock-header">
+                <i data-lucide="package-plus"></i>
+                <span>+ Add Stock</span>
+            </button>
+            <button type="button" class="stock-btn-secondary" id="btn-add-product-header">
+                <i data-lucide="package"></i>
+                <span>Add Product</span>
+            </button>
+        </div>
+
+        <!-- Responsive Two-Column Grid for Tablet/Desktop -->
+        <div class="stock-layout-grid">
+            
+            <!-- LEFT COLUMN: Overview & Stock Management -->
+            <div class="stock-layout-col stock-layout-side">
+                
+                <!-- CONSOLIDATED STOCK HEALTH METRIC GRID -->
+                <div class="settings-group stock-summary-group">
+                    <div class="settings-group-title">STOCK HEALTH SUMMARY</div>
+                    <div class="stock-stat-grid">
+                        <!-- All Products Metric Card -->
+                        <div class="stock-stat-card stock-overview-row active" id="row-overview-all" data-filter="all" role="button" tabindex="0" title="View all products">
+                            <div class="stock-stat-card-top">
+                                <span class="stock-stat-label">All Products</span>
+                                <div class="settings-row-icon icon-stock-all">
+                                    <i data-lucide="boxes"></i>
+                                </div>
+                            </div>
+                            <div class="stock-stat-card-bottom">
+                                <span class="stock-stat-value" id="overview-count-all">0</span>
+                                <span class="stock-stat-badge-chip">Total</span>
+                            </div>
+                        </div>
+
+                        <!-- Low Stock Metric Card -->
+                        <div class="stock-stat-card warning stock-overview-row" id="row-overview-low" data-filter="low_stock" role="button" tabindex="0" title="View products needing restocking">
+                            <div class="stock-stat-card-top">
+                                <span class="stock-stat-label">Low Stock</span>
+                                <div class="settings-row-icon icon-stock-low">
+                                    <i data-lucide="alert-triangle"></i>
+                                </div>
+                            </div>
+                            <div class="stock-stat-card-bottom">
+                                <span class="stock-stat-value warning" id="overview-count-low">0</span>
+                                <span class="stock-stat-badge-chip warning">Low</span>
+                            </div>
+                        </div>
+
+                        <!-- Out of Stock Metric Card -->
+                        <div class="stock-stat-card danger stock-overview-row" id="row-overview-out" data-filter="out_of_stock" role="button" tabindex="0" title="View products currently unavailable">
+                            <div class="stock-stat-card-top">
+                                <span class="stock-stat-label">Out of Stock</span>
+                                <div class="settings-row-icon icon-stock-out">
+                                    <i data-lucide="circle-alert"></i>
+                                </div>
+                            </div>
+                            <div class="stock-stat-card-bottom">
+                                <span class="stock-stat-value danger" id="overview-count-out">0</span>
+                                <span class="stock-stat-badge-chip danger">Empty</span>
+                            </div>
+                        </div>
+
+                        <!-- Reorder Soon Metric Card -->
+                        <div class="stock-stat-card info stock-overview-row" id="row-insight-reorder" data-filter="reorder_soon" role="button" tabindex="0" title="View products recommended for reordering">
+                            <div class="stock-stat-card-top">
+                                <span class="stock-stat-label">Reorder Soon</span>
+                                <div class="settings-row-icon icon-stock-reorder">
+                                    <i data-lucide="sparkles"></i>
+                                </div>
+                            </div>
+                            <div class="stock-stat-card-bottom">
+                                <span class="stock-stat-value info" id="insight-count-reorder">0</span>
+                                <span class="stock-stat-badge-chip info">Urgent</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STOCK MANAGEMENT & UTILITIES -->
+                <div class="settings-group">
+                    <div class="settings-group-title">STOCK UTILITIES</div>
+                    <div class="settings-rows-list">
+                        <!-- Stock Adjustments Row -->
+                        <div class="settings-row" id="row-stock-mgmt-adjust" role="button" tabindex="0" title="Adjust product inventory">
+                            <div class="settings-row-left">
+                                <div class="settings-row-icon icon-stock-adjust">
+                                    <i data-lucide="sliders-horizontal"></i>
+                                </div>
+                                <div class="settings-row-content">
+                                    <span class="settings-row-title">Stock Adjustments</span>
+                                    <span class="settings-row-desc">Correct or manually update inventory</span>
+                                </div>
+                            </div>
+                            <div class="settings-row-right">
+                                <div class="settings-row-chevron"><i data-lucide="chevron-right"></i></div>
+                            </div>
+                        </div>
+
+                        <!-- Stock History Row -->
+                        <div class="settings-row" id="row-stock-mgmt-history" role="button" tabindex="0" title="View history of stock changes">
+                            <div class="settings-row-left">
+                                <div class="settings-row-icon icon-stock-history">
+                                    <i data-lucide="history"></i>
+                                </div>
+                                <div class="settings-row-content">
+                                    <span class="settings-row-title">Stock History</span>
+                                    <span class="settings-row-desc">View stock movement history</span>
+                                </div>
+                            </div>
+                            <div class="settings-row-right">
+                                <div class="settings-row-chevron"><i data-lucide="chevron-right"></i></div>
+                            </div>
+                        </div>
+
+                        <!-- Print Barcodes Link -->
+                        <a href="barcode-management.html" class="settings-row" id="row-link-print-barcodes" style="text-decoration: none; color: inherit;" title="Generate, view and print product barcodes">
+                            <div class="settings-row-left">
+                                <div class="settings-row-icon icon-stock-barcode">
+                                    <i data-lucide="printer"></i>
+                                </div>
+                                <div class="settings-row-content">
+                                    <span class="settings-row-title">Print Barcodes</span>
+                                    <span class="settings-row-desc">Generate and print product barcode labels</span>
+                                </div>
+                            </div>
+                            <div class="settings-row-right">
+                                <div class="settings-row-chevron"><i data-lucide="chevron-right"></i></div>
+                            </div>
+                        </a>
+
+                        <!-- Market Prices Reference Page Link -->
+                        <a href="market-prices.html" class="settings-row" id="row-link-market-prices" style="text-decoration: none; color: inherit;" title="Browse Government Market Price References">
+                            <div class="settings-row-left">
+                                <div class="settings-row-icon icon-stock-market">
+                                    <i data-lucide="scale"></i>
+                                </div>
+                                <div class="settings-row-content">
+                                    <span class="settings-row-title">Market Prices</span>
+                                    <span class="settings-row-desc">Government commodity references</span>
+                                </div>
+                            </div>
+                            <div class="settings-row-right">
+                                <span class="stock-overview-badge info" id="insight-market-count">18</span>
+                                <div class="settings-row-chevron"><i data-lucide="chevron-right"></i></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- RIGHT COLUMN: Products Section -->
+            <div class="stock-layout-col stock-layout-main">
+                
+                <!-- SECTION 3: PRODUCTS -->
+                <div class="settings-group" id="section-products-group">
+                    <div class="stock-section-header-flex">
+                        <div class="settings-group-title" style="margin-bottom: 0;">PRODUCTS</div>
+                        <div class="stock-products-count-tag" id="products-count-badge">0 products</div>
+                    </div>
+
+                    <!-- Compact Search Bar (42–44px) -->
+                    <div class="stock-search-bar-wrap">
+                        <div class="stock-search-icon">
+                            <i data-lucide="search"></i>
+                        </div>
+                        <input type="text" id="product-search" class="stock-search-input" placeholder="Search products, SKU or barcode..." autocomplete="off">
+                        <button type="button" class="stock-search-clear-btn" id="prod-search-clear" title="Clear search" style="display: none;">
+                            <i data-lucide="x"></i>
+                        </button>
+                        <button type="button" class="stock-search-scan-btn" id="btn-scan-search-barcode" title="Scan barcode with camera">
+                            <i data-lucide="scan-barcode"></i>
+                        </button>
+                    </div>
+
+                    <!-- Compact Filter & Sort Bar -->
+                    <div class="stock-filters-bar">
+                        <div class="stock-filter-dropdown-wrap">
+                            <select id="category-filter" class="stock-filter-select" aria-label="Filter by category">
+                                <option value="">All Categories</option>
+                                <option value="Groceries">Groceries</option>
+                                <option value="Dairy">Dairy</option>
+                                <option value="Grains & Rice">Grains & Rice</option>
+                                <option value="Oil & Ghee">Oil & Ghee</option>
+                                <option value="Snacks & Biscuits">Snacks & Biscuits</option>
+                                <option value="Beverages">Beverages</option>
+                                <option value="Household">Household</option>
+                                <option value="Personal Care">Personal Care</option>
+                            </select>
+                        </div>
+                        <div class="stock-filter-dropdown-wrap">
+                            <select id="stock-sort-select" class="stock-filter-select" aria-label="Sort products">
+                                <option value="recommended">Sort ▾</option>
+                                <option value="name_asc">Name: A–Z</option>
+                                <option value="name_desc">Name: Z–A</option>
+                                <option value="stock_low">Stock: Low → High</option>
+                                <option value="stock_high">Stock: High → Low</option>
+                                <option value="recent">Recently Added</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Active Filter Indicator Strip (e.g. When filtered by Low Stock) -->
+                    <div class="stock-active-filter-strip" id="stock-active-filter-strip" style="display: none;">
+                        <span class="filter-strip-label" id="filter-strip-label">Showing: Low Stock</span>
+                        <button type="button" class="filter-strip-clear" id="filter-strip-clear">Clear Filter</button>
+                    </div>
+
+                    <!-- Grouped Product List Container -->
+                    <div class="settings-rows-list" id="products-grouped-list">
+                        <!-- Injected dynamically via stock.js -->
+                        <div class="no-results-card">
+                            <i data-lucide="package" style="width: 28px; height: 28px; color: var(--text-muted); margin-bottom: 8px;"></i>
+                            <div style="font-weight: 600; color: var(--text);">Loading products...</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Global App-Navigation (Convex Bottom Bar on Mobile / Sidebar on Desktop) -->
+    <nav id="app-navigation"></nav>
+
+    <!-- ==========================================================================
+         MODALS & BOTTOM SHEETS (SETTINGS UX STYLE)
+         ========================================================================== -->
+
+    <!-- ADD STOCK MODAL DIALOG (BOTTOM SHEET) -->
+    <div class="modal-overlay" id="modal-add-stock">
+        <div class="modal-container" style="max-height: 85vh; display: flex; flex-direction: column;">
+            <div class="modal-header" style="flex-shrink: 0;">
+                <h3 class="modal-title">Add Stock</h3>
+                <button class="modal-close" id="modal-add-stock-close" aria-label="Close modal"><i data-lucide="x"></i></button>
+            </div>
+            
+            <!-- Step 1: Select Product -->
+            <div id="add-stock-step-1" class="add-stock-step" style="display: flex; flex-direction: column; flex: 1; min-height: 0;">
+                <div class="settings-form-group" style="margin-bottom: 8px;">
+                    <label for="add-stock-prod-lookup">Select Product *</label>
+                    <div class="stock-search-bar-wrap" style="margin-bottom: 8px;">
+                        <div class="stock-search-icon"><i data-lucide="search"></i></div>
+                        <input type="text" id="add-stock-prod-lookup" class="stock-search-input" placeholder="Search product name, SKU or barcode..." autocomplete="off">
+                    </div>
+                </div>
+                <div class="settings-rows-list" id="add-stock-suggestions" style="display: none; max-height: 320px; overflow-y: auto; flex: 1;">
+                    <!-- Dynamically populated suggestions -->
+                </div>
+            </div>
+
+            <!-- Step 2: Input Details -->
+            <div id="add-stock-step-2" class="add-stock-step" style="display: none; flex-direction: column; flex: 1; min-height: 0; overflow-y: auto;">
+                <!-- Selected Product Preview -->
+                <div class="stock-selected-product-card">
+                    <div class="stock-selected-info">
+                        <strong id="add-stock-selected-name" style="font-size: 15px; color: var(--text);">-</strong>
+                        <div style="font-size: 12.5px; color: var(--text-muted); margin-top: 2px;">
+                            Current stock: <span id="add-stock-selected-current" style="font-weight: 700; color: var(--text);">0</span> <span id="add-stock-selected-unit">pc</span>
+                        </div>
+                    </div>
+                    <button type="button" class="stock-change-btn" id="btn-add-stock-change-product">Change</button>
+                </div>
+
+                <form id="form-add-stock" novalidate style="display: flex; flex-direction: column; flex: 1;">
+                    <input type="hidden" id="add-stock-prod-id">
+                    
+                    <div class="grid-2">
+                        <div class="settings-form-group">
+                            <label for="add-stock-qty">Quantity to Add *</label>
+                            <input type="number" id="add-stock-qty" class="settings-form-control" placeholder="10" min="0.01" step="0.01" required>
+                            <div class="invalid-feedback" id="edit-stock-qty-feedback">Quantity must be greater than zero.</div>
+                        </div>
+                        <div class="settings-form-group">
+                            <label for="add-stock-purchase-rate">Purchase Rate (₹) *</label>
+                            <input type="number" id="add-stock-purchase-rate" class="settings-form-control" placeholder="92" min="0" step="0.01" required>
+                            <div class="invalid-feedback">Required (≥ 0).</div>
+                        </div>
+                    </div>
+
+                    <!-- Target Stock Preview -->
+                    <div class="stock-preview-box">
+                        <span>New Stock:</span>
+                        <span id="add-stock-target-preview" style="font-weight: 700;">0 pc</span>
+                    </div>
+
+                    <div class="settings-form-group">
+                        <label for="add-stock-supplier">Supplier (Optional)</label>
+                        <input type="text" id="add-stock-supplier" class="settings-form-control" placeholder="e.g. Metro Wholesalers">
+                    </div>
+
+                    <div class="settings-form-group">
+                        <label for="add-stock-expiry">Expiry Date (Optional)</label>
+                        <input type="date" id="add-stock-expiry" class="settings-form-control">
+                    </div>
+
+                    <div class="modal-footer" style="padding-top: 12px; margin-top: auto;">
+                        <button type="button" class="settings-btn-secondary" id="btn-add-stock-cancel" style="margin-bottom: 0;">Cancel</button>
+                        <button type="submit" class="settings-btn-primary" id="btn-add-stock-save" style="margin-bottom: 0;">Add Stock</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADD / EDIT PRODUCT MODAL (REDESIGNED PREMIUM MOBILE BOTTOM SHEET & CENTERED MODAL) -->
+    <div class="modal-overlay" id="modal-product-edit">
+        <div class="modal-container prod-modal-container">
+            <!-- Fixed Non-Scrolling Header -->
+            <div class="modal-header prod-modal-header">
+                <div class="prod-modal-header-left">
+                    <div class="prod-modal-icon-badge">
+                        <i data-lucide="package-plus" id="prod-modal-title-icon"></i>
+                    </div>
+                    <div>
+                        <h3 class="modal-title" id="modal-prod-title">Add Product</h3>
+                        <p class="prod-modal-subtitle" id="modal-prod-subtitle">Enter product details and inventory rates</p>
+                    </div>
+                </div>
+                <button type="button" class="modal-close" id="modal-prod-edit-close" aria-label="Close modal">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+
+            <!-- Scrollable Form Body Content ONLY -->
+            <form id="form-product-edit" novalidate class="modal-body prod-modal-body">
+                <input type="hidden" id="edit-prod-id">
+
+                <!-- SECTION 1: PRODUCT INFORMATION -->
+                <div class="prod-form-section">
+                    <div class="prod-section-header">
+                        <span class="prod-section-title">PRODUCT INFORMATION</span>
+                    </div>
+
+                    <!-- Product Name -->
+                    <div class="settings-form-group">
+                        <label for="edit-prod-name">Product Name <span class="req-star">*</span></label>
+                        <input type="text" id="edit-prod-name" class="settings-form-control" placeholder="e.g. Basmati Rice 5kg" autocomplete="off" required>
+                        <div class="invalid-feedback" id="edit-prod-name-feedback">Product name is required.</div>
+                    </div>
+
+                    <!-- Category Dropdown Trigger -->
+                    <div class="settings-form-group">
+                        <label id="label-prod-category">Category <span class="req-star">*</span></label>
+                        <div class="custom-select-box" id="category-custom-select">
+                            <button type="button" class="custom-select-trigger" id="btn-select-category" aria-haspopup="listbox" aria-expanded="false">
+                                <span class="custom-select-label" id="category-select-label">Groceries</span>
+                                <i data-lucide="chevron-down" class="custom-select-chevron"></i>
+                            </button>
+                            <input type="hidden" id="edit-prod-category" value="Groceries" required>
+                        </div>
+                        <div class="invalid-feedback" id="edit-prod-category-feedback">Category is required.</div>
+                    </div>
+
+                    <!-- Hidden Custom Category Input Field Group -->
+                    <div class="settings-form-group" id="edit-prod-custom-category-group" style="display: none;">
+                        <label for="edit-prod-custom-category">Custom Category Name <span class="req-star">*</span></label>
+                        <input type="text" id="edit-prod-custom-category" class="settings-form-control" placeholder="e.g. Spices, Bakery" autocomplete="off">
+                        <div class="invalid-feedback">Please specify custom category name.</div>
+                    </div>
+
+                    <!-- Unit Dropdown Trigger -->
+                    <div class="settings-form-group">
+                        <label id="label-prod-unit">Unit <span class="req-star">*</span></label>
+                        <div class="custom-select-box" id="unit-custom-select">
+                            <button type="button" class="custom-select-trigger" id="btn-select-unit" aria-haspopup="listbox" aria-expanded="false">
+                                <span class="custom-select-label" id="unit-select-label">Piece (pc)</span>
+                                <i data-lucide="chevron-down" class="custom-select-chevron"></i>
+                            </button>
+                            <input type="hidden" id="edit-prod-unit" value="Piece" required>
+                        </div>
+                        <div class="invalid-feedback" id="edit-prod-unit-feedback">Unit is required.</div>
+                    </div>
+                </div>
+
+                <!-- SECTION 2: PRICING -->
+                <div class="prod-form-section">
+                    <div class="prod-section-header">
+                        <span class="prod-section-title">PRICING</span>
+                    </div>
+                    <div class="prod-grid-2">
+                        <div class="settings-form-group">
+                            <label for="edit-prod-purchase">Purchase Rate (₹) <span class="req-star">*</span></label>
+                            <div class="input-currency-prefix-wrap">
+                                <span class="input-currency-prefix">₹</span>
+                                <input type="number" id="edit-prod-purchase" class="settings-form-control input-with-prefix" placeholder="0.00" min="0" step="0.01" inputmode="decimal" required>
+                            </div>
+                            <div class="invalid-feedback">Required (≥ 0).</div>
+                        </div>
+                        <div class="settings-form-group">
+                            <label for="edit-prod-selling">Selling Rate (₹) <span class="req-star">*</span></label>
+                            <div class="input-currency-prefix-wrap">
+                                <span class="input-currency-prefix">₹</span>
+                                <input type="number" id="edit-prod-selling" class="settings-form-control input-with-prefix" placeholder="0.00" min="0" step="0.01" inputmode="decimal" required>
+                            </div>
+                            <div class="invalid-feedback">Required (≥ 0).</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECTION 3: STOCK -->
+                <div class="prod-form-section" id="edit-qty-section">
+                    <div class="prod-section-header">
+                        <span class="prod-section-title">STOCK</span>
+                    </div>
+                    <div class="prod-grid-2">
+                        <div class="settings-form-group">
+                            <label for="edit-prod-qty">Opening Stock <span class="req-star">*</span></label>
+                            <div class="input-unit-suffix-wrap">
+                                <input type="number" id="edit-prod-qty" class="settings-form-control input-with-suffix" placeholder="0" min="0" step="0.01" inputmode="decimal" required>
+                                <span class="input-unit-suffix" id="badge-stock-unit">pc</span>
+                            </div>
+                            <div class="invalid-feedback">Required (≥ 0).</div>
+                        </div>
+                        <div class="settings-form-group">
+                            <label for="edit-prod-min">Reorder Level <span class="req-star">*</span></label>
+                            <div class="input-unit-suffix-wrap">
+                                <input type="number" id="edit-prod-min" class="settings-form-control input-with-suffix" placeholder="Alert threshold" min="0" step="0.01" inputmode="decimal" required>
+                                <span class="input-unit-suffix" id="badge-reorder-unit">pc</span>
+                            </div>
+                            <div class="invalid-feedback">Required (≥ 0).</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECTION 4: IDENTIFICATION -->
+                <div class="prod-form-section">
+                    <div class="prod-section-header">
+                        <span class="prod-section-title">IDENTIFICATION</span>
+                    </div>
+                    <div class="prod-grid-2">
+                        <div class="settings-form-group">
+                            <label for="edit-prod-sku">SKU Code</label>
+                            <input type="text" id="edit-prod-sku" class="settings-form-control" placeholder="e.g. BG-RICE-5K" autocomplete="off">
+                            <span class="form-helper-text">Optional · Used for quick product lookup</span>
+                        </div>
+                        <div class="settings-form-group">
+                            <label for="edit-prod-barcode">Barcode</label>
+                            <div class="input-with-action">
+                                <input type="text" id="edit-prod-barcode" class="settings-form-control" placeholder="e.g. 8901234567890" autocomplete="off">
+                                <button type="button" class="btn-barcode-action" id="btn-generate-barcode-form" title="Generate Unique Barcode">
+                                    <i data-lucide="sparkles"></i>
+                                    <span>Generate</span>
+                                </button>
+                                <button type="button" class="btn-barcode-action" id="btn-scan-barcode-form" title="Scan Barcode using Camera">
+                                    <i data-lucide="scan-barcode"></i>
+                                </button>
+                            </div>
+                            <div class="invalid-feedback" id="edit-prod-barcode-feedback">Barcode already assigned to another product.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECTION 5: SUPPLIER -->
+                <div class="prod-form-section">
+                    <div class="prod-section-header">
+                        <span class="prod-section-title">SUPPLIER</span>
+                    </div>
+                    <div class="prod-grid-2">
+                        <div class="settings-form-group">
+                            <label for="edit-prod-supplier">Supplier</label>
+                            <div class="supplier-autocomplete-wrap">
+                                <input type="text" id="edit-prod-supplier" class="settings-form-control" placeholder="Search supplier or enter new..." autocomplete="off">
+                                <div class="supplier-suggestions-panel" id="supplier-suggestions-panel" style="display: none;"></div>
+                            </div>
+                            <span class="form-helper-text">Optional supplier name</span>
+                        </div>
+                        <div class="settings-form-group">
+                            <label for="edit-prod-expiry">Expiry Date</label>
+                            <input type="date" id="edit-prod-expiry" class="settings-form-control">
+                            <span class="form-helper-text">Optional product expiry</span>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Fixed Sticky Action Bar (Never Scrolls Out of View) -->
+            <div class="modal-footer prod-modal-footer">
+                <button type="button" class="prod-modal-btn-cancel" id="btn-prod-edit-cancel">Cancel</button>
+                <button type="button" class="prod-modal-btn-save" id="btn-prod-edit-save">
+                    <i data-lucide="check"></i>
+                    <span id="btn-prod-edit-save-text">Save Product</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- STOCK ADJUSTMENTS MODAL (BOTTOM SHEET / CENTERED) -->
+    <div class="modal-overlay" id="modal-stock-adjust">
+        <div class="modal-container" style="max-height: 85vh; display: flex; flex-direction: column;">
+            <div class="modal-header" style="flex-shrink: 0;">
+                <h3 class="modal-title">Stock Adjustments</h3>
+                <button class="modal-close" id="modal-adjust-close" aria-label="Close modal"><i data-lucide="x"></i></button>
+            </div>
+
+            <!-- Step 1: Product Selection for Adjustment -->
+            <div id="adjust-stock-step-1" class="add-stock-step" style="display: flex; flex-direction: column; flex: 1; min-height: 0;">
+                <div class="settings-form-group" style="margin-bottom: 8px;">
+                    <label for="adjust-stock-prod-lookup">Select Product to Adjust *</label>
+                    <div class="stock-search-bar-wrap" style="margin-bottom: 8px;">
+                        <div class="stock-search-icon"><i data-lucide="search"></i></div>
+                        <input type="text" id="adjust-stock-prod-lookup" class="stock-search-input" placeholder="Search product name, SKU or barcode..." autocomplete="off">
+                    </div>
+                </div>
+                <div class="settings-rows-list" id="adjust-stock-suggestions" style="display: none; max-height: 320px; overflow-y: auto; flex: 1;">
+                    <!-- Dynamically populated suggestions -->
+                </div>
+            </div>
+
+            <!-- Step 2: Adjustment Details -->
+            <div id="adjust-stock-step-2" class="add-stock-step" style="display: none; flex-direction: column; flex: 1; min-height: 0; overflow-y: auto;">
+                <div class="stock-selected-product-card">
+                    <div class="stock-selected-info">
+                        <strong id="adjust-selected-name" style="font-size: 15px; color: var(--text);">-</strong>
+                        <div style="font-size: 12.5px; color: var(--text-muted); margin-top: 2px;">
+                            Current stock: <span id="adjust-current-stock-label" style="font-weight: 700; color: var(--text);">0 pc</span>
+                        </div>
+                    </div>
+                    <button type="button" class="stock-change-btn" id="btn-adjust-change-product">Change</button>
+                </div>
+
+                <form id="form-stock-adjust" novalidate style="display: flex; flex-direction: column; flex: 1;">
+                    <input type="hidden" id="adjust-prod-id">
+                    <input type="hidden" id="adjust-direction" value="add">
+
+                    <!-- Adjustment Type Segmented Bar -->
+                    <div class="filter-tabs-segmented" style="margin-bottom: 16px;">
+                        <button type="button" class="filter-tab-seg active" id="btn-adjust-type-add" data-type="add">Add (+)</button>
+                        <button type="button" class="filter-tab-seg" id="btn-adjust-type-remove" data-type="remove">Remove (-)</button>
+                        <button type="button" class="filter-tab-seg" id="btn-adjust-type-correct" data-type="correction">Correction (=)</button>
+                    </div>
+
+                    <!-- Quantity with +/- Stepper Buttons -->
+                    <div class="settings-form-group" style="margin-bottom: 16px;">
+                        <label style="text-align: center;">Adjustment Quantity *</label>
+                        <div style="display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 8px;">
+                            <button type="button" class="btn btn-outline" id="btn-adjust-qty-minus" style="width: 44px; height: 44px; border-radius: 50%; font-size: 1.25rem; font-weight: 800; padding: 0;">-</button>
+                            <input type="number" id="adjust-quantity" class="settings-form-control" value="1" min="0.01" step="0.01" required style="width: 100px; text-align: center; font-size: 1.1rem; font-weight: 800; height: 44px;">
+                            <button type="button" class="btn btn-outline" id="btn-adjust-qty-plus" style="width: 44px; height: 44px; border-radius: 50%; font-size: 1.25rem; font-weight: 800; padding: 0;">+</button>
+                        </div>
+                        <div class="invalid-feedback" id="adjust-qty-feedback" style="text-align: center; margin-top: 4px;">Quantity must be greater than zero.</div>
+                    </div>
+
+                    <!-- Reason Selection -->
+                    <div class="settings-form-group" style="margin-bottom: 16px;">
+                        <label for="adjust-reason">Reason *</label>
+                        <select id="adjust-reason" class="settings-form-control" required>
+                            <option value="Manual correction">Manual correction</option>
+                            <option value="Sale correction">Sale correction</option>
+                            <option value="Damaged">Damaged goods</option>
+                            <option value="Expired">Expired product</option>
+                            <option value="Restock shipment">Restock shipment</option>
+                            <option value="Other">Other reason</option>
+                        </select>
+                    </div>
+
+                    <!-- Preview of New Stock -->
+                    <div class="stock-preview-box" style="margin-bottom: 16px;">
+                        <span>New Stock:</span>
+                        <span id="adjust-target-preview" style="font-weight: 700;">0 pc</span>
+                    </div>
+
+                    <div class="modal-footer" style="padding-top: 12px; margin-top: auto;">
+                        <button type="button" class="settings-btn-secondary" id="btn-adjust-cancel" style="margin-bottom: 0;">Cancel</button>
+                        <button type="submit" class="settings-btn-primary" id="btn-adjust-save" style="margin-bottom: 0;">Save Adjustment</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- STOCK HISTORY MODAL (BOTTOM SHEET / CENTERED) -->
+    <div class="modal-overlay" id="modal-stock-history">
+        <div class="modal-container" style="max-height: 85vh; display: flex; flex-direction: column;">
+            <div class="modal-header" style="flex-shrink: 0;">
+                <h3 class="modal-title">Stock History</h3>
+                <button class="modal-close" id="modal-stock-history-close" aria-label="Close modal"><i data-lucide="x"></i></button>
+            </div>
+            <div style="padding: 12px 0 4px 0; overflow-y: auto; flex: 1;">
+                <div class="stock-timeline" id="stock-history-feed">
+                    <!-- Dynamically populated history logs -->
+                </div>
+            </div>
+            <div class="modal-footer" style="padding-top: 12px; border-top: 1px solid var(--border);">
+                <button type="button" class="settings-btn-secondary" id="btn-stock-history-close" style="margin-bottom: 0;">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- REUSABLE CUSTOM PICKER SHEET / POPOVER FOR CATEGORY & UNIT -->
+    <div class="modal-overlay custom-picker-overlay" id="modal-custom-picker">
+        <div class="modal-container custom-picker-container">
+            <div class="modal-header custom-picker-header">
+                <div class="custom-picker-header-left">
+                    <h3 class="modal-title" id="custom-picker-title">Select Category</h3>
+                </div>
+                <button type="button" class="modal-close" id="custom-picker-close" aria-label="Close picker">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            
+            <!-- Search bar inside picker -->
+            <div class="custom-picker-search-wrap">
+                <i data-lucide="search" class="custom-picker-search-icon"></i>
+                <input type="text" id="custom-picker-search" class="custom-picker-search-input" placeholder="Search..." autocomplete="off">
+                <button type="button" class="custom-picker-search-clear" id="custom-picker-search-clear" style="display: none;">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+
+            <!-- List of options -->
+            <div class="custom-picker-options-list" id="custom-picker-options" role="listbox">
+                <!-- Dynamically populated -->
+            </div>
+
+            <!-- Action footer for adding custom category if picker is category -->
+            <div class="custom-picker-footer" id="custom-picker-footer" style="display: none;">
+                <button type="button" class="custom-picker-add-btn" id="custom-picker-add-btn">
+                    <i data-lucide="plus"></i>
+                    <span id="custom-picker-add-label">Add Custom Category</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- External Barcode & Scanner Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+
+    <!-- Application Scripts -->
+    <script src="js/storage.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/barcode.js"></script>
+    <script src="js/scanner.js"></script>
+    <script src="js/marketPriceService.js"></script>
+    <script src="js/notifications.js"></script>
+    <script src="js/stock.js"></script>
+</body>
+</html>

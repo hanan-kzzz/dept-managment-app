@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>My Grocery Shop - Dashboard</title>
+    <!-- Plus Jakarta Sans Font & Lucide Icons -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Base Styles -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <meta name="theme-color" content="#F4F6F8">
+</head>
+<body data-page="home">
+
+    <!-- 1. Minimal Header (Injected dynamically) -->
+    <div id="app-header"></div>
+
+    <!-- Main Dashboard Container -->
+    <main class="container" style="padding-top: 10px; padding-bottom: 110px;">
+        
+        <!-- 2. Greeting Section -->
+        <div class="welcome-section-wrapper">
+            <div class="welcome-text-block">
+                <div class="welcome-greeting-prefix" id="dashboard-greeting-prefix">Good evening,</div>
+                <h1 class="welcome-username" id="dashboard-greeting-str">Hanan</h1>
+                <p class="welcome-subtitle">Here's what's happening in your shop today.</p>
+            </div>
+            
+            <!-- Avatar with Initials in Soft Tinted Circle -->
+            <div class="welcome-avatar" id="welcome-avatar-container">
+                HN
+            </div>
+        </div>
+
+        <!-- 3. Hero Card — Today's Sales (Deep Fintech Navy-to-Teal Gradient) -->
+        <div class="sales-hero-card premium-fintech-hero">
+            <!-- Subtle Mesh / Glow Overlay -->
+            <div class="card-ambient-glow" aria-hidden="true"></div>
+
+            <!-- Top Row: Label & Segmented Range Pill -->
+            <div class="premium-card-header">
+                <div class="hero-live-badge">
+                    <span class="pulse-dot"></span>
+                    <span class="premium-card-title">TODAY'S SALES</span>
+                </div>
+                
+                <div class="compact-range-selector">
+                    <button class="compact-range-btn active" data-range="today">Today</button>
+                    <button class="compact-range-btn" data-range="7days">7 Days</button>
+                    <button class="compact-range-btn" data-range="30days">30 Days</button>
+                </div>
+            </div>
+            
+            <!-- Main Figure & Directional Change Badge -->
+            <div class="premium-card-metric-row">
+                <div class="premium-card-value tabular-nums" id="val-today-sales">₹1,300.00</div>
+                <div class="trend-capsule-badge positive" id="trend-badge-wrap">
+                    <i data-lucide="trending-up" id="trend-icon" style="width: 12px; height: 12px; stroke-width: 2.5px;"></i>
+                    <span id="sales-growth-rate">+8.4% vs yesterday</span>
+                </div>
+            </div>
+            
+            <!-- Full-Bleed Sparkline Chart (50px tall) -->
+            <div class="sales-chart-wrapper">
+                <canvas id="sales-line-chart"></canvas>
+                
+                <!-- Interactive Tooltip Overlay -->
+                <div id="chart-tooltip">
+                    <span id="tooltip-date"></span>
+                    <span id="tooltip-val" class="tabular-nums"></span>
+                </div>
+            </div>
+            
+            <!-- Bottom Row: 3 Translucent Glass Sub-Cards -->
+            <div class="premium-stat-capsules">
+                <div class="stat-capsule glass-card">
+                    <span class="stat-capsule-label">Sales</span>
+                    <span class="stat-capsule-val tabular-nums" id="summary-total-sales">₹1,300.00</span>
+                </div>
+                <div class="stat-capsule glass-card">
+                    <span class="stat-capsule-label">Transactions</span>
+                    <span class="stat-capsule-val tabular-nums" id="summary-tx-count">3</span>
+                </div>
+                <div class="stat-capsule glass-card">
+                    <span class="stat-capsule-label">Avg Sale</span>
+                    <span class="stat-capsule-val tabular-nums" id="summary-avg-sale">₹433.33</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. Quick Actions Section (Consistent 2x2 Outlined Cards) -->
+        <section class="quick-actions-section">
+            <h2 class="dashboard-section-title">QUICK ACTIONS</h2>
+            <div class="quick-actions-grid">
+                <!-- Action 1: New Sale -->
+                <a href="new-sale.html" class="quick-action-btn action-outlined" id="action-new-sale">
+                    <div class="quick-action-icon-wrap tint-blue">
+                        <i data-lucide="plus"></i>
+                    </div>
+                    <span class="quick-action-label">New Sale</span>
+                </a>
+                
+                <!-- Action 2: Add Stock -->
+                <button type="button" class="quick-action-btn action-outlined" id="action-add-product">
+                    <div class="quick-action-icon-wrap tint-amber">
+                        <i data-lucide="package"></i>
+                    </div>
+                    <span class="quick-action-label">Add Stock</span>
+                </button>
+
+                <!-- Action 3: Add Customer -->
+                <button type="button" class="quick-action-btn action-outlined" id="action-add-customer">
+                    <div class="quick-action-icon-wrap tint-purple">
+                        <i data-lucide="users"></i>
+                    </div>
+                    <span class="quick-action-label">Add Customer</span>
+                </button>
+                
+                <!-- Action 4: Record Payment -->
+                <a href="dues.html" class="quick-action-btn action-outlined" id="action-record-payment">
+                    <div class="quick-action-icon-wrap tint-emerald">
+                        <i data-lucide="receipt"></i>
+                    </div>
+                    <span class="quick-action-label">Record Payment</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- 5. Recent Activity Section (Clean Row List with Tinted Icons) -->
+        <section class="recent-activity-section">
+            <div class="recent-activity-header">
+                <h2 class="dashboard-section-title" style="margin-bottom: 0;">RECENT ACTIVITY</h2>
+                <a href="sales.html" class="recent-view-all-link">View All</a>
+            </div>
+            <div class="recent-group-card" id="dashboard-recent-activity">
+                <!-- Injected dynamically -->
+            </div>
+        </section>
+    </main>
+
+    <!-- 6. Floating Bottom Navigation & Floating + FAB -->
+    <nav id="app-navigation"></nav>
+
+    <!-- QUICK ADD CUSTOMER MODAL -->
+    <div class="modal-overlay" id="modal-quick-customer">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 class="modal-title">Add Customer</h3>
+                <button class="modal-close" id="modal-cust-close"><i data-lucide="x"></i></button>
+            </div>
+            <form id="form-quick-customer" novalidate>
+                <div class="form-group">
+                    <label for="cust-name">Customer Name *</label>
+                    <input type="text" id="cust-name" class="form-control" placeholder="Arun Kumar" required>
+                    <div class="invalid-feedback">Name is required.</div>
+                </div>
+                <div class="form-group">
+                    <label for="cust-phone">Phone Number *</label>
+                    <input type="tel" id="cust-phone" class="form-control" placeholder="+91 98765 00001" required>
+                    <div class="invalid-feedback">Enter a valid 10-15 digit mobile number.</div>
+                </div>
+                <div class="form-group">
+                    <label for="cust-address">Address</label>
+                    <input type="text" id="cust-address" class="form-control" placeholder="123 Main Street, Sector-A">
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label for="cust-due">Opening Due ($)</label>
+                        <input type="number" id="cust-due" class="form-control" placeholder="0.00" min="0" value="0" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label for="cust-limit">Credit Limit ($)</label>
+                        <input type="number" id="cust-limit" class="form-control" placeholder="10000.00" min="0" value="10000" step="0.01">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="cust-notes">Notes</label>
+                    <textarea id="cust-notes" class="form-control form-control-textarea" placeholder="Credit term notes or remarks..."></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="btn-cust-cancel">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Customer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- QUICK ADD PRODUCT MODAL -->
+    <div class="modal-overlay" id="modal-quick-product">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 class="modal-title">Add Product</h3>
+                <button class="modal-close" id="modal-prod-close"><i data-lucide="x"></i></button>
+            </div>
+            <form id="form-quick-product" novalidate>
+                <div class="form-group">
+                    <label for="prod-name">Product Name *</label>
+                    <input type="text" id="prod-name" class="form-control" placeholder="Basmati Rice 5kg" required>
+                    <div class="invalid-feedback">Product name is required.</div>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label for="prod-category">Category</label>
+                        <select id="prod-category" class="form-control">
+                            <option value="Groceries">Groceries</option>
+                            <option value="Dairy">Dairy</option>
+                            <option value="Grains & Rice">Grains & Rice</option>
+                            <option value="Oil & Ghee">Oil & Ghee</option>
+                            <option value="Snacks & Biscuits">Snacks & Biscuits</option>
+                            <option value="Beverages">Beverages</option>
+                            <option value="Household">Household</option>
+                            <option value="Personal Care">Personal Care</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="prod-unit">Unit *</label>
+                        <select id="prod-unit" class="form-control" required>
+                            <option value="Piece">Piece (pc)</option>
+                            <option value="Kilogram">Kilogram (kg)</option>
+                            <option value="Gram">Gram (g)</option>
+                            <option value="Liter">Liter (L)</option>
+                            <option value="Milliliter">Milliliter (mL)</option>
+                            <option value="Pack">Pack</option>
+                            <option value="Box">Box</option>
+                            <option value="Bottle">Bottle</option>
+                            <option value="Dozen">Dozen</option>
+                            <option value="Meter">Meter</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label for="prod-purchase">Purchase Rate ($) *</label>
+                        <input type="number" id="prod-purchase" class="form-control" placeholder="Cost price" min="0" step="0.01" required>
+                        <div class="invalid-feedback">Required (>= 0).</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="prod-selling">Selling Rate ($) *</label>
+                        <input type="number" id="prod-selling" class="form-control" placeholder="Sale price" min="0" step="0.01" required>
+                        <div class="invalid-feedback">Required (>= 0).</div>
+                    </div>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label for="prod-qty">Current Quantity *</label>
+                        <input type="number" id="prod-qty" class="form-control" placeholder="0" min="0" step="0.01" required>
+                        <div class="invalid-feedback">Required (>= 0).</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="prod-min">Min Stock Level *</label>
+                        <input type="number" id="prod-min" class="form-control" placeholder="Alert threshold" min="0" step="0.01" required>
+                        <div class="invalid-feedback">Required (>= 0).</div>
+                    </div>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label for="prod-sku">SKU</label>
+                        <input type="text" id="prod-sku" class="form-control" placeholder="SKU tag">
+                    </div>
+                    <div class="form-group">
+                        <label for="prod-barcode">Barcode</label>
+                        <input type="text" id="prod-barcode" class="form-control" placeholder="Barcode code">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="btn-prod-cancel">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Product</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Application Scripts -->
+    <script src="js/storage.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/barcode.js"></script>
+    <script src="js/scanner.js"></script>
+    <script src="js/notifications.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,538 @@
+/**
+ * Market Prices & Smart Inventory Styles
+ * Light & Dark theme responsive styling for Stage 5
+ */
+
+.market-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 16px;
+}
+
+/* Header & Controls */
+.market-header-wrap {
+    margin-bottom: 16px;
+}
+
+.market-header-title {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: var(--text);
+    margin: 0 0 4px 0;
+    letter-spacing: -0.3px;
+}
+
+.market-header-subtitle {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+.market-controls-bar {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.market-search-box {
+    position: relative;
+    width: 100%;
+}
+
+.market-search-input {
+    width: 100%;
+    height: 42px;
+    padding: 0 36px 0 36px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 0.85rem;
+    font-weight: 600;
+    outline: none;
+    transition: border-color 0.15s ease;
+}
+
+.market-search-input:focus {
+    border-color: var(--accent);
+}
+
+.market-search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+}
+
+.market-search-clear {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 4px;
+    display: none;
+}
+
+.market-location-select {
+    height: 42px;
+    padding: 0 12px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 0.82rem;
+    font-weight: 700;
+    outline: none;
+    cursor: pointer;
+    flex: 1;
+    min-width: 0;
+}
+
+/* Single line row for location dropdown & refresh button */
+.market-filter-actions-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    min-width: 0;
+}
+
+/* Remove outer box double-border from custom select wrapper */
+.market-controls-bar .custom-select-wrapper,
+#custom-wrapper-market-location-select {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    flex: 1;
+    min-width: 0;
+    width: auto !important;
+}
+
+.market-controls-bar .custom-select-trigger {
+    height: 42px;
+    min-height: 42px;
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0 12px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--text);
+    box-shadow: none;
+}
+
+.btn-market-refresh {
+    height: 42px;
+    padding: 0 14px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 0.82rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.btn-market-refresh:hover {
+    background: var(--border-light, rgba(0,0,0,0.03));
+}
+
+.btn-market-refresh.loading i {
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    100% { transform: rotate(360deg); }
+}
+
+/* Data Status Banner */
+.market-status-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    background: var(--surface-card, var(--surface));
+    border: 1px solid var(--border);
+    padding: 8px 12px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.market-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: 700;
+    color: var(--accent);
+}
+
+.market-status-badge.cached {
+    color: var(--text-muted);
+}
+
+.market-status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: var(--accent);
+}
+
+.market-status-dot.cached {
+    background-color: var(--text-muted);
+}
+
+/* Compact Cards Grid */
+.market-cards-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+@media (min-width: 600px) {
+    .market-cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 900px) {
+    .market-cards-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.market-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-card, 10px);
+    padding: 14px;
+    cursor: pointer;
+    transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.market-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+}
+
+.market-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+}
+
+.market-card-title {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: var(--text);
+    margin: 0;
+}
+
+.market-card-category {
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    margin-top: 2px;
+}
+
+.market-card-price-wrap {
+    margin: 8px 0;
+}
+
+.market-card-price {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: var(--text);
+    letter-spacing: -0.3px;
+}
+
+.market-card-unit {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--text-muted);
+}
+
+.market-card-badge {
+    display: inline-block;
+    font-size: 0.65rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: var(--border-light, rgba(0,0,0,0.05));
+    color: var(--text-muted);
+}
+
+.market-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    border-top: 1px dashed var(--border);
+    padding-top: 8px;
+    margin-top: 6px;
+}
+
+.market-card-change {
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.market-card-change.up {
+    color: var(--danger);
+}
+
+.market-card-change.down {
+    color: var(--success);
+}
+
+.market-card-change.neutral {
+    color: var(--text-muted);
+}
+
+/* Disclaimer Banner */
+.market-disclaimer-box {
+    background: var(--surface-card, var(--surface));
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    line-height: 1.4;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-top: 20px;
+    margin-bottom: 24px;
+}
+
+/* Detail Modal Styles */
+.commodity-detail-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 12px;
+}
+
+.commodity-detail-price {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--text);
+}
+
+.commodity-meta-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    background: var(--surface-card, var(--surface));
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px;
+    margin-bottom: 16px;
+}
+
+.commodity-meta-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.commodity-meta-label {
+    font-size: 0.65rem;
+    font-weight: 800;
+    color: var(--text-muted);
+    text-transform: uppercase;
+}
+
+.commodity-meta-value {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-top: 2px;
+}
+
+/* Compact History Chart SVG container */
+.market-history-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px;
+    margin-bottom: 16px;
+}
+
+.market-history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.market-history-title {
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: var(--text-muted);
+    text-transform: uppercase;
+}
+
+.market-range-tabs {
+    display: flex;
+    gap: 4px;
+}
+
+.market-range-tab {
+    padding: 3px 8px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-muted);
+    font-size: 0.7rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.market-range-tab.active {
+    background: var(--accent);
+    color: var(--text-on-accent, #fff);
+    border-color: var(--accent);
+}
+
+.market-chart-svg {
+    width: 100%;
+    height: 120px;
+    overflow: visible;
+}
+
+/* Price Comparison Badge Colors */
+.price-below-ref {
+    color: #10b981;
+}
+
+.price-slightly-above {
+    color: #f59e0b;
+}
+
+.price-above-ref {
+    color: #ef4444;
+}
+
+.price-neutral {
+    color: var(--text-muted);
+}
+
+.badge-success-tint {
+    background-color: rgba(16, 185, 129, 0.12);
+    color: #10b981;
+}
+
+.badge-warning-tint {
+    background-color: rgba(245, 158, 11, 0.12);
+    color: #f59e0b;
+}
+
+.badge-danger-tint {
+    background-color: rgba(239, 68, 68, 0.12);
+    color: #ef4444;
+}
+
+.badge-neutral {
+    background-color: var(--border-light, rgba(0,0,0,0.06));
+    color: var(--text-muted);
+}
+
+/* Smart Stock Pills */
+.status-pill-healthy {
+    background: rgba(16, 185, 129, 0.12);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.25);
+}
+
+.status-pill-reorder {
+    background: rgba(59, 130, 246, 0.12);
+    color: #3b82f6;
+    border: 1px solid rgba(59, 130, 246, 0.25);
+}
+
+.status-pill-low {
+    background: rgba(245, 158, 11, 0.12);
+    color: #f59e0b;
+    border: 1px solid rgba(245, 158, 11, 0.25);
+}
+
+.status-pill-out {
+    background: rgba(239, 68, 68, 0.12);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.25);
+}
+
+.status-pill-no-data {
+    background: rgba(156, 163, 175, 0.12);
+    color: #6b7280;
+    border: 1px solid rgba(156, 163, 175, 0.25);
+}
+
+/* Stock Insights Widget */
+.stock-insights-strip {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+@media (min-width: 600px) {
+    .stock-insights-strip {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+.insight-metric-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.insight-metric-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+}
+
+.insight-metric-value {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--text);
+    margin-top: 4px;
+}

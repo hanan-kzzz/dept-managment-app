@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Greenway Groceries - Due Ledger</title>
+    <!-- Jakarta Font & Lucide Icons -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Base Styles -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/customers.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <meta name="theme-color" content="#07090d">
+    <style>
+        .due-summary-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .due-summary-box {
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 14px;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .due-summary-label {
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .due-summary-val {
+            font-size: 1.35rem;
+            font-weight: 800;
+            margin-top: 4px;
+            letter-spacing: -0.3px;
+        }
+        
+        .due-card-extra {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            margin-top: 6px;
+            border-top: 1px solid var(--border);
+            padding-top: 6px;
+            display: flex;
+            justify-content: space-between;
+            font-weight: 500;
+        }
+        
+        .overdue-tag {
+            color: var(--danger);
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body data-page="dues">
+
+    <!-- Injected Global Header -->
+    <div id="app-header"></div>
+
+    <main class="container">
+        <!-- Standard Page Header with Record Payment Contextual Button -->
+        <div class="page-header" style="margin-bottom: 16px;">
+            <a href="index.html" class="back-nav">
+                <i data-lucide="arrow-left" style="width: 14px; height: 14px; stroke-width: 2.5px;"></i> Dashboard
+            </a>
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; margin-bottom: 4px;">
+                <div class="page-title-container" style="flex: 1; min-width: 200px;">
+                    <h1 class="page-title">Customer Dues</h1>
+                    <div class="page-title-accent"></div>
+                    <p class="page-subtitle">Track outstanding balances</p>
+                </div>
+                <div style="flex-shrink: 0; margin-top: 4px;">
+                    <button class="btn btn-primary" id="btn-record-payment-header" style="height: 40px; padding: 0 16px; border-radius: var(--radius-btn); font-size: 0.85rem;">
+                        <i data-lucide="circle-dollar-sign" style="width: 16px; height: 16px;"></i> Record Payment
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ledger Summary Boxes -->
+        <div class="due-summary-grid">
+            <div class="due-summary-box" style="border-color: rgba(244, 63, 94, 0.15);">
+                <span class="due-summary-label" style="color: var(--danger);">Total Dues</span>
+                <div class="due-summary-val due-positive" id="total-dues-amount" style="color: var(--danger);">$0.00</div>
+            </div>
+            <div class="due-summary-box">
+                <span class="due-summary-label">Due Accounts</span>
+                <div class="due-summary-val" id="total-due-accounts">0</div>
+            </div>
+        </div>
+
+        <!-- Standard Custom Search Box -->
+        <div class="custom-search-wrapper">
+            <i data-lucide="search" class="custom-search-icon"></i>
+            <input type="text" id="due-search" class="custom-search-input" placeholder="Search customer with dues..." autocomplete="off">
+            <button class="custom-search-clear" id="due-search-clear" title="Clear search">
+                <i data-lucide="x" style="width: 14px; height: 14px;"></i>
+            </button>
+        </div>
+
+        <!-- Segmented Tab bar filters -->
+        <div class="filter-tabs-segmented">
+            <button class="filter-tab-seg active" data-filter="all">All Due</button>
+            <button class="filter-tab-seg" data-filter="overdue">Overdue</button>
+            <button class="filter-tab-seg" data-filter="today">Due Today</button>
+            <button class="filter-tab-seg" data-filter="high">High Due</button>
+            <button class="filter-tab-seg" data-filter="recent">Recent</button>
+        </div>
+
+        <!-- Dues list container -->
+        <div class="customer-list-container" id="due-list-feed">
+            <div class="empty-state">
+                <div class="empty-state-icon" style="color: var(--accent); background-color: var(--accent-tint);"><i data-lucide="check-circle"></i></div>
+                <h3 class="empty-state-title">All Dues Cleared</h3>
+                <p class="empty-state-text">Great job! There are no outstanding customer balances right now.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Global App-Navigation -->
+    <nav id="app-navigation"></nav>
+
+    <!-- RECORD PAYMENT MODAL (BOTTOM SHEET) -->
+    <div class="modal-overlay" id="modal-record-payment">
+        <div class="modal-container" style="max-height: 80vh;">
+            <div class="modal-header">
+                <h3 class="modal-title">Record Due Payment</h3>
+                <button class="modal-close" id="modal-record-payment-close"><i data-lucide="x"></i></button>
+            </div>
+            
+            <!-- Step 1: Select Customer -->
+            <div id="payment-step-1" class="payment-step">
+                <div class="form-group">
+                    <label>Select Customer *</label>
+                    <div class="custom-search-wrapper" style="margin-bottom: 8px;">
+                        <i data-lucide="search" class="custom-search-icon"></i>
+                        <input type="text" id="payment-cust-lookup" class="custom-search-input" placeholder="Search customer name or phone..." autocomplete="off">
+                    </div>
+                    <div id="payment-cust-suggestions" class="search-suggestions-container" style="max-height: 200px; overflow-y: auto; border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--surface); display: none;"></div>
+                </div>
+            </div>
+
+            <!-- Step 2: Input Payment Details -->
+            <div id="payment-step-2" class="payment-step" style="display: none;">
+                <!-- Selected Customer Preview -->
+                <div style="padding: 12px; border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--surface-sec); margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <strong id="payment-selected-name" style="font-size: 0.9rem; color: var(--text);">-</strong>
+                        <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;">Phone: <span id="payment-selected-phone">-</span></div>
+                    </div>
+                    <div style="text-align: right;">
+                        <span style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; display: block;">Current Due</span>
+                        <strong id="payment-selected-due" style="font-size: 1.1rem; color: var(--danger);">₹0.00</strong>
+                    </div>
+                </div>
+
+                <form id="form-record-payment" novalidate>
+                    <input type="hidden" id="payment-cust-id">
+                    
+                    <div class="form-group">
+                        <label for="payment-amount">Payment Amount (₹) *</label>
+                        <input type="number" id="payment-amount" class="form-control" placeholder="0.00" min="0.01" step="0.01" required>
+                        <div class="invalid-feedback" id="payment-amount-feedback">Required, must be greater than zero and not exceed current due.</div>
+                    </div>
+
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label for="payment-method">Payment Method *</label>
+                            <select id="payment-method" class="form-control" required>
+                                <option value="Cash">Cash</option>
+                                <option value="UPI">UPI / Digital</option>
+                                <option value="Card">Card</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="payment-date">Payment Date *</label>
+                            <input type="date" id="payment-date" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="payment-notes">Notes / Remarks</label>
+                        <input type="text" id="payment-notes" class="form-control" placeholder="e.g. Cleared partial dues">
+                    </div>
+                    
+                    <!-- New Due Balance Preview -->
+                    <div style="margin-bottom: 14px; padding: 10px 12px; background-color: var(--accent-tint); color: var(--accent); border-radius: var(--radius-sm); font-size: 0.8rem; font-weight: 700; display: flex; justify-content: space-between;">
+                        <span>New Remaining Due:</span>
+                        <span id="payment-due-preview">₹0.00</span>
+                    </div>
+
+                    <div class="modal-footer" style="padding-top: 10px; margin-top: 10px;">
+                        <button type="button" class="btn btn-secondary" id="btn-payment-change-customer" style="height: 48px; border-radius: var(--radius-btn);">Back</button>
+                        <button type="submit" class="btn btn-primary" id="btn-payment-save" style="flex: 1; height: 48px; border-radius: var(--radius-btn);">Record Payment</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- DUE REMINDER REVIEW MODAL -->
+    <div class="modal-overlay" id="modal-due-reminder">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 class="modal-title">Send Payment Reminder</h3>
+                <button class="modal-close" id="modal-due-rem-close"><i data-lucide="x"></i></button>
+            </div>
+            <div class="form-group">
+                <label>Send To:</label>
+                <div id="due-rem-phone" style="font-weight: 700; padding: 4px 0; color: var(--text);">+91 99999 99999</div>
+            </div>
+            <div class="form-group">
+                <label for="due-rem-message">Message Template:</label>
+                <textarea id="due-rem-message" class="form-control form-control-textarea" style="height: 120px;"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="btn-due-rem-cancel">Cancel</button>
+                <button type="button" class="btn btn-primary" id="btn-due-rem-whatsapp" style="background-color: #25D366; color: white;">
+                    <i data-lucide="message-square"></i> Send via WhatsApp
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Script -->
+    <script src="js/storage.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/notifications.js"></script>
+    <script src="js/dues.js"></script>
+</body>
+</html>

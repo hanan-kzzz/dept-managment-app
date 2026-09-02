@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Greenway Groceries - Cashier POS Terminal</title>
+    <!-- Jakarta Font & Lucide Icons -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Base Styles -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/settings.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <meta name="theme-color" content="#07090d">
+    <style>
+        .pos-step {
+            display: none;
+            animation: slideIn 0.25s ease-out;
+        }
+        
+        .pos-step.active {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(8px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Product Catalog Row Layout */
+        .product-row-clean {
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow-sm);
+            transition: border-color 0.2s;
+        }
+        
+        .product-row-clean:hover {
+            border-color: var(--border-dark);
+        }
+
+        .product-row-clean.selected-product {
+            background-color: var(--selected-bg) !important;
+            border-color: var(--accent) !important;
+        }
+
+        .product-info-col {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .product-name-txt {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .product-meta-txt {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .product-action-col {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .product-price-txt {
+            font-weight: 800;
+            color: var(--accent);
+            font-size: 0.95rem;
+        }
+
+        .btn-add-quick {
+            background-color: var(--accent-tint);
+            color: var(--accent);
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.15s, transform 0.1s;
+        }
+
+        .btn-add-quick:active {
+            transform: scale(0.9);
+            background-color: var(--accent);
+            color: var(--text-on-accent);
+        }
+
+        /* Floating Bottom Cart Bar */
+        .bottom-cart-bar {
+            position: fixed;
+            bottom: var(--bottom-nav-height);
+            left: 0;
+            right: 0;
+            background-color: var(--surface);
+            border-top: 1px solid var(--border);
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 -4px 16px rgba(0,0,0,0.05);
+            z-index: 400;
+            padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+        }
+
+        @media (min-width: 768px) {
+            .bottom-cart-bar {
+                left: 240px;
+            }
+        }
+
+        .cart-bar-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .cart-bar-qty {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .cart-bar-total {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--text);
+        }
+
+        /* Cart Items Review */
+        .cart-item-row {
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 12px 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .qty-controls {
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background-color: var(--bg);
+            height: 32px;
+        }
+
+        .qty-btn {
+            background: none;
+            border: none;
+            width: 32px;
+            height: 100%;
+            cursor: pointer;
+            font-weight: 700;
+            color: var(--text-muted);
+        }
+
+        .qty-input {
+            width: 38px;
+            text-align: center;
+            border: none;
+            background: none;
+            font-weight: 700;
+            font-size: 0.8rem;
+            color: var(--text);
+            outline: none;
+        }
+
+        .btn-delete-cart {
+            background: none;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        /* Payment modes grid */
+        .payment-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .payment-card {
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            text-align: center;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .payment-card.active {
+            border-color: var(--accent);
+            background-color: var(--accent-tint);
+            color: var(--accent);
+        }
+
+        .payment-icon-wrap {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--surface-sec);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+        }
+
+        .payment-card.active .payment-icon-wrap {
+            background-color: var(--surface);
+            color: var(--accent);
+        }
+
+        .payment-label-txt {
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body data-page="sales">
+
+    <!-- Injected Global Header -->
+    <div id="app-header"></div>
+
+    <main class="container sales-container">
+        
+        <!-- ======================================================= -->
+        <!-- STEP 0: SALES HISTORY & DASHBOARD -->
+        <!-- ======================================================= -->
+        <div id="pos-step-0" class="pos-step active">
+            <!-- Redesigned Page Header with Contextual Actions -->
+            <div class="page-header" style="margin-bottom: 14px;">
+                <a href="index.html" class="back-nav">
+                    <i data-lucide="arrow-left" style="width: 14px; height: 14px; stroke-width: 2.5px;"></i> Dashboard
+                </a>
+                <div class="page-title-container" style="margin-bottom: 12px;">
+                    <h1 class="page-title">Sales Hub</h1>
+                    <div class="page-title-accent"></div>
+                    <p class="page-subtitle">Track transactions and issue invoices</p>
+                </div>
+
+                <!-- Prominent Full-Width + New Sale CTA Button -->
+                <a href="new-sale.html" class="btn btn-primary" id="btn-start-new-sale-main" style="width: 100%; height: 48px; font-weight: 800; font-size: 0.95rem; border-radius: 14px; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 16px rgba(8, 127, 245, 0.35); margin-bottom: 14px; text-decoration: none;">
+                    <i data-lucide="plus" style="width: 18px; height: 18px; stroke-width: 2.5px;"></i> New Sale
+                </a>
+            </div>
+
+            <!-- Hero Sales Metrics Card -->
+            <div class="sales-hero-card">
+                <div class="sales-hero-top">
+                    <span class="sales-hero-label">
+                        Today's Sales <i data-lucide="sparkles" class="hero-sparkle-icon"></i>
+                    </span>
+                    <div class="sales-hero-trend-wrap">
+                        <span class="sales-hero-trend">
+                            <i data-lucide="trending-up" style="width: 12px; height: 12px;"></i> +14.2%
+                        </span>
+                        <span class="sales-hero-trend-caption">vs yesterday</span>
+                    </div>
+                </div>
+                <div class="sales-hero-amount-row">
+                    <div class="sales-hero-val" id="sales-sum-total">₹0.00</div>
+                </div>
+                <div class="sales-hero-divider"></div>
+                <div class="sales-sub-grid">
+                    <div class="sales-sub-box">
+                        <div class="sales-sub-info">
+                            <span class="sales-sub-label">Invoices</span>
+                            <div class="sales-sub-val" id="sales-sum-count">0</div>
+                        </div>
+                        <div class="sales-sub-icon-wrap">
+                            <i data-lucide="file-text"></i>
+                        </div>
+                    </div>
+                    <div class="sales-sub-box">
+                        <div class="sales-sub-info">
+                            <span class="sales-sub-label">Avg Sale</span>
+                            <div class="sales-sub-val" id="sales-sum-avg">₹0.00</div>
+                        </div>
+                        <div class="sales-sub-icon-wrap alt">
+                            <i data-lucide="calculator"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search & Scan Controls -->
+            <div class="sales-search-scan-bar">
+                <div class="custom-search-wrapper" style="flex: 1; margin-bottom: 0;">
+                    <i data-lucide="search" class="custom-search-icon"></i>
+                    <input type="text" id="sales-history-search" class="custom-search-input" placeholder="Search invoice, customer, item..." autocomplete="off">
+                </div>
+                <button type="button" class="btn-scan-shortcut" id="btn-scan-barcode-sale-hub-header" onclick="if (typeof openScannerModal === 'function') openScannerModal(); else Utils.showToast('Camera scanner opening...', 'info');" title="Scan Barcode">
+                    <i data-lucide="scan-barcode"></i>
+                    <span>Scan</span>
+                </button>
+            </div>
+
+            <!-- Filter Status Pills -->
+            <div class="sales-filter-pills-bar">
+                <button type="button" class="sales-filter-pill active" data-filter="all">
+                    <span class="pill-dot all"></span> All Sales
+                </button>
+                <button type="button" class="sales-filter-pill" data-filter="paid">
+                    <span class="pill-dot paid"></span> Paid
+                </button>
+                <button type="button" class="sales-filter-pill" data-filter="partial">
+                    <span class="pill-dot partial"></span> Partial
+                </button>
+                <button type="button" class="sales-filter-pill" data-filter="due">
+                    <span class="pill-dot due"></span> Due
+                </button>
+            </div>
+
+            <!-- Sales Grouped List -->
+            <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px;">
+                <div id="sales-history-list" style="display: flex; flex-direction: column; gap: 8px;">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+        </div>
+
+        <!-- ======================================================= -->
+        <!-- STEP 1: PRODUCT SEARCH & ADD TO CART -->
+        <!-- ======================================================= -->
+        <div id="pos-step-1" class="pos-step">
+            <!-- Standard Page Header -->
+            <div class="page-header" style="margin-bottom: 12px;">
+                <a href="javascript:void(0)" class="back-nav" id="btn-back-to-step0">
+                    <i data-lucide="arrow-left" style="width: 14px; height: 14px; stroke-width: 2.5px;"></i> Sales Hub
+                </a>
+                <div class="page-title-container">
+                    <h1 class="page-title">New Sale</h1>
+                    <div class="page-title-accent"></div>
+                    <p class="page-subtitle" style="font-weight: 600; color: var(--accent);">Step 1 of 3 · Select Products</p>
+                </div>
+                <!-- Step 1 Progress Bar (33%) -->
+                <div style="width: 100%; height: 4px; background: var(--border); border-radius: 9999px; margin-top: 8px; overflow: hidden;">
+                    <div style="width: 33.33%; height: 100%; background: var(--accent); border-radius: 9999px; transition: width 0.3s ease;"></div>
+                </div>
+            </div>
+
+            <!-- Responsive Search + Scan Controls -->
+            <div class="search-sale-controls">
+                <div class="sale-search-wrap">
+                    <i data-lucide="search" class="sale-search-icon"></i>
+                    <input type="text" id="sale-product-lookup" class="sale-search-input" placeholder="Search product, SKU or barcode..." autocomplete="off" aria-label="Search products">
+                    <button type="button" class="sale-search-clear" id="sale-search-clear" style="display: none;" title="Clear search" aria-label="Clear search">
+                        <i data-lucide="x"></i>
+                    </button>
+                </div>
+                <button type="button" class="btn-sale-scan" id="btn-scan-barcode-sale" title="Scan Barcode using Camera" aria-label="Scan barcode">
+                    <i data-lucide="scan-barcode"></i>
+                    <span>Scan</span>
+                </button>
+            </div>
+
+            <!-- Catalog Products List -->
+            <div style="display: flex; flex-direction: column; gap: 8px;" id="pos-catalog-list">
+                <!-- Dynamically populated list -->
+            </div>
+            
+            <!-- Bottom Cart Bar (appears when cart has items) -->
+            <div class="bottom-cart-bar" id="pos-bottom-cart" style="display: none;">
+                <div class="cart-bar-info">
+                    <span class="cart-bar-qty" id="cart-bar-count">0 items</span>
+                    <span class="cart-bar-total" id="cart-bar-price">₹0.00</span>
+                </div>
+                <button class="btn btn-primary" id="btn-go-to-checkout" style="width: auto; min-width: 120px; height: 44px;">
+                    Review Cart <i data-lucide="arrow-right" style="width: 14px; height: 14px;"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- ======================================================= -->
+        <!-- STEP 2: CART REVIEW & CUSTOMER SELECT -->
+        <!-- ======================================================= -->
+        <div id="pos-step-2" class="pos-step">
+            <!-- Back navigation link & Step Header -->
+            <div class="page-header" style="margin-bottom: 12px;">
+                <button class="btn btn-outline btn-sm" id="btn-back-to-step1" style="width: auto; min-height: 36px; padding: 4px 12px; margin-bottom: 6px;">
+                    <i data-lucide="arrow-left" style="width: 14px; height: 14px;"></i> Back to Products
+                </button>
+                <div class="page-title-container">
+                    <h1 class="page-title">New Sale</h1>
+                    <div class="page-title-accent"></div>
+                    <p class="page-subtitle" style="font-weight: 600; color: var(--accent);">Step 2 of 3 · Customer Details & Payment</p>
+                </div>
+                <!-- Step 2 Progress Bar (66%) -->
+                <div style="width: 100%; height: 4px; background: var(--border); border-radius: 9999px; margin-top: 8px; overflow: hidden;">
+                    <div style="width: 66.66%; height: 100%; background: var(--accent); border-radius: 9999px; transition: width 0.3s ease;"></div>
+                </div>
+            </div>
+
+            <!-- Cart list -->
+            <div style="display: flex; flex-direction: column; gap: 8px;" id="sale-cart-feed">
+                <!-- Dynamically populated cart items -->
+            </div>
+
+            <!-- Customer Selection section -->
+            <div class="card" style="padding: 16px; margin-top: 8px; position: relative; overflow: visible;">
+                <label style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); display: block; margin-bottom: 8px;">Customer</label>
+                
+                <!-- 1. Hidden native select for keeping existing logic functional -->
+                <select id="sale-customer-select" style="display: none;">
+                    <option value="walk-in">Walk-in Customer</option>
+                </select>
+
+                <!-- 2. Selected Customer State (Visible when customer selected) -->
+                <div id="selected-customer-state" style="display: none;">
+                    <div class="selected-customer-card">
+                        <div class="selected-cust-left">
+                            <div class="selected-cust-avatar" id="selected-cust-avatar-text">WC</div>
+                            <div class="selected-cust-info">
+                                <div class="selected-cust-name" id="selected-cust-name-text">Walk-in Customer</div>
+                                <div class="selected-cust-phone" id="selected-cust-phone-text">Walk-in / Cash Customer</div>
+                                <div class="selected-cust-due" id="selected-cust-due-text" style="display: none;">₹0.00 current due</div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-change-customer" id="btn-change-customer-trigger">
+                            Change <i data-lucide="arrow-right-left" style="width: 14px; height: 14px; margin-left: 4px;"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 3. Active Search/Selection State (Visible when searching or changing) -->
+                <div id="search-customer-state" style="display: block;">
+                    <div class="customer-search-field-wrapper">
+                        <i data-lucide="search" class="customer-search-icon"></i>
+                        <input type="text" id="customer-search-input" class="customer-search-input-field" placeholder="Search customer name or phone..." autocomplete="off">
+                    </div>
+                    
+                    <!-- Suggestions Panel Dropdown -->
+                    <div class="search-suggestions-panel" id="search-suggestions-dropdown" style="display: none;">
+                        <!-- Populate dynamically -->
+                    </div>
+
+                    <div style="margin-top: 8px;">
+                        <button type="button" class="btn-add-new-customer-link" id="btn-add-customer-open">
+                            <i data-lucide="plus" style="width: 14px; height: 14px; margin-right: 4px;"></i> Add New Customer
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Warning container for credit limits -->
+                <div id="customer-due-warning-pane" style="display: none;">
+                    Outstanding Due: <span id="warning-due-amount">₹0.00</span> (Limit: <span id="warning-credit-limit">₹0.00</span>)
+                </div>
+            </div>
+
+            <!-- Pricing Summary Card -->
+            <div class="card" style="padding: 16px; display: flex; flex-direction: column; gap: 8px; font-size: 0.85rem;" id="sale-summary-pane">
+                <div style="display: flex; justify-content: space-between;">
+                    <span style="color: var(--text-muted);">Subtotal</span>
+                    <span id="sum-subtotal" style="font-weight: 700;">₹0.00</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <label for="sale-discount" style="color: var(--text-muted); font-weight: 500;">Discount (₹)</label>
+                    <input type="number" id="sale-discount" class="form-control" style="width: 100px; height: 32px; padding: 4px 8px; font-size: 0.85rem; border-radius: var(--radius-sm);" min="0" value="0" step="0.01">
+                </div>
+                <div id="sum-tax-row" style="display: none; justify-content: space-between;">
+                    <span style="color: var(--text-muted);" id="sum-tax-label">Tax / GST (0%)</span>
+                    <span id="sum-tax" style="font-weight: 700;">₹0.00</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 1.15rem; font-weight: 800; border-top: 1px dashed var(--border); padding-top: 10px; margin-top: 6px;">
+                    <span style="color: var(--text);">Total Payable</span>
+                    <span id="sum-total" style="color: var(--accent);">₹0.00</span>
+                </div>
+            </div>
+
+            <button class="btn btn-primary" id="btn-go-to-payment" style="height: 48px; font-size: 0.95rem; margin-top: 8px;">
+                Proceed to Payment <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
+            </button>
+        </div>
+
+        <!-- ======================================================= -->
+        <!-- STEP 3: DEDICATED PAYMENT SCREEN -->
+        <!-- ======================================================= -->
+        <div id="pos-step-3" class="pos-step">
+            <!-- Back navigation link & Step Header -->
+            <div class="page-header" style="margin-bottom: 12px;">
+                <button class="btn btn-outline btn-sm" id="btn-back-to-step2" style="width: auto; min-height: 36px; padding: 4px 12px; margin-bottom: 6px;">
+                    <i data-lucide="arrow-left" style="width: 14px; height: 14px;"></i> Back to Customer & Cart
+                </button>
+                <div class="page-title-container">
+                    <h1 class="page-title">New Sale</h1>
+                    <div class="page-title-accent"></div>
+                    <p class="page-subtitle" style="font-weight: 600; color: var(--success);">Step 3 of 3 · Final Review & Confirm</p>
+                </div>
+                <!-- Step 3 Progress Bar (100%) -->
+                <div style="width: 100%; height: 4px; background: var(--border); border-radius: 9999px; margin-top: 8px; overflow: hidden;">
+                    <div style="width: 100%; height: 100%; background: var(--accent); border-radius: 9999px;"></div>
+                </div>
+            </div>
+
+            <!-- Financial Breakdown Card -->
+            <div class="card payment-summary-card" style="padding: 16px; margin-bottom: 12px;">
+                <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 6px;">
+                    <span style="color: var(--text-muted);">Subtotal</span>
+                    <span id="pay-subtotal-val" style="font-weight: 600;">₹0.00</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 6px;">
+                    <span style="color: var(--text-muted);">Discount</span>
+                    <span id="pay-discount-val" style="font-weight: 600; color: var(--success);">-₹0.00</span>
+                </div>
+                <div id="pay-tax-row" style="display: none; justify-content: space-between; font-size: 0.85rem; margin-bottom: 6px;">
+                    <span style="color: var(--text-muted);">Tax</span>
+                    <span id="pay-tax-val" style="font-weight: 600;">₹0.00</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 1.3rem; font-weight: 800; border-top: 1px dashed var(--border); padding-top: 10px; margin-top: 6px;">
+                    <span style="color: var(--text);">TOTAL</span>
+                    <span id="pay-total-display" style="color: var(--accent);">₹0.00</span>
+                </div>
+            </div>
+
+            <!-- Hidden legacy select for payment method binding -->
+            <select id="sale-payment-method" style="display: none;">
+                <option value="Cash">Cash</option>
+                <option value="UPI">UPI</option>
+                <option value="Card">Card</option>
+                <option value="Credit/Due">Credit/Due</option>
+            </select>
+
+            <!-- Mode Selector Label -->
+            <label style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); display: block; margin-bottom: 6px;">Payment Method</label>
+
+            <!-- Payment Methods Grid (SVG Lucide Icons) -->
+            <div class="payment-grid" id="pos-payment-mode-grid">
+                <div class="payment-card active" data-mode="Cash">
+                    <div class="payment-icon-wrap"><i data-lucide="banknote"></i></div>
+                    <span class="payment-label-txt">Cash</span>
+                </div>
+                <div class="payment-card" data-mode="UPI">
+                    <div class="payment-icon-wrap"><i data-lucide="smartphone"></i></div>
+                    <span class="payment-label-txt">UPI</span>
+                </div>
+                <div class="payment-card" data-mode="Card">
+                    <div class="payment-icon-wrap"><i data-lucide="credit-card"></i></div>
+                    <span class="payment-label-txt">Card</span>
+                </div>
+                <div class="payment-card" data-mode="Credit/Due">
+                    <div class="payment-icon-wrap"><i data-lucide="wallet-cards"></i></div>
+                    <span class="payment-label-txt">Due</span>
+                </div>
+            </div>
+
+            <!-- DYNAMIC PAYMENT METHOD DETAILS SECTION -->
+
+            <!-- 1. CASH PAYMENT DETAIL PANEL -->
+            <div class="card payment-method-panel" id="panel-pay-cash" style="padding: 16px; margin-top: 12px;">
+                <div class="form-group" style="margin-bottom: 10px;">
+                    <label for="sale-amount-paid" style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted);">Amount Received (₹)</label>
+                    <input type="number" id="sale-amount-paid" class="form-control" placeholder="0.00" min="0" step="0.01" style="height: 48px; font-size: 1.2rem; font-weight: 800; border-radius: var(--radius-sm);">
+                </div>
+
+                <!-- Quick Amount Suggestion Buttons -->
+                <div class="quick-cash-tags" id="quick-cash-tags" style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px;">
+                    <!-- Injected dynamically -->
+                </div>
+
+                <!-- Change & Balance Calculation -->
+                <div class="cash-calc-pane" style="background: var(--surface-sec); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;" id="cash-change-line">
+                        <span style="font-size: 0.85rem; font-weight: 600; color: var(--text);">Change to Return:</span>
+                        <span id="cash-change-val" style="font-size: 1.1rem; font-weight: 800; color: var(--success);">₹0.00</span>
+                    </div>
+                    <div style="display: none; justify-content: space-between; align-items: center;" id="cash-remaining-line">
+                        <span style="font-size: 0.85rem; font-weight: 600; color: var(--danger);">Remaining / Short:</span>
+                        <span id="cash-remaining-val" style="font-size: 1.1rem; font-weight: 800; color: var(--danger);">₹0.00</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. UPI PAYMENT DETAIL PANEL -->
+            <div class="card payment-method-panel" id="panel-pay-upi" style="display: none; padding: 20px; margin-top: 12px; text-align: center;">
+                <div style="width: 48px; height: 48px; border-radius: 50%; background: var(--accent-tint); color: var(--accent); display: flex; align-items: center; justify-content: center; margin: 0 auto 12px;">
+                    <i data-lucide="qr-code" style="width: 24px; height: 24px;"></i>
+                </div>
+                <h3 style="font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 4px;">UPI Payment</h3>
+                <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">Amount to Collect: <strong id="upi-amount-val" style="color: var(--accent); font-size: 1.1rem;">₹0.00</strong></div>
+                <p style="font-size: 0.78rem; color: var(--text-muted); background: var(--surface-sec); padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border);">
+                    Ask customer to scan your shop's UPI QR code. Confirm payment receipt before completing sale.
+                </p>
+            </div>
+
+            <!-- 3. CARD PAYMENT DETAIL PANEL -->
+            <div class="card payment-method-panel" id="panel-pay-card" style="display: none; padding: 20px; margin-top: 12px; text-align: center;">
+                <div style="width: 48px; height: 48px; border-radius: 50%; background: var(--accent-tint); color: var(--accent); display: flex; align-items: center; justify-content: center; margin: 0 auto 12px;">
+                    <i data-lucide="credit-card" style="width: 24px; height: 24px;"></i>
+                </div>
+                <h3 style="font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 4px;">Card Payment</h3>
+                <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">Amount to Swipe/Tap: <strong id="card-amount-val" style="color: var(--accent); font-size: 1.1rem;">₹0.00</strong></div>
+                <p style="font-size: 0.78rem; color: var(--text-muted); background: var(--surface-sec); padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border);">
+                    Process card on your POS terminal device and click Complete Sale to record transaction.
+                </p>
+            </div>
+
+            <!-- 4. CREDIT / DUE PAYMENT DETAIL PANEL -->
+            <div class="card payment-method-panel" id="panel-pay-due" style="display: none; padding: 16px; margin-top: 12px;">
+                <!-- Walk-in Warning Block -->
+                <div id="due-walkin-warning" style="display: none; background: var(--danger-tint); border: 1px solid rgba(239, 68, 68, 0.2); border-radius: var(--radius-sm); padding: 14px; text-align: center;">
+                    <div style="color: var(--danger); font-weight: 700; font-size: 0.9rem; margin-bottom: 4px; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                        <i data-lucide="alert-circle" style="width: 16px; height: 16px;"></i> Customer Required for Credit
+                    </div>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 10px;">
+                        Credit/Due sales cannot be assigned to anonymous Walk-in customers.
+                    </p>
+                    <button type="button" class="btn btn-secondary btn-sm" id="btn-due-pick-customer" style="width: 100%; height: 38px; font-weight: 700;">
+                        <i data-lucide="user-plus"></i> Select or Add Customer
+                    </button>
+                </div>
+
+                <!-- Customer Due Calculations Block -->
+                <div id="due-registered-details" style="display: none; flex-direction: column; gap: 10px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 8px;">
+                        <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 700;">CUSTOMER</span>
+                        <span id="due-customer-name" style="font-weight: 700; color: var(--text);">-</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+                        <span style="color: var(--text-muted);">Current Due Balance:</span>
+                        <span id="due-old-balance" style="font-weight: 700;">₹0.00</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+                        <span style="color: var(--text-muted);">This Sale Amount:</span>
+                        <span id="due-new-sale" style="font-weight: 700;">₹0.00</span>
+                    </div>
+
+                    <!-- Partial payment input -->
+                    <div class="form-group" style="margin: 4px 0 0;">
+                        <label for="due-partial-paid-input" style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted);">Paid Now / Partial (₹)</label>
+                        <input type="number" id="due-partial-paid-input" class="form-control" placeholder="0.00" min="0" step="0.01" value="0" style="height: 40px; font-weight: 700; border-radius: var(--radius-sm);">
+                    </div>
+
+                    <!-- Due Date selection -->
+                    <div class="form-group" style="margin: 4px 0 0;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                            <label for="due-target-date" style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0;">Due Date</label>
+                            <span id="due-days-notice" style="font-size: 0.72rem; color: var(--accent); font-weight: 700;">Due in 7 days</span>
+                        </div>
+                        <input type="date" id="due-target-date" class="form-control" style="height: 40px; font-weight: 600; border-radius: var(--radius-sm);">
+                    </div>
+
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px dashed var(--border); padding-top: 10px; margin-top: 4px;">
+                        <span style="font-size: 0.85rem; font-weight: 700; color: var(--danger);">New Total Due:</span>
+                        <span id="sale-due-amount" style="font-size: 1.15rem; font-weight: 800; color: var(--danger);">₹0.00</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Complete checkout button with double-tap protection -->
+            <button class="btn btn-primary" id="btn-complete-sale" style="height: 52px; font-size: 1rem; font-weight: 800; margin-top: 16px; margin-bottom: 24px;">
+                <i data-lucide="check"></i> Complete Sale
+            </button>
+        </div>
+
+        <!-- ======================================================= -->
+        <!-- STEP 4: BILL SUCCESS SCREEN -->
+        <!-- ======================================================= -->
+        <div id="pos-step-4" class="pos-step">
+            <div class="card success-receipt-card" style="padding: 28px 20px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 16px; margin-top: 12px;">
+                <!-- Animated Success Badge -->
+                <div class="success-badge-circle" style="width: 64px; height: 64px; border-radius: 50%; background-color: var(--success-bg); color: var(--success); display: flex; align-items: center; justify-content: center;">
+                    <i data-lucide="check-circle-2" style="width: 36px; height: 36px; stroke-width: 2.5px;"></i>
+                </div>
+
+                <div>
+                    <span style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.8px; font-weight: 800; color: var(--success);">Sale Confirmed</span>
+                    <h2 style="font-size: 1.25rem; font-weight: 800; color: var(--text); margin-top: 2px;">Bill Generated Successfully</h2>
+                    <span id="success-invoice-badge" class="success-inv-pill" style="display: inline-block; background: var(--surface-sec); border: 1px solid var(--border); padding: 3px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; color: var(--accent); margin-top: 6px;">INV-000000</span>
+                    <span id="success-total-value" style="font-size: 2.2rem; font-weight: 800; color: var(--text); display: block; margin-top: 6px;">₹0.00</span>
+                </div>
+                
+                <!-- Invoice Summary Box -->
+                <div style="border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 14px 0; width: 100%; display: flex; flex-direction: column; gap: 8px; font-size: 0.85rem; text-align: left;">
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="color: var(--text-muted);">Customer</span>
+                        <span id="success-customer" style="font-weight: 700; color: var(--text);">-</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="color: var(--text-muted);">Payment Mode</span>
+                        <span id="success-method" style="font-weight: 700; color: var(--text);">-</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="color: var(--text-muted);">Amount Paid</span>
+                        <span id="success-paid" style="font-weight: 700; color: var(--success);">₹0.00</span>
+                    </div>
+                    <div style="display: none; justify-content: space-between;" id="success-due-row">
+                        <span style="color: var(--text-muted);">Outstanding Due</span>
+                        <span id="success-due" style="font-weight: 800; color: var(--danger);">₹0.00</span>
+                    </div>
+                </div>
+                
+                <!-- Action Buttons Cluster (View, Print, PDF, Share, New Sale) -->
+                <div class="success-actions-cluster" style="display: flex; flex-direction: column; gap: 10px; width: 100%;">
+                    <button class="btn btn-primary" id="btn-success-view-bill" style="height: 48px; font-size: 0.95rem; font-weight: 700;">
+                        <i data-lucide="receipt"></i> View Bill
+                    </button>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
+                        <button class="btn btn-outline" id="btn-success-print" style="height: 44px; font-size: 0.8rem; padding: 0 4px;">
+                            <i data-lucide="printer"></i> Print
+                        </button>
+                        <button class="btn btn-outline" id="btn-success-pdf" style="height: 44px; font-size: 0.8rem; padding: 0 4px;">
+                            <i data-lucide="download"></i> PDF
+                        </button>
+                        <button class="btn btn-outline" id="btn-success-share" style="height: 44px; font-size: 0.8rem; padding: 0 4px;">
+                            <i data-lucide="share-2"></i> Share
+                        </button>
+                    </div>
+
+                    <hr style="border: none; border-top: 1px solid var(--border); margin: 6px 0;" />
+
+                    <button class="btn btn-secondary" id="btn-start-fresh-sale" style="height: 48px; font-size: 0.9rem; font-weight: 700;">
+                        <i data-lucide="plus"></i> Start New Sale
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Global App-Navigation -->
+    <nav id="app-navigation"></nav>
+
+    <!-- QUICK ADD CUSTOMER MODAL (BOTTOM SHEET) -->
+    <div class="modal-overlay" id="modal-quick-customer">
+        <div class="modal-container">
+            <div class="modal-drag-handle"></div>
+            
+            <!-- Form View Container -->
+            <div id="quick-customer-form-container" style="display: flex; flex-direction: column; gap: 4px;">
+                <div class="modal-header" style="border-bottom: none; margin-bottom: 8px; padding-bottom: 0;">
+                    <h3 class="modal-title" style="font-size: 1.15rem; font-weight: 800;">Add New Customer</h3>
+                    <button type="button" class="modal-close" id="modal-cust-close"><i data-lucide="x"></i></button>
+                </div>
+                <form id="form-quick-customer" novalidate>
+                    <div class="form-group">
+                        <label for="cust-name" style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted);">Customer Name</label>
+                        <input type="text" id="cust-name" class="form-control" placeholder="Customer Name" style="height: 48px; border-radius: var(--radius-sm);" required>
+                        <div class="invalid-feedback">Name is required.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="cust-phone" style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted);">Phone Number</label>
+                        <input type="tel" id="cust-phone" class="form-control" placeholder="Phone Number" style="height: 48px; border-radius: var(--radius-sm);" required>
+                        <div class="invalid-feedback" id="cust-phone-feedback">Please enter a valid phone number.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="cust-notes" style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted);">Notes (Optional)</label>
+                        <input type="text" id="cust-notes" class="form-control" placeholder="Notes" style="height: 48px; border-radius: var(--radius-sm);">
+                    </div>
+                    <div class="modal-footer" style="margin-top: 24px;">
+                        <button type="button" class="btn btn-secondary" id="btn-cust-cancel" style="flex: 1; height: 48px; font-weight: 700; border-radius: var(--radius-btn);">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="btn-cust-save" style="flex: 1; height: 48px; font-weight: 700; border-radius: var(--radius-btn);">Add Customer</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Duplicate Alert View Container -->
+            <div id="quick-customer-duplicate-container" style="display: none; flex-direction: column; gap: 16px; padding: 8px 0;">
+                <div style="background-color: var(--warning-tint); color: var(--warning); border: 1px solid rgba(217, 144, 0, 0.15); padding: 12px; border-radius: var(--radius-sm); font-size: 0.85rem; font-weight: 700; display: flex; align-items: center; gap: 8px;">
+                    <i data-lucide="alert-triangle" style="width: 16px; height: 16px;"></i>
+                    Customer already exists
+                </div>
+                <div style="padding: 16px; border: 1px solid var(--border); border-radius: var(--radius-md); background-color: var(--surface-sec); display: flex; flex-direction: column; gap: 4px;">
+                    <span id="duplicate-cust-name" style="font-size: 0.95rem; font-weight: 700; color: var(--text);"></span>
+                    <span id="duplicate-cust-phone" style="font-size: 0.8rem; color: var(--text-muted);"></span>
+                </div>
+                <div style="display: flex; gap: 12px; margin-top: 12px;">
+                    <button type="button" class="btn btn-secondary" id="btn-duplicate-back" style="flex: 1; height: 48px; font-weight: 700; border-radius: var(--radius-btn);">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="btn-duplicate-select" style="flex: 1; height: 48px; font-weight: 700; border-radius: var(--radius-btn);">Select Customer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- External Barcode, Scanner & PDF Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <!-- Application Scripts -->
+    <script src="js/storage.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/barcode.js"></script>
+    <script src="js/scanner.js"></script>
+    <script src="js/notifications.js"></script>
+    <script src="js/sales.js"></script>
+</body>
+</html>

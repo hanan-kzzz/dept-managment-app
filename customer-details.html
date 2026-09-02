@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Greenway Groceries - Customer Profile</title>
+    <!-- Jakarta Font & Lucide Icons -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Base Styles -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/customers.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <meta name="theme-color" content="#07090d">
+</head>
+<body data-page="customer-details">
+
+    <!-- Injected Global Header -->
+    <div id="app-header"></div>
+
+    <main class="container" style="padding-bottom: 40px;">
+        <!-- Back Navigation Link -->
+        <div style="margin-bottom: 14px;">
+            <a href="customers.html" class="back-nav-link">
+                <i data-lucide="arrow-left" style="width: 14px; height: 14px; stroke-width: 2.5px;"></i> Customers
+            </a>
+        </div>
+
+        <!-- Mobile / Desktop Profile Grid Layout -->
+        <div class="customer-profile-layout">
+            
+            <!-- LEFT SIDEBAR: Profile Card, Outstanding Due, Quick Actions & Account Details -->
+            <div class="customer-profile-sidebar">
+                
+                <!-- Profile Header Glass Card -->
+                <div class="profile-header-glass-card">
+                    <div class="profile-card-content">
+                        <!-- Circular Avatar with Glow -->
+                        <div class="profile-avatar-circular" id="prof-avatar-badge">AP</div>
+                        
+                        <!-- Customer Name & Phone -->
+                        <h1 class="profile-name-lg" id="prof-name">Customer Name</h1>
+                        
+                        <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;">
+                            <a href="tel:+919876500001" class="profile-phone-link" id="prof-phone-link">
+                                <i data-lucide="phone" style="width: 13px; height: 13px;"></i> <span id="prof-phone">+91 99999 99999</span>
+                            </a>
+                            <span id="prof-due-status-badge" class="status-pill-modern status-pill-overdue">
+                                <span class="status-dot"></span> 3D OVERDUE
+                            </span>
+                        </div>
+                        
+                        <!-- Outstanding Due Hero Box -->
+                        <div class="due-hero-glass-card" id="prof-due-container">
+                            <div class="due-hero-label">OUTSTANDING DUE</div>
+                            <div class="due-hero-amount tabular-nums" id="prof-due">₹2,140.00</div>
+                            <div id="prof-overdue-subtitle" class="due-hero-warning" style="display: none;">
+                                <i data-lucide="triangle-alert" style="width: 12px; height: 12px;"></i> Due since <span id="prof-overdue-date-str">Aug 29, 2026 (3 days overdue)</span>
+                            </div>
+                        </div>
+
+                        <!-- 3-Column Mini Financial Stats Row -->
+                        <div class="mini-stats-grid">
+                            <div class="mini-stat-col">
+                                <span class="mini-stat-label">PURCHASES</span>
+                                <div class="mini-stat-val tabular-nums" id="prof-total-purchases">₹640.00</div>
+                            </div>
+                            <div class="mini-stat-col">
+                                <span class="mini-stat-label">TOTAL PAID</span>
+                                <div class="mini-stat-val mini-stat-val paid-green tabular-nums" id="prof-total-paid">₹0.00</div>
+                            </div>
+                            <div class="mini-stat-col">
+                                <span class="mini-stat-label">LAST ACTIVE</span>
+                                <div class="mini-stat-val" id="prof-last-active" style="font-size: 0.8rem; font-weight: 700; color: #CBD5E1; margin-top: 2px;">Aug 29, 2026</div>
+                            </div>
+                        </div>
+
+                        <!-- Primary & Secondary Action CTAs -->
+                        <div style="margin-top: 16px;">
+                            <!-- Full-width Primary Button -->
+                            <button class="btn-primary-cta" id="btn-record-payment-local">
+                                <i data-lucide="wallet" style="width: 18px; height: 18px;"></i> Record Payment
+                            </button>
+                            
+                            <!-- Secondary Equal-width Action Buttons -->
+                            <div class="secondary-actions-grid">
+                                <a href="sales.html?openNewSale=true" class="btn-glass-secondary" id="btn-new-sale-link">
+                                    <i data-lucide="plus" style="width: 15px; height: 15px;"></i> New Sale
+                                </a>
+                                <button class="btn-glass-secondary" id="btn-send-reminder">
+                                    <i data-lucide="message-square" style="width: 15px; height: 15px;"></i> Send Reminder
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Account Details Glass Card -->
+                <div class="account-details-card">
+                    <div class="account-details-header">Account Details</div>
+                    <div class="details-meta-list" style="display: flex; flex-direction: column; gap: 4px;">
+                        <div class="details-row">
+                            <span class="details-label">Credit Limit</span>
+                            <span class="details-val tabular-nums" id="prof-limit">₹5,000.00</span>
+                        </div>
+                        <div class="details-row" id="prof-address-section" style="display: flex;">
+                            <span class="details-label">Address</span>
+                            <span class="details-val" id="prof-address">Building A, Ground Floor</span>
+                        </div>
+                        <div class="notes-subsection" id="prof-notes-section" style="display: flex; flex-direction: column; gap: 2px;">
+                            <span class="details-label">Customer Notes</span>
+                            <div class="notes-text" id="prof-notes">Regular customer. Prefers evening delivery.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Admin Profile Actions (Edit Button + Text-only Delete Link) -->
+                <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 16px;">
+                    <button class="btn-glass-secondary" id="btn-edit-customer" style="flex: 1; height: 40px; font-size: 0.82rem;">
+                        <i data-lucide="pencil" style="width: 14px; height: 14px;"></i> Edit Profile
+                    </button>
+                    <button class="btn-delete-danger-link" id="btn-delete-customer">
+                        <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i> Delete Profile
+                    </button>
+                </div>
+            </div>
+
+            <!-- RIGHT CONTENT: Transaction Ledger & Reminder History -->
+            <div class="customer-profile-content">
+                <!-- Transaction Ledger Glass Card -->
+                <section class="glass-card" style="padding: 20px;">
+                    <div class="ledger-header-card">
+                        <div>
+                            <h2 style="font-size: 1rem; font-weight: 800; color: #F8FAFC; margin: 0 0 2px 0; display: flex; align-items: center; gap: 7px;">
+                                <i data-lucide="book-open" style="width: 17px; height: 17px; color: #3894FF;"></i>
+                                Transaction Ledger
+                            </h2>
+                            <p style="font-size: 0.75rem; color: #8E9BAE; margin: 0;">Complete chronological record of purchases and payments</p>
+                        </div>
+                        <span id="ledger-count-pill" class="ledger-count-pill">2 Entries</span>
+                    </div>
+
+                    <div class="ledger-list-clean" id="ledger-list-feed">
+                        <!-- Ledger items dynamically populated by JS -->
+                        <div class="empty-state" style="padding: 30px 0; text-align: center;">
+                            <p class="empty-state-text" style="color: #8E9BAE; font-size: 0.82rem;">No transaction logs available.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Reminder History Glass Card -->
+                <section class="glass-card" style="padding: 20px; margin-top: 16px;">
+                    <div class="ledger-header-card">
+                        <div>
+                            <h2 style="font-size: 1rem; font-weight: 800; color: #F8FAFC; margin: 0 0 2px 0; display: flex; align-items: center; gap: 7px;">
+                                <i data-lucide="message-square" style="width: 17px; height: 17px; color: #32D583;"></i>
+                                Reminder History
+                            </h2>
+                            <p style="font-size: 0.75rem; color: #8E9BAE; margin: 0;">Log of WhatsApp & payment reminders prepared or sent</p>
+                        </div>
+                        <span id="reminder-count-pill" class="ledger-count-pill">0 Reminders</span>
+                    </div>
+
+                    <div class="reminder-history-feed" id="reminder-history-feed">
+                        <!-- Injected dynamically by JS -->
+                        <div class="empty-state" style="padding: 32px 16px; text-align: center;">
+                            <p class="empty-state-text" style="font-size: 0.82rem; color: #8E9BAE; margin: 0;">No reminder history recorded for this customer</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <!-- Global App-Navigation -->
+    <nav id="app-navigation"></nav>
+
+    <!-- RECORD PAYMENT MODAL -->
+    <div class="modal-overlay" id="modal-record-payment">
+        <div class="modal-container" style="max-width: 440px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Record Payment</h3>
+                <button class="modal-close" id="modal-payment-close"><i data-lucide="x"></i></button>
+            </div>
+            <form id="form-record-payment" novalidate>
+                <input type="hidden" id="payment-customer-id">
+                <div class="card" style="background: var(--surface-sec); padding: 12px; margin-bottom: 12px; border: 1px solid var(--border);">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">Customer:</span>
+                        <strong id="modal-pay-customer-name" style="font-size: 0.9rem; color: var(--text);">-</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px; border-top: 1px dashed var(--border); padding-top: 6px;">
+                        <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">Current Outstanding:</span>
+                        <strong id="modal-pay-due-val" style="font-size: 1.15rem; color: var(--danger); font-weight: 800;">₹0.00</strong>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="payment-amount">Payment Amount (₹) *</label>
+                    <input type="number" id="payment-amount" class="form-control" placeholder="0.00" min="0.01" step="0.01" style="height: 48px; font-size: 1.25rem; font-weight: 800;" required>
+                    <div class="invalid-feedback" id="payment-amount-feedback">Amount must be greater than zero.</div>
+                </div>
+
+                <div class="form-group">
+                    <label>Payment Method *</label>
+                    <div class="payment-method-selector-grid" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;">
+                        <button type="button" class="btn btn-outline btn-pay-method active" data-method="Cash" style="height: 40px; font-size: 0.85rem; font-weight: 700;">Cash</button>
+                        <button type="button" class="btn btn-outline btn-pay-method" data-method="UPI" style="height: 40px; font-size: 0.85rem; font-weight: 700;">UPI</button>
+                        <button type="button" class="btn btn-outline btn-pay-method" data-method="Card" style="height: 40px; font-size: 0.85rem; font-weight: 700;">Card</button>
+                    </div>
+                    <input type="hidden" id="payment-method-value" value="Cash">
+                </div>
+
+                <div class="form-group">
+                    <label for="payment-date">Payment Date</label>
+                    <input type="date" id="payment-date" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label for="payment-notes">Notes / Memo (Optional)</label>
+                    <input type="text" id="payment-notes" class="form-control" placeholder="e.g. UPI Ref / Cash receipt memo">
+                </div>
+
+                <div class="modal-footer" style="padding-top: 10px;">
+                    <button type="button" class="btn btn-secondary" id="btn-payment-cancel" style="flex: 1; height: 46px;">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="btn-payment-submit" style="flex: 1; height: 46px; font-weight: 800;">
+                        <i data-lucide="check"></i> Record Payment
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- PAYMENT RECEIPT SUCCESS DIALOG -->
+    <div class="modal-overlay" id="modal-payment-receipt">
+        <div class="modal-container" style="max-width: 440px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Payment Recorded</h3>
+                <button class="modal-close" id="modal-receipt-close"><i data-lucide="x"></i></button>
+            </div>
+            <div style="padding: 10px 0; text-align: center;">
+                <div style="width: 56px; height: 56px; border-radius: 50%; background: var(--success-bg); color: var(--success); display: flex; align-items: center; justify-content: center; margin: 0 auto 10px;">
+                    <i data-lucide="check-circle" style="width: 32px; height: 32px; stroke-width: 2.5px;"></i>
+                </div>
+                <span style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: var(--success); letter-spacing: 0.5px;">Payment Received</span>
+                <div id="receipt-amount-display" style="font-size: 2rem; font-weight: 800; color: var(--text); margin: 2px 0 4px;">₹0.00</div>
+                <div id="receipt-payment-id" style="font-size: 0.8rem; font-family: monospace; font-weight: 700; color: var(--accent); background: var(--surface-sec); padding: 2px 8px; border-radius: 4px; display: inline-block; border: 1px solid var(--border); margin-bottom: 14px;">PAY-000000</div>
+
+                <div class="card" style="padding: 14px; text-align: left; display: flex; flex-direction: column; gap: 8px; font-size: 0.85rem; background: var(--surface-sec); border: 1px solid var(--border); margin-bottom: 16px;">
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="color: var(--text-muted);">Customer:</span>
+                        <strong id="receipt-customer-name" style="color: var(--text);">-</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="color: var(--text-muted);">Payment Method:</span>
+                        <strong id="receipt-method" style="color: var(--text);">Cash</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="color: var(--text-muted);">Date & Time:</span>
+                        <span id="receipt-date" style="font-weight: 600; color: var(--text);">-</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; border-top: 1px dashed var(--border); padding-top: 8px; margin-top: 2px;">
+                        <span style="color: var(--text); font-weight: 700;">Remaining Due:</span>
+                        <strong id="receipt-remaining-due" style="color: var(--danger); font-size: 1rem; font-weight: 800;">₹0.00</strong>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 10px; margin-bottom: 8px;">
+                    <button type="button" class="btn btn-primary" id="btn-share-receipt" style="flex: 1; height: 44px; font-weight: 700; font-size: 0.85rem;">
+                        <i data-lucide="share-2"></i> Share Receipt
+                    </button>
+                    <button type="button" class="btn btn-outline" id="btn-print-receipt" style="flex: 1; height: 44px; font-weight: 700; font-size: 0.85rem;">
+                        <i data-lucide="printer"></i> Print Receipt
+                    </button>
+                </div>
+                <button type="button" class="btn btn-secondary" id="btn-receipt-done" style="width: 100%; height: 42px; font-weight: 700;">Done</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- EDIT PROFILE FORM MODAL -->
+    <div class="modal-overlay" id="modal-customer-edit">
+        <div class="modal-container" style="max-width: 440px;">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modal-cust-title">Edit Customer Profile</h3>
+                <button class="modal-close" id="modal-cust-edit-close"><i data-lucide="x"></i></button>
+            </div>
+            <form id="form-customer-edit" novalidate>
+                <input type="hidden" id="edit-cust-id">
+                <div class="form-group">
+                    <label for="edit-cust-name">Customer Name *</label>
+                    <input type="text" id="edit-cust-name" class="form-control" placeholder="Enter name" required>
+                    <div class="invalid-feedback">Name is required.</div>
+                </div>
+                <div class="form-group">
+                    <label for="edit-cust-phone">Phone Number *</label>
+                    <input type="tel" id="edit-cust-phone" class="form-control" placeholder="Phone Number" required>
+                    <div class="invalid-feedback" id="edit-cust-phone-feedback">Enter a valid 10-15 digit phone number.</div>
+                </div>
+                <div class="form-group" id="duplicate-customer-alert" style="display: none; background: var(--danger-tint); border: 1px solid rgba(239, 68, 68, 0.2); padding: 10px; border-radius: var(--radius-sm); margin-top: 4px;">
+                    <div style="font-size: 0.8rem; color: var(--danger); font-weight: 600;">A customer with this phone number already exists.</div>
+                </div>
+                <div class="form-group">
+                    <label for="edit-cust-address">Address</label>
+                    <input type="text" id="edit-cust-address" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="edit-cust-limit">Credit Limit *</label>
+                    <input type="number" id="edit-cust-limit" class="form-control" min="0" required step="0.01">
+                    <div class="invalid-feedback">Required (>= 0).</div>
+                </div>
+                <div class="form-group">
+                    <label for="edit-cust-notes">Notes</label>
+                    <textarea id="edit-cust-notes" class="form-control form-control-textarea" style="height: 70px;"></textarea>
+                </div>
+                <div class="modal-footer" style="padding-top: 10px;">
+                    <button type="button" class="btn btn-secondary" id="btn-cust-edit-cancel" style="flex: 1; height: 46px;">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="btn-cust-edit-save" style="flex: 1; height: 46px;">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- WHATSAPP / DUE REMINDER REVIEW MODAL (REDESIGNED) -->
+    <div class="modal-overlay" id="modal-reminder-review">
+        <div class="modal-container rem-modal-container" style="max-width: 440px;">
+            <!-- Modal Header with Single Close X -->
+            <div class="modal-header rem-modal-header">
+                <div class="rem-header-title-wrap">
+                    <div class="rem-header-badge">
+                        <i data-lucide="bell-ring"></i>
+                    </div>
+                    <div>
+                        <h3 class="modal-title rem-modal-title">Payment Reminder</h3>
+                        <span class="rem-modal-subtitle">Send via WhatsApp or share note</span>
+                    </div>
+                </div>
+                <button class="modal-close rem-modal-close" id="modal-rem-close" title="Close"><i data-lucide="x"></i></button>
+            </div>
+
+            <div class="rem-modal-body">
+                <!-- Customer Summary Card with Tone-Adaptive Due Accent -->
+                <div class="rem-customer-card tone-standard" id="rem-customer-card">
+                    <div class="rem-cust-left">
+                        <div class="rem-cust-avatar" id="rem-avatar-badge">AP</div>
+                        <div class="rem-cust-info">
+                            <span class="rem-cust-name" id="rem-customer-name">Anand Kumar</span>
+                            <span class="rem-cust-phone" id="rem-phone-display">+91 98765 43210</span>
+                        </div>
+                    </div>
+                    <div class="rem-cust-due-wrap">
+                        <span class="rem-due-label" id="rem-due-label">Outstanding Due</span>
+                        <strong class="rem-due-amount" id="rem-due-amount-display">₹1,450.00</strong>
+                    </div>
+                </div>
+
+                <!-- Template Selector Pills with Active Badge State -->
+                <div class="rem-template-section">
+                    <label class="rem-section-label">Select Message Template</label>
+                    <div class="rem-template-pills">
+                        <button type="button" class="btn-rem-tpl active" data-tpl="standard">
+                            <i data-lucide="check" class="tpl-check"></i>
+                            <span>Standard Due</span>
+                        </button>
+                        <button type="button" class="btn-rem-tpl" data-tpl="overdue">
+                            <i data-lucide="check" class="tpl-check"></i>
+                            <span>Overdue Alert</span>
+                        </button>
+                        <button type="button" class="btn-rem-tpl" data-tpl="friendly">
+                            <i data-lucide="check" class="tpl-check"></i>
+                            <span>Friendly Note</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Generated Message Section with Character Counter & Edit Hint -->
+                <div class="rem-message-section">
+                    <div class="rem-msg-header">
+                        <label for="rem-message-text" class="rem-section-label">Generated Message</label>
+                        <div class="rem-msg-meta">
+                            <span class="rem-edit-hint"><i data-lucide="pencil"></i> Tap to edit</span>
+                            <span class="rem-char-counter" id="rem-char-counter">0 chars</span>
+                        </div>
+                    </div>
+                    
+                    <div class="rem-textarea-wrap">
+                        <textarea id="rem-message-text" class="rem-textarea" rows="4" placeholder="Compose payment reminder..."></textarea>
+                    </div>
+                </div>
+
+                <!-- WhatsApp Bubble Preview Accordion -->
+                <div class="rem-bubble-accordion">
+                    <div class="rem-bubble-toggle" id="btn-toggle-bubble-preview">
+                        <div class="rem-bubble-toggle-left">
+                            <i data-lucide="smartphone" class="wa-icon"></i>
+                            <span>Live WhatsApp Bubble Preview</span>
+                        </div>
+                        <i data-lucide="chevron-down" class="chevron-icon"></i>
+                    </div>
+                    <div class="rem-bubble-wrap hidden" id="rem-bubble-wrap">
+                        <div class="wa-chat-bubble">
+                            <div class="wa-bubble-store-header">
+                                <i data-lucide="store" class="wa-store-icon"></i>
+                                <span class="wa-store-name">Greenway Groceries</span>
+                            </div>
+                            <div class="wa-bubble-text" id="rem-bubble-text-preview">
+                                Loading preview...
+                            </div>
+                            <div class="wa-bubble-footer">
+                                <span class="wa-bubble-time">Just now</span>
+                                <i data-lucide="check-check" class="wa-blue-ticks"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Primary WhatsApp Action & Secondary Copy Action (No Duplicate Close) -->
+                <div class="rem-modal-actions">
+                    <button type="button" class="btn-rem-whatsapp-primary" id="btn-rem-share">
+                        <i data-lucide="message-circle" class="wa-btn-icon"></i>
+                        <span>Send via WhatsApp</span>
+                    </button>
+                    <button type="button" class="btn-rem-copy-secondary" id="btn-rem-copy" title="Copy to clipboard">
+                        <i data-lucide="copy"></i>
+                        <span>Copy Text</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Scripts -->
+    <script src="js/storage.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/notifications.js"></script>
+    <script src="js/customers.js"></script>
+</body>
+</html>
