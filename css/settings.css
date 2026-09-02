@@ -2503,4 +2503,180 @@ body[data-page="settings"] {
     color: #53BDEB; /* WhatsApp Double Check Blue */
 }
 
+/* ==========================================================
+   LIGHT MODE STYLES FOR WHATSAPP REMINDERS SUBPAGE
+   ========================================================== */
+
+[data-theme="light"] .wa-hero-card,
+:root:not([data-theme="dark"]) .wa-hero-card {
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
+}
+
+[data-theme="light"] .wa-hero-card.disconnected,
+:root:not([data-theme="dark"]) .wa-hero-card.disconnected {
+    border-color: #FECDD3;
+    background: linear-gradient(145deg, #FFFFFF 0%, #FFF5F5 100%);
+}
+
+[data-theme="light"] .wa-hero-card.disconnected .wa-hero-icon-box,
+:root:not([data-theme="dark"]) .wa-hero-card.disconnected .wa-hero-icon-box {
+    background: #FFE4E6;
+    color: #E11D48;
+}
+
+[data-theme="light"] .wa-hero-card.connected,
+:root:not([data-theme="dark"]) .wa-hero-card.connected {
+    border-color: #BBF7D0;
+    background: linear-gradient(145deg, #FFFFFF 0%, #F0FDF4 100%);
+}
+
+[data-theme="light"] .wa-hero-card.connected .wa-hero-icon-box,
+:root:not([data-theme="dark"]) .wa-hero-card.connected .wa-hero-icon-box {
+    background: #DCFCE7;
+    color: #16A34A;
+}
+
+[data-theme="light"] .wa-hero-title,
+:root:not([data-theme="dark"]) .wa-hero-title {
+    color: #0F172A;
+}
+
+[data-theme="light"] .wa-hero-desc,
+:root:not([data-theme="dark"]) .wa-hero-desc {
+    color: #64748B;
+}
+
+[data-theme="light"] .wa-hero-meta,
+:root:not([data-theme="dark"]) .wa-hero-meta {
+    color: #64748B;
+}
+
+[data-theme="light"] .wa-controls-bar,
+:root:not([data-theme="dark"]) .wa-controls-bar {
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+}
+
+[data-theme="light"] .wa-presets-title,
+:root:not([data-theme="dark"]) .wa-presets-title {
+    color: #475569;
+}
+
+[data-theme="light"] .wa-preset-chip,
+:root:not([data-theme="dark"]) .wa-preset-chip {
+    background: #F1F5F9;
+    border: 1px solid #CBD5E1;
+    color: #475569;
+}
+
+[data-theme="light"] .wa-preset-chip:hover,
+:root:not([data-theme="dark"]) .wa-preset-chip:hover {
+    background: #E2E8F0;
+    color: #0F172A;
+}
+
+[data-theme="light"] .wa-preset-chip.active,
+:root:not([data-theme="dark"]) .wa-preset-chip.active {
+    background: #087FF5;
+    border-color: #087FF5;
+    color: #FFFFFF;
+}
+
+[data-theme="light"] .wa-timing-box,
+:root:not([data-theme="dark"]) .wa-timing-box {
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+}
+
+[data-theme="light"] .wa-timing-title,
+:root:not([data-theme="dark"]) .wa-timing-title {
+    color: #0F172A;
+}
+
+[data-theme="light"] .wa-timing-sub,
+:root:not([data-theme="dark"]) .wa-timing-sub {
+    color: #64748B;
+}
+
+[data-theme="light"] .wa-timing-select,
+:root:not([data-theme="dark"]) .wa-timing-select {
+    background: #FFFFFF;
+    border: 1px solid #CBD5E1;
+    color: #0F172A;
+}
+
+[data-theme="light"] .wa-section-title,
+:root:not([data-theme="dark"]) .wa-section-title {
+    color: #0F172A;
+}
+
+[data-theme="light"] .wa-section-subtitle,
+:root:not([data-theme="dark"]) .wa-section-subtitle {
+    color: #64748B;
+}
+
+[data-theme="light"] .wa-timeline-content,
+:root:not([data-theme="dark"]) .wa-timeline-content {
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+}
+
+[data-theme="light"] .wa-rule-name,
+:root:not([data-theme="dark"]) .wa-rule-name {
+    color: #0F172A;
+}
+
+[data-theme="light"] .wa-rule-desc,
+:root:not([data-theme="dark"]) .wa-rule-desc {
+    color: #64748B;
+}
+
+[data-theme="light"] .wa-lock-overlay,
+:root:not([data-theme="dark"]) .wa-lock-overlay {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(8px);
+}
+
+[data-theme="light"] .wa-lock-card,
+:root:not([data-theme="dark"]) .wa-lock-card {
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    box-shadow: 0 12px 32px rgba(15, 23, 42, 0.12);
+}
+
+[data-theme="light"] .wa-lock-card h5,
+:root:not([data-theme="dark"]) .wa-lock-card h5 {
+    color: #0F172A;
+}
+
+[data-theme="light"] .wa-lock-card p,
+:root:not([data-theme="dark"]) .wa-lock-card p {
+    color: #64748B;
+}
+
+[data-theme="light"] .wa-msg-bubble-wrap,
+:root:not([data-theme="dark"]) .wa-msg-bubble-wrap {
+    background: #E5DDD5; /* Authentic WhatsApp Light Mode Chat Background */
+}
+
+[data-theme="light"] .wa-bubble,
+:root:not([data-theme="dark"]) .wa-bubble {
+    background: #FFFFFF;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .wa-bubble-text,
+:root:not([data-theme="dark"]) .wa-bubble-text {
+    color: #111B21;
+}
+
+[data-theme="light"] .wa-bubble-text b,
+:root:not([data-theme="dark"]) .wa-bubble-text b {
+    color: #000000;
+}
+
+
 

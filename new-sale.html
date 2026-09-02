@@ -4,6 +4,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>New Sale - Grocery POS</title>
+  <script>
+    (function() {
+      var t = localStorage.getItem('theme');
+      if (!t) {
+        try {
+          var s = JSON.parse(localStorage.getItem('grocery_settings'));
+          t = s && s.theme;
+        } catch(e) {}
+      }
+      if (!t || t === 'system') {
+        t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'dark';
+      }
+      document.documentElement.setAttribute('data-theme', t);
+      if (t === 'dark') document.documentElement.classList.add('dark');
+      else document.documentElement.classList.remove('dark');
+    })();
+  </script>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap">
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -20,6 +37,64 @@
       color: #1E293B;
       margin: 0;
       padding: 0;
+    }
+
+    /* Complete Dark Mode Support for New Sale Page */
+    [data-theme="dark"] body, html.dark body {
+      background-color: #0B0F17 !important;
+      color: #F8FAFC !important;
+    }
+    [data-theme="dark"] .bg-[#F7F8FA], html.dark .bg-[#F7F8FA],
+    [data-theme="dark"] .bg-[#FAFAF8], html.dark .bg-[#FAFAF8] {
+      background-color: #0B0F17 !important;
+      border-color: #1E293B !important;
+    }
+    [data-theme="dark"] header, html.dark header,
+    [data-theme="dark"] footer, html.dark footer,
+    [data-theme="dark"] .bg-white, html.dark .bg-white {
+      background-color: #161B26 !important;
+      color: #F8FAFC !important;
+      border-color: #273043 !important;
+    }
+    [data-theme="dark"] .bg-slate-50, html.dark .bg-slate-50 {
+      background-color: #1E2433 !important;
+      color: #F8FAFC !important;
+      border-color: #273043 !important;
+    }
+    [data-theme="dark"] .bg-slate-100, html.dark .bg-slate-100 {
+      background-color: #242C3D !important;
+      color: #F8FAFC !important;
+      border-color: #334155 !important;
+    }
+    [data-theme="dark"] .text-slate-900, html.dark .text-slate-900,
+    [data-theme="dark"] .text-slate-800, html.dark .text-slate-800,
+    [data-theme="dark"] .text-slate-700, html.dark .text-slate-700 {
+      color: #F8FAFC !important;
+    }
+    [data-theme="dark"] .text-slate-600, html.dark .text-slate-600,
+    [data-theme="dark"] .text-slate-500, html.dark .text-slate-500 {
+      color: #94A3B8 !important;
+    }
+    [data-theme="dark"] .text-slate-400, html.dark .text-slate-400 {
+      color: #64748B !important;
+    }
+    [data-theme="dark"] .border-slate-100, html.dark .border-slate-100,
+    [data-theme="dark"] .border-slate-200, html.dark .border-slate-200,
+    [data-theme="dark"] .border-slate-200\/80, html.dark .border-slate-200\/80,
+    [data-theme="dark"] .border-slate-200\/90, html.dark .border-slate-200\/90 {
+      border-color: #273043 !important;
+    }
+    [data-theme="dark"] input, html.dark input {
+      background-color: #0F172A !important;
+      color: #F8FAFC !important;
+      border-color: #334155 !important;
+    }
+    [data-theme="dark"] #cameraScanModal, html.dark #cameraScanModal {
+      background-color: #0B0F17 !important;
+    }
+    [data-theme="dark"] #scannedDrawerContainer, html.dark #scannedDrawerContainer {
+      background-color: #161B26 !important;
+      border-color: #273043 !important;
     }
 
     .font-mono-num {
@@ -1948,7 +2023,56 @@
     function triggerSuccessFlow() {
       currentInvoiceNo = "INV-2026-" + Math.floor(1000 + Math.random() * 9000);
       let total = 0;
-      Object.keys(cart).forEach(id => total += cart[id].total);
+      const saleItems = [];
+      Object.keys(cart).forEach(id => {
+        const item = itemsDb[id];
+        const cartItem = cart[id];
+        total += cartItem.total;
+        saleItems.push({
+          productId: id,
+          productName: item ? item.name : 'Product',
+          quantity: cartItem.qty || (cartItem.weightKg || 1),
+          unit: item ? item.unit : 'Piece',
+          rate: item ? item.price : 0,
+          total: cartItem.total
+        });
+      });
+
+      // Parse payment method & amounts
+      let pm = selectedPayment || 'Cash';
+      let paidAmt = total;
+      let dueAmt = 0;
+
+      if (pm.includes('Due') || pm.includes('Credit')) {
+        const dueMatch = pm.match(/Due ₹?(\d+(?:\.\d+)?)/i);
+        const paidMatch = pm.match(/Paid ₹?(\d+(?:\.\d+)?)/i);
+        if (dueMatch) dueAmt = parseFloat(dueMatch[1]) || 0;
+        if (paidMatch) paidAmt = parseFloat(paidMatch[1]) || 0;
+        if (!dueMatch && !paidMatch) {
+          dueAmt = total;
+          paidAmt = 0;
+        }
+      }
+
+      // Persist sale into Storage DB
+      if (typeof Storage !== 'undefined' && typeof Storage.saveSale === 'function') {
+        Storage.saveSale({
+          invoiceNumber: currentInvoiceNo,
+          customerId: selectedCust.id || 'walk-in',
+          customerName: selectedCust.name || 'Walk-in Customer',
+          customerPhone: selectedCust.phone || '',
+          date: new Date().toISOString(),
+          items: saleItems,
+          subtotal: total,
+          discount: 0,
+          tax: 0,
+          grandTotal: total,
+          paymentMethod: pm,
+          amountPaid: paidAmt,
+          amountDue: dueAmt,
+          change: 0
+        });
+      }
 
       document.getElementById('succInvNum').textContent = `Invoice #${currentInvoiceNo} generated`;
       document.getElementById('succPaymentTag').textContent = selectedPayment;

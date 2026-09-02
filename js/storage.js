@@ -526,7 +526,12 @@ const Storage = {
 
     // --- SALES / TRANSACTIONS ---
     getSales() {
-        return this._get(KEYS.SALES, []);
+        let sales = this._get(KEYS.SALES, []);
+        if (!sales || sales.length === 0) {
+            this.loadDemoData();
+            sales = this._get(KEYS.SALES, []);
+        }
+        return sales;
     },
 
     saveSales(sales) {

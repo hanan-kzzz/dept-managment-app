@@ -763,6 +763,7 @@ function setupThemeSelection() {
                 appTheme = prefersDark ? 'dark' : 'light';
             }
             document.documentElement.setAttribute('data-theme', appTheme);
+            document.documentElement.classList.toggle('dark', appTheme === 'dark');
 
             // Update UI list checkmarks
             document.querySelectorAll('[data-theme-val]').forEach(el => {

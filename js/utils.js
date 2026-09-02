@@ -152,13 +152,18 @@ const Utils = {
         const settings = Storage.getSettings();
         const unreadCount = Storage.getNotifications().filter(n => !n.read).length;
 
-        // Apply saved theme on boot (Default to dark for fintech styling)
-        let savedTheme = localStorage.getItem('theme') || 'dark';
+        // Apply saved theme on boot
+        let savedTheme = localStorage.getItem('theme');
+        if (!savedTheme) {
+            savedTheme = settings.theme || 'dark';
+        }
         if (savedTheme === 'system') {
             const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            savedTheme = prefersDark ? 'dark' : 'dark';
+            savedTheme = prefersDark ? 'dark' : 'light';
         }
         document.documentElement.setAttribute('data-theme', savedTheme);
+        document.documentElement.classList.toggle('dark', savedTheme === 'dark');
+        localStorage.setItem('theme', savedTheme);
 
         // Dynamic time greeting
         const hour = new Date().getHours();
@@ -173,8 +178,7 @@ const Utils = {
             headerContainer.className = 'header-bar';
             headerContainer.innerHTML = `
                 <div class="header-title" style="display: flex; align-items: center; gap: 8px;">
-                    <i data-lucide="store" style="width: 18px; height: 18px; stroke-width: 2.2px; color: var(--accent); flex-shrink: 0;"></i>
-                    <div style="font-size: 14.5px; font-weight: 700; color: var(--text); letter-spacing: -0.2px;">${settings.shopName || 'My Grocery Shop'}</div>
+                    <div class="cashly-logo-badge" style="width: 28px; height: 28px; border-radius: 50%; background-color: rgba(37, 99, 235, 0.1); display: flex; align-items: center; justify-content: center; color: #2563EB; flex-shrink: 0;"><i data-lucide="wallet" style="width: 16px; height: 16px; stroke-width: 2.5px;"></i></div><div style="font-size: 16px; font-weight: 800; color: var(--text); letter-spacing: -0.3px;">Cashly</div>
                 </div>
                 <div class="header-actions" style="display: flex; align-items: center; gap: 6px;">
                     <button type="button" id="global-theme-toggle-btn" class="icon-btn" aria-label="Toggle Dark/Light Mode" title="Toggle Theme">
@@ -197,8 +201,13 @@ const Utils = {
                     const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
                     const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
                     document.documentElement.setAttribute('data-theme', newTheme);
+                    document.documentElement.classList.toggle('dark', newTheme === 'dark');
                     localStorage.setItem('theme', newTheme);
                     
+                    const curSettings = Storage.getSettings();
+                    curSettings.theme = newTheme;
+                    Storage.saveSettings(curSettings);
+
                     const icon = themeToggleBtn.querySelector('i');
                     if (icon) {
                         icon.setAttribute('data-lucide', newTheme === 'light' ? 'sun' : 'moon');
@@ -1276,3 +1285,4 @@ document.addEventListener('DOMContentLoaded', () => {
 if (typeof window !== 'undefined') {
     window.Utils = Utils;
 }
+
