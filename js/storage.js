@@ -20,7 +20,7 @@ const KEYS = {
 };
 
 const DEFAULT_SETTINGS = {
-    shopName: 'My Grocery Shop',
+    shopName: 'My Shop',
     shopPhone: '+91 98765 43210',
     shopAddress: '123 Main Street, Market Area',
     shopEmail: 'contact@mygrocery.com',
@@ -1070,16 +1070,16 @@ const Storage = {
         }
 
         if (rice && cookies) {
-            // Sale 3: Walk-in customer cash sale
+            // Sale 3: Walk-in customer cash sale (3 hours ago)
             this.saveSale({
                 invoiceNumber: 'INV-000003',
                 customerId: 'walk-in',
                 customerName: 'Walk-in Customer',
                 customerPhone: '',
-                date: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString(), // 3 hours ago
+                date: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString(),
                 items: [
-                    { productId: rice.id, productName: rice.productName, barcode: rice.barcode, sku: rice.sku, quantity: 2, unit: rice.unit, rate: rice.sellingRate, total: 2 * rice.sellingRate }, // 220
-                    { productId: cookies.id, productName: cookies.productName, barcode: cookies.barcode, sku: cookies.sku, quantity: 2, unit: cookies.unit, rate: cookies.sellingRate, total: 2 * cookies.sellingRate } // 40
+                    { productId: rice.id, productName: rice.productName, barcode: rice.barcode, sku: rice.sku, quantity: 2, unit: rice.unit, rate: rice.sellingRate, total: 2 * rice.sellingRate },
+                    { productId: cookies.id, productName: cookies.productName, barcode: cookies.barcode, sku: cookies.sku, quantity: 2, unit: cookies.unit, rate: cookies.sellingRate, total: 2 * cookies.sellingRate }
                 ],
                 subtotal: 260,
                 discount: 0,
@@ -1090,10 +1090,70 @@ const Storage = {
                 amountDue: 0,
                 change: 40
             });
+
+            // Sale 4: Ramesh Kumar Cash Sale
+            this.saveSale({
+                invoiceNumber: 'INV-000004',
+                customerId: 'walk-in',
+                customerName: 'Ramesh Kumar',
+                customerPhone: '+91 98765 12345',
+                date: new Date(Date.now() - 45 * 60 * 1000).toISOString(),
+                items: [
+                    { productId: cookies.id, productName: cookies.productName, barcode: cookies.barcode, sku: cookies.sku, quantity: 1, unit: cookies.unit, rate: 30, total: 30 }
+                ],
+                subtotal: 30,
+                discount: 0,
+                tax: 0,
+                grandTotal: 30,
+                paymentMethod: 'Cash',
+                amountPaid: 30,
+                amountDue: 0,
+                change: 0
+            });
+
+            // Sale 5: Ramesh Kumar Cash Sale (Repeat pattern test)
+            this.saveSale({
+                invoiceNumber: 'INV-000005',
+                customerId: 'walk-in',
+                customerName: 'Ramesh Kumar',
+                customerPhone: '+91 98765 12345',
+                date: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
+                items: [
+                    { productId: cookies.id, productName: cookies.productName, barcode: cookies.barcode, sku: cookies.sku, quantity: 1, unit: cookies.unit, rate: 30, total: 30 }
+                ],
+                subtotal: 30,
+                discount: 0,
+                tax: 0,
+                grandTotal: 30,
+                paymentMethod: 'Cash',
+                amountPaid: 30,
+                amountDue: 0,
+                change: 0
+            });
+
+            // Sale 6: Ramesh Kumar Cash Sale (Repeat pattern test)
+            this.saveSale({
+                invoiceNumber: 'INV-000006',
+                customerId: 'walk-in',
+                customerName: 'Ramesh Kumar',
+                customerPhone: '+91 98765 12345',
+                date: new Date(Date.now() - 15 * 60 * 1000).toISOString(),
+                items: [
+                    { productId: cookies.id, productName: cookies.productName, barcode: cookies.barcode, sku: cookies.sku, quantity: 1, unit: cookies.unit, rate: 30, total: 30 }
+                ],
+                subtotal: 30,
+                discount: 0,
+                tax: 0,
+                grandTotal: 30,
+                paymentMethod: 'Cash',
+                amountPaid: 30,
+                amountDue: 0,
+                change: 0
+            });
         }
 
-        // Set next sequence to 4
-        localStorage.setItem(KEYS.INVOICE_SEQ, '4');
+        // Set next sequence to 7
+        localStorage.setItem(KEYS.INVOICE_SEQ, '7');
 
         // Set default initial settings
         this._set(KEYS.SETTINGS, DEFAULT_SETTINGS);
@@ -1655,3 +1715,4 @@ if (typeof window !== 'undefined') {
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = Storage;
 }
+

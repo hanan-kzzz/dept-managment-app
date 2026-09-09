@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script>window.BASE_PATH = '../../';</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>New Sale - Grocery POS</title>
@@ -14,7 +15,7 @@
         } catch(e) {}
       }
       if (!t || t === 'system') {
-        t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'dark';
+        t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
       }
       document.documentElement.setAttribute('data-theme', t);
       if (t === 'dark') document.documentElement.classList.add('dark');
@@ -22,10 +23,16 @@
     })();
   </script>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class'
+    };
+  </script>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap">
   <script src="https://unpkg.com/lucide@latest"></script>
-  <script src="js/storage.js"></script>
-  <script src="js/utils.js"></script>
+  <script src="../../js/storage.js"></script>
+  <script src="../../js/utils.js"></script>
+  <link rel="stylesheet" href="../../css/style.css">
   <style>
     /* Critical Fallback CSS */
     .hidden { display: none !important; }
@@ -40,12 +47,28 @@
     }
 
     /* Complete Dark Mode Support for New Sale Page */
+    [data-theme="dark"] .hover\:bg-slate-50:hover, html.dark .hover\:bg-slate-50:hover {
+      background-color: #1E2433 !important;
+    }
+    [data-theme="dark"] .bg-blue-50\/80, html.dark .bg-blue-50\/80,
+    [data-theme="dark"] .bg-blue-50, html.dark .bg-blue-50 {
+      background-color: #1E293B !important;
+      border-color: #334155 !important;
+    }
+    [data-theme="dark"] .border-blue-100, html.dark .border-blue-100,
+    [data-theme="dark"] .border-slate-200\/60, html.dark .border-slate-200\/60 {
+      border-color: #273043 !important;
+    }
+    [data-theme="dark"] .bg-\[\#FAFAF8\]\/90, html.dark .bg-\[\#FAFAF8\]\/90 {
+      background-color: rgba(11, 15, 23, 0.9) !important;
+    }
+
     [data-theme="dark"] body, html.dark body {
       background-color: #0B0F17 !important;
       color: #F8FAFC !important;
     }
-    [data-theme="dark"] .bg-[#F7F8FA], html.dark .bg-[#F7F8FA],
-    [data-theme="dark"] .bg-[#FAFAF8], html.dark .bg-[#FAFAF8] {
+    [data-theme="dark"] .bg-\[\#F7F8FA\], html.dark .bg-\[\#F7F8FA\],
+    [data-theme="dark"] .bg-\[\#FAFAF8\], html.dark .bg-\[\#FAFAF8\] {
       background-color: #0B0F17 !important;
       border-color: #1E293B !important;
     }
@@ -61,7 +84,9 @@
       color: #F8FAFC !important;
       border-color: #273043 !important;
     }
-    [data-theme="dark"] .bg-slate-100, html.dark .bg-slate-100 {
+    [data-theme="dark"] .bg-slate-100, html.dark .bg-slate-100,
+    [data-theme="dark"] .bg-slate-200, html.dark .bg-slate-200,
+    [data-theme="dark"] .bg-slate-200\/80, html.dark .bg-slate-200\/80 {
       background-color: #242C3D !important;
       color: #F8FAFC !important;
       border-color: #334155 !important;
@@ -84,6 +109,40 @@
     [data-theme="dark"] .border-slate-200\/90, html.dark .border-slate-200\/90 {
       border-color: #273043 !important;
     }
+        [data-theme="dark"] .bg-blue-50\/70, html.dark .bg-blue-50\/70 {
+      background-color: #1E293B !important;
+      border-color: #334155 !important;
+    }
+        [data-theme="dark"] .bg-amber-50\/70, html.dark .bg-amber-50\/70 {
+      background-color: #1E293B !important;
+      border-color: #334155 !important;
+    }
+    [data-theme="dark"] .bg-amber-200\/80, html.dark .bg-amber-200\/80 {
+      background-color: #0F172A !important;
+      border-color: #334155 !important;
+      color: #F8FAFC !important;
+    }
+    [data-theme="dark"] .text-amber-950, html.dark .text-amber-950,
+    [data-theme="dark"] .text-amber-900, html.dark .text-amber-900 {
+      color: #F1F5F9 !important;
+    }
+    [data-theme="dark"] .text-amber-900\/80, html.dark .text-amber-900\/80 {
+      color: #94A3B8 !important;
+    }
+    [data-theme="dark"] .border-amber-300\/80, html.dark .border-amber-300\/80 {
+      border-color: #334155 !important;
+    }
+    [data-theme="dark"] .bg-emerald-100\/80, html.dark .bg-emerald-100\/80 {
+      background-color: rgba(16, 185, 129, 0.1) !important;
+      border-color: rgba(16, 185, 129, 0.3) !important;
+      color: #34D399 !important;
+    }
+    [data-theme="dark"] .text-emerald-800, html.dark .text-emerald-800 {
+      color: #34D399 !important;
+    }
+    [data-theme="dark"] .border-emerald-300\/80, html.dark .border-emerald-300\/80 {
+      border-color: rgba(16, 185, 129, 0.3) !important;
+    }
     [data-theme="dark"] input, html.dark input {
       background-color: #0F172A !important;
       color: #F8FAFC !important;
@@ -100,8 +159,7 @@
     .font-mono-num {
       font-family: 'JetBrains Mono', monospace;
     }
-
-    .no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
     .btn-press {
@@ -132,6 +190,12 @@
     }
 
     /* In-Cart Card Border Wash */
+    [data-theme="dark"] .card-in-cart, html.dark .card-in-cart {
+      background-color: rgba(37, 99, 235, 0.12) !important;
+      border-color: rgba(59, 130, 246, 0.5) !important;
+      border-left: 4px solid #3B82F6 !important;
+    }
+
     .card-in-cart {
       border-left: 4px solid #2563EB !important;
       background-color: rgba(37, 99, 235, 0.04) !important;
@@ -398,6 +462,7 @@
       }
     }
   </style>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232563EB' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><path d='M21 12V7H5a2 2 0 0 1 0-4h14v4'/><path d='M3 5v14a2 2 0 0 0 2 2h16v-5'/><path d='M18 12a2 2 0 0 0 0 4h4v-4Z'/></svg>">
 </head>
 <body class="min-h-screen flex flex-col justify-between max-w-lg mx-auto bg-[#F7F8FA] relative shadow-xl border-x border-slate-200">
 
@@ -405,7 +470,7 @@
   <div id="screenStep1" class="flex-1 flex flex-col min-h-0 bg-[#F7F8FA]">
     <header class="bg-white border-b border-slate-200/80 px-4 pt-4 pb-3 shrink-0 space-y-2 sticky top-0 z-30 shadow-2xs">
       <div class="flex items-center justify-between">
-        <a href="sales.html" class="text-blue-600 font-extrabold text-xs flex items-center gap-1 hover:underline">
+        <a href="../../pages/sales/sales.html" class="text-blue-600 font-extrabold text-xs flex items-center gap-1 hover:underline">
           <i data-lucide="arrow-left" class="w-4 h-4"></i>
           <span>Sales Hub</span>
         </a>
@@ -711,141 +776,90 @@
     </footer>
   </div>
 
-  <!-- SCREEN 4: DIGITAL PAYMENT CARD CONFIRMATION (Step 4 of 3) -->
-  <div id="screenStep4" class="flex-1 flex flex-col min-h-0 bg-[#FAFAF8] hidden" style="display: none;">
-    <header class="px-4 py-3 shrink-0 flex items-center justify-between sticky top-0 z-30 bg-[#FAFAF8]/90 backdrop-blur-md">
-      <a href="sales.html" class="text-slate-400 hover:text-slate-700 font-extrabold text-xs flex items-center gap-1 transition-colors">
-        <i data-lucide="arrow-left" class="w-4 h-4"></i>
-        <span>Sales Hub</span>
+  <!-- SCREEN 4: PAYMENT SUCCESSFUL PAGE (Premium Digital Banking Receipt) -->
+  <div id="screenStep4" class="flex-1 flex flex-col min-h-0 min-h-screen pos-success-screen hidden" style="display: none; min-height: 100vh;">
+    <!-- Compact Top Header -->
+    <header class="px-4 py-3 shrink-0 flex items-center justify-between sticky top-0 z-30 pos-header backdrop-blur-md">
+      <a href="../../pages/sales/sales.html" class="pos-header-link font-bold text-xs flex items-center gap-1.5 transition-colors">
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        <span>Sales</span>
       </a>
-      <span class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 font-mono">PAYMENT CONFIRMED</span>
+      <!-- Right Header Actions (Status Badge & Overflow Menu) -->
+      <div class="flex items-center gap-2">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider pos-header-badge shadow-2xs">
+          <svg class="w-3 h-3 stroke-[3]" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg>
+          <span id="posHeaderBadgeText">Payment Confirmed</span>
+        </span>
+        <button type="button" class="w-7 h-7 flex items-center justify-center rounded-lg pos-header-menu-btn transition-colors">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+        </button>
+      </div>
     </header>
 
-    <main class="flex-1 overflow-y-auto no-scrollbar p-4 space-y-6 pb-28 relative max-w-sm mx-auto w-full">
+    <main class="flex-1 overflow-y-auto no-scrollbar p-4 space-y-4 pb-16 max-w-md md:max-w-lg mx-auto w-full">
       
-      <!-- Single Accent Success Badge & Label -->
-      <div class="text-center space-y-1.5 pt-1">
-        <div class="w-10 h-10 rounded-full bg-blue-50 text-blue-600 border border-blue-200/80 flex items-center justify-center mx-auto shadow-2xs check-pulse-badge">
-          <i data-lucide="check" class="w-5 h-5 stroke-[2.5px]"></i>
+      <!-- PAYMENT HERO SECTION (Main Visual Hook with Subtle Hero Background Tint) -->
+      <div class="text-center space-y-1.5 pt-3 pb-3 px-4 rounded-3xl relative overflow-hidden" id="posSuccessArea" style="background: radial-gradient(ellipse at top, rgba(8, 127, 245, 0.05) 0%, rgba(22, 163, 74, 0.04) 55%, transparent 85%);">
+        <div id="posSuccessBadgeIcon" class="w-[50px] h-[50px] rounded-full pos-hero-secure-badge flex items-center justify-center mx-auto shadow-[0_4px_14px_rgba(22,163,74,0.12)] check-badge-anim">
+          <svg class="w-6 h-6 stroke-[3]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5" stroke-dasharray="30" stroke-dashoffset="30" class="check-path-anim" /></svg>
         </div>
-        <p class="text-xs font-extrabold text-slate-500 tracking-wide uppercase">Payment Successful</p>
-      </div>
-
-      <!-- HERO DIGITAL PAYMENT CARD (Deep Charcoal & Navy Gradient Anchor) -->
-      <div id="heroPaymentCard" class="bg-gradient-to-br from-slate-900 via-slate-950 to-blue-950 text-white rounded-[1.75rem] p-6 shadow-2xl relative overflow-hidden border border-slate-800/90 card-entrance-anim">
-        <!-- Subtle Metallic Light Sheen Sweep Overlay -->
-        <div class="card-sheen-effect"></div>
-
-        <!-- Card Top Bar: Shop Name + Single Accent Blue PAID Glass Tag -->
-        <div class="flex items-center justify-between relative z-10">
-          <div class="flex items-center gap-2">
-            <div class="w-7 h-7 rounded-xl bg-white/10 backdrop-blur-md border border-white/10 flex items-center justify-center text-xs">🛒</div>
-            <span class="font-black text-xs text-slate-200 tracking-tight">My Grocery Shop</span>
-          </div>
-          <span class="px-2.5 py-1 bg-blue-500/15 border border-blue-400/30 text-blue-400 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider backdrop-blur-xs flex items-center gap-1">
-            <span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span> PAID
-          </span>
-        </div>
-
-        <!-- Card Center: Hero Balance / Total Paid -->
-        <div class="my-6 space-y-1 relative z-10">
-          <span class="text-[10px] font-mono font-extrabold uppercase tracking-widest text-slate-400 block">TOTAL PAID</span>
-          <div class="text-3xl font-black tracking-tight text-white font-mono" id="cardHeroTotal">₹0.00</div>
-        </div>
-
-        <!-- Horizontal Divider -->
-        <div class="w-full h-px bg-white/10 my-4 relative z-10"></div>
-
-        <!-- Card Bottom Meta: Customer + Masked Ref + Translucent Glass Payment Chip -->
-        <div class="flex items-end justify-between relative z-10 text-xs">
-          <div class="space-y-0.5">
-            <div class="font-bold text-slate-200 text-xs" id="cardCustName">Ramesh Kumar</div>
-            <div class="text-[11px] font-mono text-slate-400 tracking-wider" id="cardMaskedRef">INV •• 8042</div>
-          </div>
-          
-          <div class="text-right space-y-1">
-            <div class="text-[10px] text-slate-400 font-mono" id="cardDateTime">02 Sep 2026, 08:20 AM</div>
-            <div class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white/10 border border-white/10 rounded-xl text-[10px] font-extrabold text-slate-200 backdrop-blur-md" id="cardPaymentMethodChip">
-              <i data-lucide="banknote" class="w-3 h-3 text-blue-400"></i>
-              <span>Cash</span>
-            </div>
-          </div>
+        <p class="text-xs sm:text-sm font-bold pos-hero-status hero-label-anim" id="posSuccessStatusLabel">Payment received</p>
+        <h1 class="text-3xl sm:text-4xl font-extrabold pos-hero-amount tracking-tight font-mono-num hero-amount-anim" id="posSuccessAmount">₹0.00</h1>
+        <p class="text-[11px] font-medium pos-hero-timestamp hero-time-anim" id="posSuccessTimestamp"></p>
+        
+        <!-- Small Success Accent Indicator -->
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full pos-hero-secure-badge text-[11px] font-bold mt-1.5 shadow-2xs">
+          <svg class="w-3 h-3 stroke-[3]" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg>
+          <span>Payment completed securely</span>
         </div>
       </div>
 
-      <!-- Collapsible Itemized Details Row -->
-      <div class="bg-white rounded-2xl border border-slate-200/80 shadow-2xs overflow-hidden">
-        <button type="button" onclick="toggleItemizedCardDetails()" class="w-full p-4 flex items-center justify-between text-left hover:bg-slate-50 transition-colors">
-          <div class="flex items-center gap-2">
-            <span class="text-xs font-bold text-slate-700" id="cardItemCountLabel">0 items</span>
-            <span class="text-slate-300">•</span>
-            <span class="text-xs font-extrabold text-blue-600 hover:underline">View details</span>
-          </div>
-          <i data-lucide="chevron-down" id="cardChevron" class="w-4 h-4 text-slate-400 transition-transform"></i>
+      <!-- DIGITAL TRANSACTION SUMMARY CONTAINER -->
+      <div id="digitalSuperBillMount" class="w-full pos-card-entrance">
+        <!-- Rendered dynamically by Utils.formatBillHTML(sale, 'digital-super') -->
+      </div>
+
+      <div class="pt-2 space-y-2.5 actions-fade-in" id="posSuccessActions">
+        <!-- Primary WhatsApp Action (48px high, green #22C55E) -->
+        <button onclick="shareWhatsApp()" type="button" class="w-full h-12 px-4 pos-btn-whatsapp hover:opacity-90 active:scale-[0.98] font-extrabold text-xs rounded-xl flex items-center justify-center gap-2 shadow-sm transition-all btn-press">
+          <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+          <span>Send Receipt via WhatsApp</span>
         </button>
 
-        <div id="cardItemizedPane" class="hidden px-4 pb-4 border-t border-slate-100 pt-3 space-y-2 text-xs">
-          <div class="space-y-2 font-medium" id="invItemsList"></div>
-          
-          <div class="pt-2.5 border-t border-slate-100 flex justify-between items-center text-xs font-bold text-slate-800">
-            <span>Subtotal</span>
-            <span class="font-mono" id="invSubtotal">₹0.00</span>
-          </div>
+        <!-- Secondary Actions Grid (Neutral Component Surfaces) -->
+        <div class="grid grid-cols-3 gap-2">
+          <button onclick="shareBillNative()" type="button" class="h-11 px-3 pos-btn-secondary active:scale-[0.98] font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 transition-all btn-press shadow-2xs">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+            <span>Share</span>
+          </button>
+
+          <button onclick="window.print()" type="button" class="h-11 px-3 pos-btn-secondary active:scale-[0.98] font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 transition-all btn-press shadow-2xs">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+            <span>Print</span>
+          </button>
+
+          <button onclick="downloadPdf()" type="button" class="h-11 px-3 pos-btn-secondary active:scale-[0.98] font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 transition-all btn-press shadow-2xs">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <span>Download</span>
+          </button>
         </div>
-      </div>
 
-      <!-- Refined Action Icons Row (Matching Accent Tinted Circles) -->
-      <div class="pt-1 space-y-2">
-        <label class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 block text-center">Share Confirmation</label>
-        
-        <div class="flex items-center justify-around px-2 py-2">
-          <!-- WhatsApp (Brand Green Icon Glyph, Matching Blue Tint Circle) -->
-          <button onclick="shareWhatsApp()" type="button" class="flex flex-col items-center gap-1.5 group btn-press">
-            <div class="w-11 h-11 rounded-2xl bg-blue-50/80 text-emerald-600 border border-blue-100 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-all shadow-2xs">
-              <i data-lucide="message-circle" class="w-5 h-5"></i>
-            </div>
-            <span class="text-[11px] font-bold text-slate-600">WhatsApp</span>
-          </button>
-
-          <!-- Share -->
-          <button onclick="shareBillNative()" type="button" class="flex flex-col items-center gap-1.5 group btn-press">
-            <div class="w-11 h-11 rounded-2xl bg-blue-50/80 text-blue-600 border border-blue-100 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-all shadow-2xs">
-              <i data-lucide="share-2" class="w-5 h-5"></i>
-            </div>
-            <span class="text-[11px] font-bold text-slate-600">Share</span>
-          </button>
-
-          <!-- Download -->
-          <button onclick="downloadPdf()" type="button" class="flex flex-col items-center gap-1.5 group btn-press">
-            <div class="w-11 h-11 rounded-2xl bg-blue-50/80 text-blue-600 border border-blue-100 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-all shadow-2xs">
-              <i data-lucide="download" class="w-5 h-5"></i>
-            </div>
-            <span class="text-[11px] font-bold text-slate-600">Download</span>
-          </button>
-
-          <!-- Print -->
-          <button onclick="window.print()" type="button" class="flex flex-col items-center gap-1.5 group btn-press">
-            <div class="w-11 h-11 rounded-2xl bg-blue-50/80 text-blue-600 border border-blue-100 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-all shadow-2xs">
-              <i data-lucide="printer" class="w-5 h-5"></i>
-            </div>
-            <span class="text-[11px] font-bold text-slate-600">Print</span>
-          </button>
+        <!-- Primary Next Action: Start New Sale (48px high, #087FF5 blue, shadow-md) -->
+        <div class="pt-2 space-y-2">
+          <a href="../../pages/sales/new-sale.html" class="w-full h-12 pos-btn-primary active:scale-[0.98] font-extrabold text-xs rounded-xl flex items-center justify-center gap-2 shadow-[0_4px_12px_rgba(8,127,245,0.18)] dark:shadow-[0_4px_12px_rgba(47,143,255,0.25)] transition-all btn-press">
+            <svg class="w-4 h-4 stroke-[3]" viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <span>Start New Sale</span>
+          </a>
+          <a href="../../pages/sales/sales.html" class="block text-center text-xs font-bold pos-back-link py-1 transition-colors">
+            &larr; Back to Sales
+          </a>
         </div>
       </div>
     </main>
-
-    <footer class="bg-[#FAFAF8] border-t border-slate-200/60 p-4 shrink-0 fixed bottom-0 left-0 right-0 max-w-lg mx-auto z-30 space-y-2.5">
-      <a href="new-sale.html" class="w-full py-3.5 bg-blue-600 hover:bg-blue-700 active:scale-[0.99] text-white font-extrabold text-xs rounded-2xl flex items-center justify-center gap-2 shadow-md transition-all btn-press">
-        <i data-lucide="plus-circle" class="w-4 h-4"></i>
-        <span>Start New Sale</span>
-      </a>
-      <a href="sales.html" class="block text-center text-xs font-bold text-slate-400 hover:text-slate-700 py-0.5 transition-colors">Back to Sales Hub</a>
-    </footer>
   </div>
 
   <!-- OVERLAY: CAMERA BARCODE SCANNER MODAL (LIGHT THEME MATCHING APP) -->
   <div id="cameraScanModal" class="fixed inset-0 bg-[#F8FAFC] z-50 flex flex-col justify-between p-4 hidden" style="display: none;">
-    <!-- Top Bar: Live Status + Flashlight Toggle + Close Button -->
     <header class="flex items-center justify-between z-20 text-slate-800 shrink-0">
       <div class="flex items-center gap-2 px-3 py-1.5 bg-white border border-slate-200/90 rounded-full shadow-2xs">
         <div class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></div>
@@ -875,7 +889,7 @@
         
         <!-- Camera Error / Fallback State overlay -->
         <div id="cameraErrorFallback" class="hidden absolute inset-0 bg-slate-900/90 flex flex-col items-center justify-center text-center p-4 space-y-2 z-10">
-          <div class="w-10 h-10 rounded-full bg-slate-800 text-slate-300 flex items-center justify-center">📷</div>
+          <div class="w-10 h-10 rounded-full bg-slate-800 text-slate-300 flex items-center justify-center">ÃƒÂ°Ã…Â¸Ã¢â‚¬Å“·</div>
           <p class="text-[11px] font-bold text-slate-200 leading-tight">Camera Feed Simulator Active</p>
           <p class="text-[10px] text-slate-400">Use quick chips below or allow camera permissions</p>
         </div>
@@ -996,7 +1010,7 @@
           <i data-lucide="printer" class="w-4 h-4"></i>
           <span>Print & View Bill</span>
         </button>
-        <a href="new-sale.html" onclick="closeSuccessModal()" class="block w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl">Start Next Sale</a>
+        <a href="../../pages/sales/new-sale.html" onclick="closeSuccessModal()" class="block w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl">Start Next Sale</a>
       </div>
     </div>
   </div>
@@ -1166,7 +1180,7 @@
       if (productList.length === 0) {
         feed.innerHTML = `
           <div class="text-center py-12 space-y-3 bg-white rounded-2xl border border-slate-200/80">
-            <div class="w-12 h-12 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mx-auto text-xl">🔍</div>
+            <div class="w-12 h-12 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mx-auto text-xl">ÃƒÂ°Ã…Â¸Ã¢â‚¬ÂÃ‚Â</div>
             <p class="text-xs font-bold text-slate-500">No products found matching your search</p>
           </div>
         `;
@@ -1700,7 +1714,16 @@
     function changeUnitQty(id, delta) {
       if (!itemsDb[id]) return;
       if (!cart[id]) cart[id] = { qty: 0, total: 0 };
-      cart[id].qty += delta;
+      
+      const maxAvailable = parseFloat(itemsDb[id].quantity) || 0;
+      const proposedQty = cart[id].qty + delta;
+      
+      if (proposedQty > maxAvailable) {
+        showToast(`Only ${maxAvailable} ${itemsDb[id].unit} available in stock`);
+        return;
+      }
+
+      cart[id].qty = proposedQty;
       if (cart[id].qty <= 0) delete cart[id];
       else cart[id].total = cart[id].qty * itemsDb[id].price;
       
@@ -2015,7 +2038,6 @@
       if (stepNum === 2) renderOrderSummary();
       if (stepNum === 3) renderReviewScreen();
       if (stepNum === 4) renderGeneratedInvoice();
-
       window.scrollTo(0, 0);
       if (typeof lucide !== 'undefined') lucide.createIcons();
     }
@@ -2024,19 +2046,23 @@
       currentInvoiceNo = "INV-2026-" + Math.floor(1000 + Math.random() * 9000);
       let total = 0;
       const saleItems = [];
-      Object.keys(cart).forEach(id => {
-        const item = itemsDb[id];
-        const cartItem = cart[id];
-        total += cartItem.total;
-        saleItems.push({
-          productId: id,
-          productName: item ? item.name : 'Product',
-          quantity: cartItem.qty || (cartItem.weightKg || 1),
-          unit: item ? item.unit : 'Piece',
-          rate: item ? item.price : 0,
-          total: cartItem.total
+      if (typeof cart !== 'undefined' && cart) {
+        Object.keys(cart).forEach(id => {
+          const item = (typeof itemsDb !== 'undefined' && itemsDb[id]) ? itemsDb[id] : null;
+          const cartItem = cart[id];
+          if (cartItem) {
+            total += (cartItem.total || 0);
+            saleItems.push({
+              productId: id,
+              productName: item ? item.name : (cartItem.name || 'Product'),
+              quantity: cartItem.qty || (cartItem.weightKg || 1),
+              unit: item ? item.unit : (cartItem.unit || 'Piece'),
+              rate: item ? item.price : (cartItem.price || 0),
+              total: cartItem.total || 0
+            });
+          }
         });
-      });
+      }
 
       // Parse payment method & amounts
       let pm = selectedPayment || 'Cash';
@@ -2054,34 +2080,34 @@
         }
       }
 
+      const newSaleObj = {
+        id: currentInvoiceNo,
+        invoiceNumber: currentInvoiceNo,
+        customerId: (selectedCust && selectedCust.id) || 'walk-in',
+        customerName: (selectedCust && selectedCust.name) || 'Walk-in Customer',
+        customerPhone: (selectedCust && selectedCust.phone) || '',
+        date: new Date().toISOString(),
+        items: saleItems,
+        subtotal: total,
+        discount: 0,
+        tax: 0,
+        grandTotal: total,
+        paymentMethod: pm,
+        amountPaid: paidAmt,
+        amountDue: dueAmt,
+        change: 0
+      };
+
+      window.currentSaleObj = newSaleObj;
+
       // Persist sale into Storage DB
       if (typeof Storage !== 'undefined' && typeof Storage.saveSale === 'function') {
-        Storage.saveSale({
-          invoiceNumber: currentInvoiceNo,
-          customerId: selectedCust.id || 'walk-in',
-          customerName: selectedCust.name || 'Walk-in Customer',
-          customerPhone: selectedCust.phone || '',
-          date: new Date().toISOString(),
-          items: saleItems,
-          subtotal: total,
-          discount: 0,
-          tax: 0,
-          grandTotal: total,
-          paymentMethod: pm,
-          amountPaid: paidAmt,
-          amountDue: dueAmt,
-          change: 0
-        });
+        Storage.saveSale(newSaleObj);
       }
 
-      document.getElementById('succInvNum').textContent = `Invoice #${currentInvoiceNo} generated`;
-      document.getElementById('succPaymentTag').textContent = selectedPayment;
-      
-      const modal = document.getElementById('successModal');
-      modal.classList.remove('hidden');
-      modal.style.display = 'flex';
-
-      animateCountUp(document.getElementById('succAmountRecap'), 0, total, 700);
+      // Instantly render generated invoice and navigate directly to Step 4 (super.money digital receipt UI)
+      renderGeneratedInvoice();
+      goToStep(4);
     }
 
     function closeSuccessModal() {
@@ -2115,85 +2141,132 @@
       closeSuccessModal();
       renderGeneratedInvoice();
       goToStep(4);
+      if (window.currentSaleObj && typeof Utils !== 'undefined' && Utils.showBillModal) {
+        Utils.showBillModal(window.currentSaleObj, 'digital-super');
+      }
     }
 
     function renderGeneratedInvoice() {
-      const cardHeroTotal = document.getElementById('cardHeroTotal');
-      const cardCustName = document.getElementById('cardCustName');
-      const cardMaskedRef = document.getElementById('cardMaskedRef');
-      const cardDateTime = document.getElementById('cardDateTime');
-      const cardItemCountLabel = document.getElementById('cardItemCountLabel');
-      const cardPaymentMethodChip = document.getElementById('cardPaymentMethodChip');
+      let sale = window.currentSaleObj;
+      if (!sale && typeof Storage !== 'undefined' && typeof Storage.getSales === 'function') {
+        const sales = Storage.getSales();
+        if (sales && sales.length > 0) {
+          sale = sales[sales.length - 1];
+          window.currentSaleObj = sale;
+        }
+      }
 
-      let total = 0;
-      let count = 0;
-      let itemsHtml = '';
+      if (!sale) {
+        sale = {
+          id: currentInvoiceNo || 'INV-2026-8042',
+          invoiceNumber: currentInvoiceNo || 'INV-2026-8042',
+          customerName: (selectedCust && selectedCust.name) || 'Walk-in Customer',
+          customerPhone: (selectedCust && selectedCust.phone) || '',
+          paymentMethod: selectedPayment || 'Cash',
+          grandTotal: 99.00,
+          amountPaid: 99.00,
+          amountDue: 0,
+          items: [{ productName: 'Grocery Purchase', quantity: 1, rate: 99.00, total: 99.00 }],
+          date: new Date().toISOString()
+        };
+        window.currentSaleObj = sale;
+      }
 
-      Object.keys(cart).forEach(id => {
-        const item = itemsDb[id];
-        const cartItem = cart[id];
-        count += 1;
-        total += cartItem.total;
-        
-        const qtyStr = cartItem.displayUnit ? `${cartItem.weightKg} ${cartItem.displayUnit}` : `${cartItem.qty} ${item.unit}`;
-        itemsHtml += `
-          <div class="flex justify-between items-center py-1.5 border-b border-slate-50">
-            <div>
-              <div class="font-extrabold text-slate-900">${item.name}</div>
-              <div class="text-[10px] text-slate-400 font-medium">${qtyStr} @ ₹${item.price}/${item.unit}</div>
-            </div>
-            <span class="font-black text-slate-900 font-mono">₹${cartItem.total.toFixed(2)}</span>
-          </div>
-        `;
-      });
+      const amountEl = document.getElementById('posSuccessAmount');
+      const timeEl = document.getElementById('posSuccessTimestamp');
+      const statusLabel = document.getElementById('posSuccessStatusLabel');
+      const badgeIcon = document.getElementById('posSuccessBadgeIcon');
+      const headerBadge = document.getElementById('posHeaderBadgeText');
+
+      const payStatus = sale.paymentStatus || ((sale.amountDue || 0) <= 0.001 ? 'success' : 'pending');
+
+      if (payStatus === 'failed') {
+        if (statusLabel) statusLabel.textContent = 'Payment Failed';
+        if (headerBadge) headerBadge.textContent = 'Payment Failed';
+        if (badgeIcon) {
+          badgeIcon.className = 'w-12 h-12 rounded-full bg-rose-100 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 flex items-center justify-center mx-auto shadow-2xs';
+          badgeIcon.innerHTML = '<svg class="w-6 h-6 stroke-[3]" viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+        }
+      } else if (payStatus === 'pending') {
+        if (statusLabel) statusLabel.textContent = 'Payment Pending';
+        if (headerBadge) headerBadge.textContent = 'Payment Pending';
+        if (badgeIcon) {
+          badgeIcon.className = 'w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 flex items-center justify-center mx-auto shadow-2xs';
+          badgeIcon.innerHTML = '<svg class="w-6 h-6 stroke-[3]" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>';
+        }
+      } else {
+        if (statusLabel) statusLabel.textContent = 'Payment received';
+        if (headerBadge) headerBadge.textContent = 'Payment Confirmed';
+        if (badgeIcon) {
+          badgeIcon.className = 'w-12 h-12 rounded-full bg-[#DCFCE7] dark:bg-[rgba(34,197,94,0.12)] text-[#16A34A] dark:text-[#34D399] flex items-center justify-center mx-auto shadow-2xs check-badge-anim';
+          badgeIcon.innerHTML = '<svg class="w-6 h-6 stroke-[3]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5" stroke-dasharray="30" stroke-dashoffset="30" class="check-path-anim" /></svg>';
+        }
+      }
+
+      if (amountEl && typeof Utils !== 'undefined') {
+        amountEl.textContent = Utils.formatCurrency(sale.grandTotal !== undefined ? sale.grandTotal : sale.total);
+      }
+      if (timeEl) {
+        try {
+          const d = sale.date ? new Date(sale.date) : new Date();
+          if (!isNaN(d.getTime())) {
+            const month = d.toLocaleString('en-US', { month: 'short' });
+            const day = d.getDate();
+            const time = d.toLocaleString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+            timeEl.textContent = `${month} ${day} · ${time}`;
+          }
+        } catch(e) {}
+      }
 
       const invListEl = document.getElementById('invItemsList');
       const invSubtotalEl = document.getElementById('invSubtotal');
-      if (invListEl) invListEl.innerHTML = itemsHtml || '<div class="text-slate-400 text-center py-2">No items selected</div>';
-      if (invSubtotalEl) invSubtotalEl.textContent = `₹${total.toFixed(2)}`;
-      
-      if (cardCustName) cardCustName.textContent = selectedCust.name || "Walk-in Customer";
-      const shortRef = currentInvoiceNo ? currentInvoiceNo.split('-').pop() : '8042';
-      if (cardMaskedRef) cardMaskedRef.textContent = `INV •• ${shortRef}`;
-      
-      const now = new Date();
-      const dateStr = now.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
-      const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
-      if (cardDateTime) cardDateTime.textContent = `${dateStr}, ${timeStr}`;
-      
-      if (cardItemCountLabel) cardItemCountLabel.textContent = `${count} item${count === 1 ? '' : 's'}`;
-      
-      let pmIcon = 'banknote';
-      if (selectedPayment === 'UPI') pmIcon = 'qr-code';
-      if (selectedPayment === 'Card') pmIcon = 'credit-card';
-      if (selectedPayment.includes('Credit')) pmIcon = 'clock';
+      const cardItemCountLabel = document.getElementById('cardItemCountLabel');
 
-      if (cardPaymentMethodChip) {
-        cardPaymentMethodChip.innerHTML = `<i data-lucide="${pmIcon}" class="w-3 h-3 text-emerald-400"></i><span>${selectedPayment}</span>`;
+      if (sale.items && sale.items.length > 0) {
+        const itemsHtml = sale.items.map(it => `
+          <div class="flex justify-between items-center py-1.5 border-b border-slate-50">
+            <div>
+              <div class="font-extrabold text-slate-900">${it.productName || 'Item'}</div>
+              <div class="text-[10px] text-slate-400 font-medium">${it.quantity} ${it.unit || ''} @ ₹${(it.rate || 0).toFixed(2)}</div>
+            </div>
+            <span class="font-black text-slate-900 font-mono">₹${(it.total || 0).toFixed(2)}</span>
+          </div>
+        `).join('');
+        if (invListEl) invListEl.innerHTML = itemsHtml;
+        if (cardItemCountLabel) cardItemCountLabel.textContent = `${sale.items.length} item${sale.items.length === 1 ? '' : 's'}`;
+      } else {
+        if (invListEl) invListEl.innerHTML = '<div class="text-slate-400 text-center py-2">No items</div>';
+        if (cardItemCountLabel) cardItemCountLabel.textContent = '0 items';
       }
 
-      // Smooth Balance Count Up Animation
-      if (cardHeroTotal) {
-        animateCountUp(cardHeroTotal, 0, total, 450);
+      if (invSubtotalEl) invSubtotalEl.textContent = `₹${(sale.grandTotal || 0).toFixed(2)}`;
+
+      const mountEl = document.getElementById('digitalSuperBillMount');
+      if (mountEl && typeof Utils !== 'undefined' && Utils.formatBillHTML) {
+        mountEl.innerHTML = Utils.formatBillHTML(sale, 'digital-super');
       }
 
       if (typeof lucide !== 'undefined') lucide.createIcons();
     }
 
     function shareWhatsApp() {
-      const phone = selectedCust.phone.replace(/[^0-9]/g, '');
-      const total = document.getElementById('cardHeroTotal')?.textContent || '₹0.00';
-      const text = encodeURIComponent(`Hi ${selectedCust.name}, thank you for shopping at My Grocery Shop! Your payment of ${total} (${currentInvoiceNo}) is confirmed.`);
-      
-      showToast(`Opening WhatsApp for ${selectedCust.phone}...`);
-      window.open(`https://wa.me/${phone}?text=${text}`, '_blank');
+      if (window.currentSaleObj && typeof Utils !== 'undefined' && Utils.shareBill) {
+        Utils.shareBill(window.currentSaleObj);
+      } else {
+        const phone = selectedCust.phone ? selectedCust.phone.replace(/[^0-9]/g, '') : '';
+        const total = `₹${window.currentSaleObj ? window.currentSaleObj.grandTotal.toFixed(2) : '0.00'}`;
+        const text = encodeURIComponent(`Hi ${selectedCust.name || 'Customer'}, thank you for shopping! Your payment of ${total} (${currentInvoiceNo}) is confirmed.`);
+        window.open(`https://wa.me/${phone}?text=${text}`, '_blank');
+      }
     }
 
     function shareBillNative() {
-      if (navigator.share) {
+      if (window.currentSaleObj && typeof Utils !== 'undefined' && Utils.showBillModal) {
+        Utils.showBillModal(window.currentSaleObj, 'digital-super');
+      } else if (navigator.share) {
         navigator.share({
           title: `Invoice ${currentInvoiceNo}`,
-          text: `My Grocery Shop Bill for ${selectedCust.name} - Total: ${document.getElementById('invGrandTotal').textContent}`,
+          text: `Bill for ${selectedCust.name}`,
           url: window.location.href
         }).catch(() => {});
       } else {
@@ -2202,7 +2275,11 @@
     }
 
     function downloadPdf() {
-      showToast("Invoice PDF downloaded ✓");
+      if (window.currentSaleObj && typeof Utils !== 'undefined' && Utils.downloadBillPDF) {
+        Utils.downloadBillPDF(window.currentSaleObj, 'digital-super');
+      } else {
+        showToast("Invoice PDF downloaded ✓");
+      }
     }
 
     function showToast(msg) {
@@ -2220,3 +2297,7 @@
   </script>
 </body>
 </html>
+
+
+
+

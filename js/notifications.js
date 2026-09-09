@@ -65,10 +65,39 @@ const NotificationQueue = {
                     } else if (item.channel === 'whatsapp') {
                         const settings = Storage.getSettings();
                         if (settings.whatsappConnected) {
-                            item.status = 'SENT';
-                            item.sentAt = new Date().toISOString();
-                            item.lastError = null;
-                            console.log(`[WhatsApp API Reminder Dispatched] to ${item.recipient}`);
+                            // Call local Node.js server
+                            fetch('http://localhost:3000/send-message', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    phone: item.payload.phone,
+                                    message: item.payload.message
+                                })
+                            }).then(response => response.json())
+                              .then(data => {
+                                  if (data.success) {
+                                      item.status = 'SENT';
+                                      item.sentAt = new Date().toISOString();
+                                      item.lastError = null;
+                                      Storage.saveNotificationQueue(queue);
+                                      console.log(`[WhatsApp API Reminder Dispatched] to ${item.recipient}`);
+                                      if (typeof Utils !== 'undefined') {
+                                          Utils.showToast("WhatsApp message sent securely in background", "success");
+                                      }
+                                  } else {
+                                      item.status = item.attempts >= item.maxAttempts ? 'FAILED' : 'PENDING';
+                                      item.lastError = data.error || 'API Error';
+                                      Storage.saveNotificationQueue(queue);
+                                      console.error(`[WhatsApp API Failed] ${item.lastError}`);
+                                  }
+                              }).catch(err => {
+                                  item.status = item.attempts >= item.maxAttempts ? 'FAILED' : 'PENDING';
+                                  item.lastError = err.message || 'Network Error';
+                                  Storage.saveNotificationQueue(queue);
+                                  console.error(`[WhatsApp API Fetch Error]`, err);
+                              });
+                            // We handle saving in the promises, so we don't mark as SENT synchronously here
+                            return;
                         } else {
                             // Direct WhatsApp link used
                             item.status = 'SENT';
@@ -166,7 +195,7 @@ const TelegramService = {
         }
 
         const settings = Storage.getSettings();
-        const shopName = settings.shopName || 'My Grocery Shop';
+        const shopName = settings.shopName || 'My Shop';
         const msg = `TEST NOTIFICATION\n\n${shopName}\n\nTelegram owner alert integration is successfully connected and working!\n\nDate: ${new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })}`;
 
         NotificationQueue.enqueue('telegram', 'TEST', 'Shop Owner', { text: msg });
@@ -181,7 +210,7 @@ const TelegramService = {
         if (!status.connected) return false;
 
         const settings = Storage.getSettings();
-        const shopName = settings.shopName || 'My Grocery Shop';
+        const shopName = settings.shopName || 'My Shop';
         const cur = settings.currency || '₹';
         let alertMessage = '';
 
@@ -250,14 +279,14 @@ const WhatsAppService = {
         const settings = Storage.getSettings();
         settings.whatsappConnected = true;
         Storage.saveSettings(settings);
-        return true;
+        return { success: true, message: "Connecting to WhatsApp..." };
     },
 
     disconnect() {
         const settings = Storage.getSettings();
         settings.whatsappConnected = false;
         Storage.saveSettings(settings);
-        return true;
+        return { success: true, message: "Disconnected from WhatsApp." };
     },
 
     validateCustomerPhone(phone) {
@@ -271,7 +300,7 @@ const WhatsAppService = {
 
     prepareReminder(customer, financials = null, templateType = 'standard') {
         const settings = Storage.getSettings();
-        const shopName = settings.shopName || 'My Grocery Shop';
+        const shopName = settings.shopName || 'My Shop';
         const cur = settings.currency || '₹';
         
         if (!customer) {
@@ -344,19 +373,21 @@ const WhatsAppService = {
             reminderId: record.id
         });
 
-        // Launch WhatsApp link for direct share if on browser
-        const waUrl = `https://wa.me/${cleanPhone}?text=${encodedMsg}`;
-        try {
-            window.open(waUrl, '_blank');
-        } catch (e) {
-            console.warn("Could not automatically open WhatsApp window:", e);
+        // Launch WhatsApp link for direct share if on browser ONLY if not connected to background bot
+        if (!isConnected) {
+            const waUrl = `https://wa.me/${cleanPhone}?text=${encodedMsg}`;
+            try {
+                window.open(waUrl, '_blank');
+            } catch (e) {
+                console.warn("Could not automatically open WhatsApp window:", e);
+            }
         }
 
         return {
             success: true,
             status: isConnected ? 'Sent' : 'Prepared',
             record: record,
-            message: isConnected ? "Reminder sent via WhatsApp Business." : "WhatsApp reminder prepared."
+            message: isConnected ? "Reminder queued for background delivery." : "WhatsApp reminder prepared."
         };
     }
 };
@@ -386,7 +417,7 @@ const NotificationService = {
 
         // Deduplication check: Do not create duplicate unread notifications for same event key
         if (eventKey) {
-            const exists = notifications.some(n => n.eventKey === eventKey && !n.read && !n.resolved);
+            const exists = notifications.some(n => n.eventKey === eventKey && !n.resolved);
             if (exists) {
                 return null;
             }
@@ -456,8 +487,8 @@ const NotificationService = {
 
     markAllAsRead() {
         const notifications = Storage.getNotifications();
-        notifications.forEach(n => { n.read = true; });
-        Storage.saveNotifications(notifications);
+        const updated = notifications.map(n => ({ ...n, read: true }));
+        Storage.saveNotifications(updated);
         if (typeof Utils !== 'undefined' && Utils.initAppLayout) {
             Utils.initAppLayout(document.body.dataset.page);
         }
@@ -698,3 +729,4 @@ if (typeof module !== 'undefined' && module.exports) {
         NotificationQueue
     };
 }
+

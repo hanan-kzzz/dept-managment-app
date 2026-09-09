@@ -1,55 +1,59 @@
 /* Unified Premium Design System (Teal Accent - Light Mode Default) */
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+@import url('dashboard.css');
 
 :root {
-    /* Light Mode Default Theme (New Electric Blue Brand) */
+    /* Light Mode Default Theme (High Contrast Professional Theme) */
     --primary: #087FF5;
-    --primary-hover: #006FE6;
-    --primary-pressed: #005FCC;
-    --primary-tint: #E8F2FF; /* Light blue background */
+    --primary-hover: #066FD6;
+    --primary-pressed: #055CB5;
+    --primary-tint: #EAF3FF; /* Light blue background */
     --primary-tint-alt: #F3F8FF; /* Very light blue background */
 
     --page-bg: #F4F6F8;
     --surface: #FFFFFF;
     --surface-secondary: #F8FAFC;
 
-    --text-primary: #17191C;
-    --text-secondary: #737982;
-    --text-muted: #9AA1AA;
+    --text-primary: #111827;
+    --text-secondary: #475569;
+    --text-muted: #64748B;
 
-    --border: #E1E5EA;
-    --border-input: #DCE1E6;
-    --divider: #E9ECEF;
+    --border: #D9E1EA;
+    --border-input: #CBD5E1;
+    --divider: #E2E8F0;
 
-    --success: #22C55E;
-    --success-bg: #EAF9EF;
-    --success-text: #16803A;
+    --success: #15803D;
+    --success-bg: #DCFCE7;
+    --success-border: #BBF7D0;
+    --success-text: #15803D;
 
-    --warning: #F59E0B;
-    --warning-bg: #FFF6E5;
-    --warning-text: #B76E00;
+    --warning: #B45309;
+    --warning-bg: #FEF3C7;
+    --warning-border: #FDE68A;
+    --warning-text: #B45309;
 
-    --danger: #EF4444;
-    --danger-bg: #FFF0F0;
-    --danger-text: #C62828;
+    --danger: #B91C1C;
+    --danger-bg: #FEE2E2;
+    --danger-border: #FECACA;
+    --danger-text: #B91C1C;
 
-    --info: #3B82F6;
-    --info-bg: #EFF6FF;
+    --info: #087FF5;
+    --info-bg: #EAF3FF;
 
-    /* Hero Card Theme Tokens (Light Mode - Anchor Cobalt Hero) */
-    --hero-bg: linear-gradient(135deg, #0F172A 0%, #1E3A8A 55%, #2563EB 100%);
-    --hero-border: rgba(255, 255, 255, 0.15);
+    /* Hero Card Theme Tokens (Light Mode - Anchor Blue Hero) */
+    --hero-bg: linear-gradient(135deg, #123A8F 0%, #1769D5 100%);
+    --hero-border: rgba(255, 255, 255, 0.2);
     --hero-text-primary: #FFFFFF;
-    --hero-text-secondary: #94A3B8;
-    --hero-pill-bg: rgba(255, 255, 255, 0.12);
-    --hero-pill-border: rgba(255, 255, 255, 0.15);
+    --hero-text-secondary: rgba(255, 255, 255, 0.78);
+    --hero-pill-bg: rgba(255, 255, 255, 0.15);
+    --hero-pill-border: rgba(255, 255, 255, 0.25);
     --hero-pill-text: #FFFFFF;
-    --hero-badge-bg: rgba(34, 197, 94, 0.25);
-    --hero-badge-text: #4ADE80;
-    --hero-badge-border: rgba(74, 222, 128, 0.4);
-    --hero-divider: rgba(255, 255, 255, 0.15);
+    --hero-badge-bg: rgba(255, 255, 255, 0.2);
+    --hero-badge-text: #FFFFFF;
+    --hero-badge-border: rgba(255, 255, 255, 0.3);
+    --hero-divider: rgba(255, 255, 255, 0.2);
 
-    /* Maintain compatibility mappings so we don't break styles using legacy names */
+    /* Mappings for legacy/compatibility variable names */
     --bg: var(--page-bg);
     --surface-sec: var(--surface-secondary);
     
@@ -69,16 +73,16 @@
     --warning-tint: var(--warning-bg);
     --success-tint: var(--success-bg);
     --info-tint: var(--info-bg);
-    --btn-secondary-hover: #F4F7FA;
+    --btn-secondary-hover: #F8FAFC;
     
     --radius-sm: 10px;
     --radius-md: 16px;
     --radius-lg: 20px;
     --radius-btn: 12px;
     
-    --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.04);
-    --shadow-md: 0 4px 18px rgba(15, 23, 42, 0.06);
-    --shadow-lg: 0 12px 28px rgba(15, 23, 42, 0.08);
+    --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.05);
+    --shadow-md: 0 6px 18px rgba(15, 23, 42, 0.10);
+    --shadow-lg: 0 12px 28px rgba(15, 23, 42, 0.12);
     
     --font: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     --bottom-nav-height: 68px;
@@ -86,39 +90,42 @@
 }
 
 [data-theme="dark"] {
-    /* Dark Mode Theme (New Electric Blue Brand) */
+    /* Dark Mode Theme */
     --primary: #2F8FFF;
     --primary-hover: #1A7FE6;
     --primary-pressed: #0C6FD9;
-    --primary-tint: #102A47; /* Blue background */
-    --primary-tint-alt: #0D223B;
+    --primary-tint: #173B66;
+    --primary-tint-alt: #102A47;
 
-    --page-bg: #0F1114;
-    --surface: #171A1E;
-    --surface-secondary: #1D2126;
+    --page-bg: #0B1220;
+    --surface: #151C28;
+    --surface-secondary: #1A2330;
 
-    --text-primary: #F5F7FA;
-    --text-secondary: #A4ABB4;
-    --text-muted: #737B85;
+    --text-primary: #F8FAFC;
+    --text-secondary: #94A3B8;
+    --text-muted: #64748B;
 
-    --border: #2A3037;
-    --border-input: #2A3037;
-    --divider: #2A3037;
+    --border: #263244;
+    --border-input: #263244;
+    --divider: #263244;
 
-    --success: #32D583;
-    --success-bg: rgba(50, 213, 131, 0.1);
-    --success-text: #32D583;
+    --success: #34D399;
+    --success-bg: rgba(52, 211, 153, 0.15);
+    --success-border: rgba(52, 211, 153, 0.3);
+    --success-text: #34D399;
 
     --warning: #FBBF24;
-    --warning-bg: rgba(251, 191, 36, 0.1);
+    --warning-bg: rgba(251, 191, 36, 0.15);
+    --warning-border: rgba(251, 191, 36, 0.3);
     --warning-text: #FBBF24;
 
     --danger: #F87171;
-    --danger-bg: rgba(248, 113, 113, 0.1);
+    --danger-bg: rgba(248, 113, 113, 0.15);
+    --danger-border: rgba(248, 113, 113, 0.3);
     --danger-text: #F87171;
 
     --info: #3B82F6;
-    --info-bg: rgba(59, 130, 246, 0.1);
+    --info-bg: rgba(59, 130, 246, 0.15);
 
     /* Hero Card Theme Tokens (Dark Mode) */
     --hero-bg: linear-gradient(135deg, #12141D 0%, #1A1D28 100%);
@@ -858,11 +865,15 @@ body {
 .progress-bar-container {
     width: 100%;
     height: 6px;
-    background-color: var(--surface-sec);
+    background-color: #E2E8F0;
     border-radius: 3px;
     overflow: hidden;
     margin-top: 8px;
     position: relative;
+}
+
+[data-theme="dark"] .progress-bar-container {
+    background-color: #1E293B;
 }
 
 .progress-bar-fill {
@@ -871,9 +882,9 @@ body {
     transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.progress-fill-healthy { background-color: var(--success); }
-.progress-fill-low { background-color: var(--warning); }
-.progress-fill-out { background-color: var(--danger); }
+.progress-fill-healthy { background-color: #22C55E; }
+.progress-fill-low { background-color: #F59E0B; }
+.progress-fill-out { background-color: #EF4444; }
 
 /* Status pill */
 .status-pill {
@@ -2329,25 +2340,20 @@ body.modal-open {
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
     padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
     margin-bottom: 16px;
-    color: #17191C;
+    color: #111827;
 }
 
 .barcode-viewer-name {
     font-size: 1.1rem;
     font-weight: 800;
-    color: #17191C;
+    color: #111827;
     margin-bottom: 4px;
 }
 
 .barcode-viewer-meta {
     font-size: 0.85rem;
-    color: #737982;
+    color: #64748B;
     font-weight: 600;
     margin-bottom: 14px;
 }
@@ -2592,17 +2598,41 @@ body.modal-open {
    RECEIPT & INVOICE FORMAT SURFACES (Always High-Contrast Clean White)
    ========================================================================== */
 
-/* 58mm and 80mm Thermal Receipts */
+/* 58mm and 80mm Thermal Receipts - Premium Realistic Paper Presentation */
 .thermal-receipt {
-    background: #FFFFFF !important;
-    color: #000000 !important;
-    font-family: 'Courier New', Courier, monospace, system-ui;
+    position: relative;
+    background: #FAFAFA !important;
+    color: #0F172A !important;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
     font-size: 12px;
-    line-height: 1.35;
-    padding: 16px 14px;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+    line-height: 1.4;
+    padding: 24px 18px 20px 18px;
+    border-radius: 18px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.12);
     box-sizing: border-box;
     margin: 0 auto;
+    overflow: hidden;
+}
+
+/* Serrated Perforated Paper Edges */
+.receipt-paper-serrated-top,
+.receipt-paper-serrated-bottom {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 6px;
+    background-size: 12px 6px;
+    z-index: 2;
+}
+
+.receipt-paper-serrated-top {
+    top: 0;
+    background-image: radial-gradient(circle at 6px 0px, transparent 6px, #FAFAFA 6px);
+}
+
+.receipt-paper-serrated-bottom {
+    bottom: 0;
+    background-image: radial-gradient(circle at 6px 6px, transparent 6px, #FAFAFA 6px);
 }
 
 .receipt-80 {
@@ -2860,6 +2890,412 @@ body.modal-open {
 }
 
 /* ==========================================================================
+   CLEAN POS DIGITAL RECEIPT FORMAT (Requirement 1-38)
+   ========================================================================== *//* ==========================================================================
+   DIGITAL BANKING PHYSICAL RECEIPT FORMAT
+   ========================================================================== */
+.pos-receipt-wrapper {
+    width: calc(100% - 28px);
+    max-width: 430px;
+    margin: 0 auto;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #111827;
+    box-sizing: border-box;
+    padding-bottom: 14px;
+}
+
+@media (min-width: 768px) {
+    .pos-receipt-wrapper {
+        max-width: 500px;
+    }
+}
+
+.pos-receipt-card {
+    background: #FFFFFF !important;
+    border-radius: 18px 18px 0 0;
+    padding: 22px 20px 24px 20px;
+    box-shadow: 0 12px 32px rgba(15, 23, 42, 0.10);
+    box-sizing: border-box;
+    position: relative;
+    color: #111827 !important;
+}
+
+[data-theme="dark"] .pos-receipt-card {
+    background: #FFFFFF !important;
+    color: #111827 !important;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+}
+
+/* Decorative receipt edge removed per user spec for clean digital transaction card */
+.pos-receipt-card::after, .digital-tx-card::after {
+    display: none !important;
+}
+
+.pos-receipt-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.pos-shop-logo {
+    max-height: 38px;
+    max-width: 120px;
+    object-fit: contain;
+    margin-bottom: 4px;
+}
+
+.pos-shop-name {
+    font-size: 16px;
+    font-weight: 700;
+    color: #111827 !important;
+    line-height: 1.2;
+}
+
+.pos-receipt-subtitle {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: #475569 !important;
+    margin-top: 2px;
+}
+
+.pos-receipt-inv-no {
+    font-size: 10px;
+    font-weight: 600;
+    color: #64748B !important;
+    font-family: monospace;
+    text-align: right;
+}
+
+.pos-receipt-divider {
+    height: 0;
+    border-top: 1px dashed #D8DEE8 !important;
+    margin: 16px 0;
+}
+
+.pos-receipt-section {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.pos-section-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: #475569 !important;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 2px;
+}
+
+.pos-customer-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: #111827 !important;
+}
+
+.pos-customer-phone {
+    font-size: 12px;
+    font-weight: 500;
+    color: #64748B !important;
+}
+
+.pos-payment-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.pos-payment-method {
+    font-size: 14px;
+    font-weight: 700;
+    color: #111827 !important;
+}
+
+/* Status Badges inside White Receipt */
+.pos-receipt-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    font-weight: 800;
+    padding: 3px 8px;
+    border-radius: 9999px;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+}
+
+.pos-receipt-badge.badge-paid {
+    background-color: #DCFCE7 !important;
+    color: #15803D !important;
+    border: 1px solid rgba(34, 197, 94, 0.25) !important;
+}
+
+.pos-receipt-badge.badge-failed {
+    background-color: #FEE2E2 !important;
+    color: #B91C1C !important;
+    border: 1px solid rgba(239, 68, 68, 0.25) !important;
+}
+
+.pos-receipt-badge.badge-pending {
+    background-color: #FEF3C7 !important;
+    color: #B45309 !important;
+    border: 1px solid rgba(245, 158, 11, 0.25) !important;
+}
+
+.pos-receipt-badge.badge-partial {
+    background-color: #EFF6FF !important;
+    color: #3B82F6 !important;
+    border: 1px solid rgba(59, 130, 246, 0.25) !important;
+}
+
+/* Items List */
+.pos-items-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.pos-item-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    font-size: 13px;
+}
+
+.pos-item-title {
+    font-weight: 600;
+    color: #111827 !important;
+    line-height: 1.3;
+}
+
+.pos-item-sub {
+    font-size: 11px;
+    font-weight: 500;
+    color: #64748B !important;
+    margin-top: 1px;
+}
+
+.pos-item-price {
+    font-weight: 700;
+    color: #111827 !important;
+    font-family: monospace;
+    text-align: right;
+    white-space: nowrap;
+}
+
+/* Totals */
+.pos-totals-breakdown {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.pos-total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    color: #475569 !important;
+    font-weight: 500;
+}
+
+.pos-total-row.discount {
+    color: #15803D !important;
+}
+
+.pos-total-row.grand-total {
+    font-size: 18px;
+    font-weight: 750;
+    color: #111827 !important;
+    margin-top: 4px;
+    padding-top: 8px;
+    border-top: 1px dashed #D8DEE8 !important;
+}
+
+.pos-total-row.grand-total span:last-child {
+    font-family: monospace;
+}
+
+/* Expandable Disclosure */
+.pos-details-disclosure {
+    font-size: 12px;
+}
+
+.pos-details-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    font-weight: 700;
+    color: #087FF5 !important;
+    padding: 2px 0;
+    user-select: none;
+    list-style: none;
+}
+
+.pos-details-summary::-webkit-details-marker {
+    display: none;
+}
+
+.pos-details-disclosure[open] .pos-details-chevron {
+    transform: rotate(180deg);
+}
+
+.pos-details-chevron {
+    transition: transform 180ms ease;
+}
+
+.pos-details-content {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 8px;
+    padding: 10px 12px;
+    background: #F8FAFC !important;
+    border-radius: 10px;
+    font-size: 12px;
+    border: 1px solid #E5E7EB !important;
+}
+
+.pos-detail-entry {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.pos-detail-lbl {
+    color: #475569 !important;
+    font-weight: 500;
+}
+
+.pos-detail-val {
+    color: #111827 !important;
+    font-weight: 600;
+}
+
+.pos-receipt-thankyou {
+    margin-top: 10px;
+    text-align: center;
+    font-size: 11px;
+    font-weight: 600;
+    color: #16A34A !important;
+}
+
+/* Success icon animation */
+.check-scale-anim {
+    animation: checkScale 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes checkScale {
+    0% { transform: scale(0.6); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.paytm-icon { background: #e0f2fe; }
+.bank-icon { background: #f1f5f9; }
+.super-icon { background: #ede9fe; }
+
+.super-vpa-text {
+    word-break: break-all;
+    font-size: 13px;
+}
+
+.super-items-breakdown {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.super-items-title {
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: 0.6px;
+    color: #94a3b8;
+    margin-bottom: 4px;
+}
+
+.super-item-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: #334155;
+    font-weight: 600;
+}
+
+.super-item-val {
+    font-weight: 800;
+    color: #0f172a;
+}
+
+.super-upi-ref {
+    text-align: center;
+    font-size: 13px;
+    color: #334155;
+    font-weight: 600;
+}
+
+.super-upi-ref span {
+    font-weight: 700;
+    color: #0f172a;
+    letter-spacing: 0.2px;
+}
+
+.super-partner-strip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 14px;
+    font-size: 11px;
+    font-weight: 800;
+    color: #94a3b8;
+}
+
+.super-partner-brand { color: #502bd8; }
+.super-partner-upi { color: #475569; letter-spacing: 1px; }
+.super-partner-bank { color: #0284c7; }
+.super-partner-sep { color: #cbd5e1; }
+
+.super-sawtooth-bottom {
+    height: 14px;
+    width: 100%;
+    background: #ffffff;
+    clip-path: polygon(
+        0% 0%, 100% 0%,
+        100% 100%, 96.4% 50%, 92.8% 100%, 89.2% 50%, 85.6% 100%, 82% 50%, 78.4% 100%, 74.8% 50%, 71.2% 100%, 67.6% 50%, 64% 100%, 60.4% 50%, 56.8% 100%, 53.2% 50%, 49.6% 100%, 46% 50%, 42.4% 100%, 38.8% 50%, 35.2% 100%, 31.6% 50%, 28% 100%, 24.4% 50%, 20.8% 100%, 17.2% 50%, 13.6% 100%, 10% 50%, 6.4% 100%, 2.8% 50%, 0% 100%
+    );
+}
+
+.super-cashback-banner {
+    margin-top: 14px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 14px;
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #ffffff;
+}
+
+.super-cashback-icon {
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.super-cashback-text {
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.35;
+}
+
+/* ==========================================================================
    POS FLOATING BOTTOM CART BAR
    ========================================================================== */
 .bottom-cart-bar {
@@ -2937,9 +3373,10 @@ body.modal-open {
     }
 
     .thermal-receipt,
-    .a4-invoice-container {
+    .a4-invoice-container,
+    .digital-super-wrapper {
         box-shadow: none !important;
-        margin: 0 !important;
+        margin: 0 auto !important;
         max-width: 100% !important;
     }
 
@@ -2999,6 +3436,12 @@ body.modal-open {
     display: flex;
     align-items: center;
     gap: 4px;
+}
+
+.sales-hero-trend.negative {
+    background: rgba(239, 68, 68, 0.2);
+    color: #F87171;
+    border-color: rgba(248, 113, 113, 0.3);
 }
 
 .sales-hero-amount-row {
@@ -3414,3 +3857,1599 @@ body.modal-open {
     padding: 2px 6px;
     border-radius: 4px;
 }
+
+/* ==========================================================================
+   FULL SCREEN BILL & RECEIPT UI
+   ========================================================================== */
+/* ==========================================================================
+   VIEW BILL INVOICE MODAL (FINTECH BOTTOM-SHEET & RESPONSIVE SHEET)
+   ========================================================================== */
+
+.bill-modal-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 99999;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.bill-modal-wrapper.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.bill-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(5, 20, 35, 0.45);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 1;
+}
+
+.bill-modal-sheet {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    max-width: 100%;
+    height: 94vh;
+    max-height: 94vh;
+    background: #F5F8FC;
+    border-radius: 20px 20px 0 0;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 -10px 40px rgba(5, 20, 35, 0.3);
+    transform: translateY(100%);
+    transition: transform 300ms cubic-bezier(.22, 1, .36, 1);
+    overflow: hidden;
+}
+
+.bill-modal-wrapper.active .bill-modal-sheet {
+    transform: translateY(0);
+}
+
+/* Tablet & Desktop Layout (< 640px bottom-sheet, >= 640px centered modal) */
+@media (min-width: 640px) {
+    .bill-modal-wrapper {
+        align-items: center;
+        padding: 24px 16px;
+    }
+
+    .bill-modal-sheet {
+        max-width: 560px;
+        height: 86vh;
+        max-height: 860px;
+        border-radius: 22px;
+        margin: auto;
+        border: 1px solid #D9E4F0;
+        box-shadow: 0 20px 50px rgba(5, 20, 35, 0.35);
+        transform: translateY(30px) scale(0.98);
+        opacity: 0;
+        transition: transform 300ms cubic-bezier(.22, 1, .36, 1), opacity 200ms ease;
+    }
+
+    .bill-modal-wrapper.active .bill-modal-sheet {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+}
+
+/* --- STICKY HEADER --- */
+.bill-modal-header {
+    height: 56px;
+    padding: 0 16px;
+    background: #FFFFFF;
+    border-bottom: 1px solid #E2E8F0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+    z-index: 5;
+}
+
+.bill-nav-back-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #087FF5;
+    font-size: 0.88rem;
+    font-weight: 700;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 6px 10px;
+    border-radius: 10px;
+    transition: background 0.15s ease;
+}
+
+.bill-nav-back-btn:hover {
+    background: #EAF4FF;
+}
+
+.bill-header-title-text {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #0B1F36;
+    font-family: 'Plus Jakarta Sans', var(--font-sans), sans-serif;
+}
+
+.bill-modal-close-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: #F1F5F9;
+    color: #61758A;
+    border: none;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.bill-modal-close-btn:hover {
+    background: #E2E8F0;
+    color: #0B1F36;
+}
+
+/* --- SCROLLABLE BODY --- */
+.bill-modal-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    background: #F5F8FC;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+/* --- RECEIPT HERO CARD --- */
+.bill-hero-accent-card {
+    background: #EAF4FF;
+    border: 1px solid #D9E4F0;
+    border-radius: 18px;
+    padding: 20px 18px;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 4px 16px rgba(8, 127, 245, 0.06);
+}
+
+.bill-hero-shop-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #0B1F36;
+    letter-spacing: -0.01em;
+    margin-bottom: 2px;
+}
+
+.bill-hero-subtitle {
+    font-size: 0.74rem;
+    font-weight: 700;
+    color: #61758A;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 12px;
+}
+
+.bill-hero-amount-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 6px;
+}
+
+.bill-hero-currency-amount {
+    font-size: 2.1rem;
+    font-weight: 800;
+    color: #0B1F36;
+    font-family: var(--font-mono), monospace;
+    letter-spacing: -0.03em;
+}
+
+.bill-hero-status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #DCFCE7;
+    color: #16A34A;
+    border: 1px solid rgba(22, 163, 74, 0.3);
+    font-size: 0.72rem;
+    font-weight: 800;
+    padding: 3px 10px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.bill-hero-timestamp {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #61758A;
+}
+
+/* --- MAIN CONTENT SURFACE --- */
+.bill-content-card-surface {
+    background: #FFFFFF;
+    border: 1px solid #D9E4F0;
+    border-radius: 18px;
+    box-shadow: 0 8px 30px rgba(15, 50, 90, .08);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.bill-section-block {
+    display: flex;
+    flex-direction: column;
+}
+
+.bill-section-label {
+    font-size: 0.68rem;
+    font-weight: 800;
+    color: #61758A;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 8px;
+}
+
+/* Customer Section */
+.bill-customer-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.bill-cust-avatar-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    background: #EAF4FF;
+    color: #087FF5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.bill-cust-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.bill-cust-name {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: #0B1F36;
+}
+
+.bill-cust-phone {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #61758A;
+    font-family: var(--font-mono), monospace;
+}
+
+/* Payment Section */
+.bill-payment-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.bill-pay-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    background: #EAF4FF;
+    color: #087FF5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bill-pay-method-name {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #0B1F36;
+}
+
+.bill-pay-status-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: #16A34A;
+    font-size: 0.78rem;
+    font-weight: 800;
+}
+
+/* Items Section */
+.bill-items-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.bill-item-line {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.bill-item-name {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #0B1F36;
+}
+
+.bill-item-sub {
+    font-size: 0.76rem;
+    font-weight: 600;
+    color: #61758A;
+    margin-top: 2px;
+}
+
+.bill-item-right {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #0B1F36;
+    white-space: nowrap;
+}
+
+/* Dividers */
+.bill-card-divider {
+    height: 1px;
+    background: #E2E8F0;
+    width: 100%;
+}
+
+.bill-card-divider-strong {
+    height: 1.5px;
+    background: #CBD5E1;
+    width: 100%;
+    margin: 8px 0;
+}
+
+/* Summary Section */
+.bill-summary-block {
+    gap: 6px;
+}
+
+.bill-summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.84rem;
+    color: #61758A;
+}
+
+.bill-summary-val {
+    font-weight: 700;
+    color: #0B1F36;
+}
+
+.bill-discount-row .bill-summary-val {
+    color: #16A34A;
+}
+
+.bill-grand-total-row {
+    margin-top: 6px;
+}
+
+.bill-total-paid-lbl {
+    font-size: 0.92rem;
+    font-weight: 800;
+    color: #0B1F36;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+}
+
+.bill-total-paid-val {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #087FF5;
+}
+
+/* Transaction Details Accordion */
+.bill-tx-details-accordion {
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+    padding: 10px 12px;
+    background: #F8FAFC;
+    transition: all 0.2s ease;
+}
+
+.bill-accordion-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #61758A;
+    cursor: pointer;
+    user-select: none;
+    list-style: none;
+}
+
+.bill-accordion-summary::-webkit-details-marker {
+    display: none;
+}
+
+.bill-accordion-arrow {
+    transition: transform 0.2s ease;
+    color: #61758A;
+}
+
+.bill-tx-details-accordion[open] .bill-accordion-arrow {
+    transform: rotate(180deg);
+}
+
+.bill-accordion-content {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed #CBD5E1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 0.78rem;
+}
+
+.bill-detail-entry {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.bill-detail-key {
+    color: #61758A;
+    font-weight: 600;
+}
+
+.bill-detail-val {
+    color: #0B1F36;
+    font-weight: 700;
+}
+
+/* --- STICKY ACTION DOCK --- */
+.bill-sticky-action-dock {
+    padding: 12px 16px;
+    padding-bottom: max(12px, env(safe-area-inset-bottom));
+    background: #FFFFFF;
+    border-top: 1px solid #E2E8F0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex-shrink: 0;
+    z-index: 10;
+}
+
+.btn-bill-action-whatsapp {
+    width: 100%;
+    height: 48px;
+    border-radius: 14px;
+    background: #16A34A;
+    color: #FFFFFF;
+    font-size: 0.9rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 14px rgba(22, 163, 74, 0.35);
+}
+
+.btn-bill-action-whatsapp:hover {
+    background: #15803D;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(22, 163, 74, 0.45);
+}
+
+.bill-secondary-actions-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+
+.btn-bill-action-secondary {
+    height: 42px;
+    border-radius: 12px;
+    background: #F1F5F9;
+    color: #0B1F36;
+    font-size: 0.82rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    border: 1px solid #D9E4F0;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.btn-bill-action-secondary:hover {
+    background: #E2E8F0;
+    color: #0B1F36;
+}
+
+/* ==========================================================================
+   DARK MODE OVERRIDES FOR VIEW BILL MODAL
+   ========================================================================== */
+body.dark .bill-modal-sheet,
+html.dark .bill-modal-sheet {
+    background: #070F1B;
+    border-color: #223852;
+}
+
+body.dark .bill-modal-header,
+html.dark .bill-modal-header {
+    background: #101B2B;
+    border-bottom-color: #223852;
+}
+
+body.dark .bill-header-title-text,
+html.dark .bill-header-title-text {
+    color: #F8FAFC;
+}
+
+body.dark .bill-modal-close-btn,
+html.dark .bill-modal-close-btn {
+    background: #14243A;
+    color: #9FB2C7;
+}
+
+body.dark .bill-modal-close-btn:hover,
+html.dark .bill-modal-close-btn:hover {
+    background: #1E344F;
+    color: #F8FAFC;
+}
+
+body.dark .bill-modal-body,
+html.dark .bill-modal-body {
+    background: #070F1B;
+}
+
+body.dark .bill-hero-accent-card,
+html.dark .bill-hero-accent-card {
+    background: #14243A;
+    border-color: #223852;
+}
+
+body.dark .bill-hero-shop-title,
+html.dark .bill-hero-shop-title,
+body.dark .bill-hero-currency-amount,
+html.dark .bill-hero-currency-amount {
+    color: #F8FAFC;
+}
+
+body.dark .bill-hero-subtitle,
+html.dark .bill-hero-subtitle,
+body.dark .bill-hero-timestamp,
+html.dark .bill-hero-timestamp {
+    color: #9FB2C7;
+}
+
+body.dark .bill-hero-status-pill,
+html.dark .bill-hero-status-pill {
+    background: rgba(52, 211, 153, 0.15);
+    color: #34D399;
+    border-color: rgba(52, 211, 153, 0.3);
+}
+
+body.dark .bill-content-card-surface,
+html.dark .bill-content-card-surface {
+    background: #101B2B;
+    border-color: #223852;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+}
+
+body.dark .bill-section-label,
+html.dark .bill-section-label {
+    color: #9FB2C7;
+}
+
+body.dark .bill-cust-avatar-icon,
+html.dark .bill-cust-avatar-icon,
+body.dark .bill-pay-icon,
+html.dark .bill-pay-icon {
+    background: #14243A;
+    color: #2F8FFF;
+}
+
+body.dark .bill-cust-name,
+html.dark .bill-cust-name,
+body.dark .bill-pay-method-name,
+html.dark .bill-pay-method-name,
+body.dark .bill-item-name,
+html.dark .bill-item-name,
+body.dark .bill-item-right,
+html.dark .bill-item-right,
+body.dark .bill-summary-val,
+html.dark .bill-summary-val,
+body.dark .bill-total-paid-lbl,
+html.dark .bill-total-paid-lbl {
+    color: #F8FAFC;
+}
+
+body.dark .bill-cust-phone,
+html.dark .bill-cust-phone,
+body.dark .bill-item-sub,
+html.dark .bill-item-sub,
+body.dark .bill-summary-lbl,
+html.dark .bill-summary-lbl {
+    color: #9FB2C7;
+}
+
+body.dark .bill-pay-status-tag,
+html.dark .bill-pay-status-tag {
+    color: #34D399;
+}
+
+body.dark .bill-total-paid-val,
+html.dark .bill-total-paid-val {
+    color: #2F8FFF;
+}
+
+body.dark .bill-card-divider,
+html.dark .bill-card-divider {
+    background: #223852;
+}
+
+body.dark .bill-card-divider-strong,
+html.dark .bill-card-divider-strong {
+    background: #2D4A6F;
+}
+
+body.dark .bill-tx-details-accordion,
+html.dark .bill-tx-details-accordion {
+    background: #14243A;
+    border-color: #223852;
+}
+
+body.dark .bill-accordion-summary,
+html.dark .bill-accordion-summary,
+body.dark .bill-detail-key,
+html.dark .bill-detail-key {
+    color: #9FB2C7;
+}
+
+body.dark .bill-detail-val,
+html.dark .bill-detail-val {
+    color: #F8FAFC;
+}
+
+body.dark .bill-sticky-action-dock,
+html.dark .bill-sticky-action-dock {
+    background: #101B2B;
+    border-top-color: #223852;
+}
+
+body.dark .btn-bill-action-secondary,
+html.dark .btn-bill-action-secondary {
+    background: #14243A;
+    border-color: #223852;
+    color: #F8FAFC;
+}
+
+body.dark .btn-bill-action-secondary:hover,
+html.dark .btn-bill-action-secondary:hover {
+    background: #1E344F;
+}
+
+.bill-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+}
+
+/* --- Advanced Splash Screen --- */
+#app-splash-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--page-bg);
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1), visibility 0.6s;
+    overflow: hidden;
+}
+#app-splash-screen.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+.splash-logo-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    z-index: 2;
+}
+.intersecting-wrapper {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.circle {
+    position: absolute;
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    opacity: 0.85;
+    mix-blend-mode: multiply;
+    animation: intersectMerge 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+[data-theme="dark"] .circle {
+    mix-blend-mode: screen;
+}
+.circle-left {
+    background-color: var(--primary);
+    transform: translateX(-40px);
+}
+.circle-right {
+    background-color: var(--info);
+    transform: translateX(40px);
+}
+@keyframes intersectMerge {
+    0% { opacity: 0; transform: translateX(calc(var(--dir, 1) * 40px)) scale(0.6); }
+    40% { opacity: 0.85; transform: translateX(calc(var(--dir, 1) * 20px)) scale(1.1); }
+    100% { opacity: 1; transform: translateX(0) scale(1); background-color: var(--primary); }
+}
+.circle-left { --dir: -1; }
+.circle-right { --dir: 1; }
+
+.splash-icon {
+    position: absolute;
+    z-index: 10;
+    color: #fff;
+    opacity: 0;
+    animation: iconReveal 0.6s 1.0s forwards cubic-bezier(0.25, 1, 0.5, 1);
+}
+.splash-icon svg { width: 36px; height: 36px; }
+
+@keyframes iconReveal {
+    0% { opacity: 0; transform: scale(0.3) rotate(-30deg); }
+    70% { transform: scale(1.15) rotate(5deg); }
+    100% { opacity: 1; transform: scale(1) rotate(0); }
+}
+
+.splash-title {
+    font-size: 1.85rem;
+    font-weight: 900;
+    color: var(--text-primary);
+    letter-spacing: -0.5px;
+    opacity: 0;
+    animation: titleFadeIn 0.8s 1.2s forwards cubic-bezier(0.25, 1, 0.5, 1);
+}
+@keyframes titleFadeIn {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.splash-spread-bg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: var(--primary-tint);
+    transform: translate(-50%, -50%) scale(0);
+    z-index: 1;
+    animation: spreadOut 1.5s 1.4s forwards cubic-bezier(0.25, 1, 0.5, 1);
+}
+@keyframes spreadOut {
+    0% { transform: translate(-50%, -50%) scale(0); opacity: 0.8; }
+    50% { opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(250); opacity: 0; }
+}
+
+.page-title-section {
+    margin-bottom: 20px;
+}
+
+.page-title {
+    font-size: 1.5rem;
+    font-weight: 750;
+    color: #0F172A;
+    letter-spacing: -0.6px;
+}
+
+[data-theme="dark"] .page-title {
+    color: #F8FAFC;
+}
+
+.page-subtitle {
+    font-size: 0.85rem;
+    color: #475569;
+    margin-top: 2px;
+    font-weight: 500;
+}
+
+[data-theme="dark"] .page-subtitle {
+    color: #94A3B8;
+}
+
+/* ==========================================================================
+   PREMIUM FLOATING BOTTOM NAVIGATION BAR
+   ========================================================================== */
+.bottom-nav {
+    position: fixed;
+    bottom: 14px;
+    bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 28px);
+    max-width: 430px;
+    height: 64px;
+    background-color: #FFFFFF;
+    border-top: 1px solid #E2E8F0;
+    border: 1px solid #E2E8F0;
+    border-radius: 24px;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+    display: grid;
+    grid-template-columns: 1fr 1fr 72px 1fr 1fr;
+    align-items: center;
+    padding: 0 4px;
+    z-index: 500;
+    box-sizing: border-box;
+    transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+
+[data-theme="dark"] .bottom-nav {
+    background-color: #171A1E;
+    border: 1px solid #2A3036;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+@media (max-width: 359px) {
+    .bottom-nav {
+        width: calc(100% - 20px);
+        grid-template-columns: 1fr 1fr 64px 1fr 1fr;
+        padding: 0 2px;
+    }
+}
+
+/* Center Notch Scoop Cradle Overlay */
+.bottom-nav-cradle-wrap {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.bottom-nav-cradle-svg {
+    position: absolute;
+    top: -1px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 76px;
+    height: 34px;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.cradle-cutout-fill {
+    fill: var(--bg);
+    transition: fill 0.2s ease;
+}
+
+.cradle-cutout-stroke {
+    stroke: rgba(0, 0, 0, 0.06);
+    transition: stroke 0.2s ease;
+}
+
+[data-theme="dark"] .cradle-cutout-stroke {
+    stroke: #2A3036;
+}
+
+.bottom-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    min-height: 44px;
+    text-decoration: none;
+    cursor: pointer;
+    gap: 3px;
+    padding: 4px 0;
+    border-radius: 10px;
+    transition: background-color 0.15s ease, transform 0.15s ease;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Inactive Icon Container */
+.bottom-nav-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    color: #64748B;
+    transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-theme="dark"] .bottom-nav-icon {
+    color: #94A3B8;
+}
+
+.bottom-nav-icon svg {
+    width: 20px;
+    height: 20px;
+    stroke-width: 2px;
+    transition: all 0.18s ease;
+}
+
+/* Inactive Label */
+.bottom-nav-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: #475569;
+    line-height: 1.1;
+    letter-spacing: 0.1px;
+    transition: color 0.18s ease, font-weight 0.18s ease;
+}
+
+[data-theme="dark"] .bottom-nav-label {
+    color: #94A3B8;
+}
+
+/* Active Item State */
+.bottom-nav-item.active {
+    background-color: #EAF3FF;
+    border-radius: 10px;
+}
+
+[data-theme="dark"] .bottom-nav-item.active {
+    background-color: rgba(47, 143, 255, 0.15);
+}
+
+.bottom-nav-item.active .bottom-nav-icon {
+    background-color: transparent;
+    color: #087FF5;
+    box-shadow: none;
+}
+
+[data-theme="dark"] .bottom-nav-item.active .bottom-nav-icon {
+    background-color: transparent;
+    color: #2F8FFF;
+    box-shadow: none;
+}
+
+.bottom-nav-item.active .bottom-nav-icon svg {
+    width: 20px;
+    height: 20px;
+    stroke-width: 2.2px;
+    color: #087FF5;
+}
+
+[data-theme="dark"] .bottom-nav-item.active .bottom-nav-icon svg {
+    color: #2F8FFF;
+}
+
+.bottom-nav-item.active .bottom-nav-label {
+    color: #087FF5;
+    font-weight: 700;
+}
+
+[data-theme="dark"] .bottom-nav-item.active .bottom-nav-label {
+    color: #2F8FFF;
+}
+
+.bottom-nav-item:active {
+    transform: scale(0.95);
+}
+
+/* Buttons System */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 650;
+    border-radius: var(--radius-btn);
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    min-height: 46px;
+    transition: transform 0.1s, opacity 0.2s, background-color 0.2s;
+    text-decoration: none;
+}
+
+.btn:active {
+    transform: scale(0.98);
+}
+
+.btn svg {
+    width: 16px;
+    height: 16px;
+    stroke-width: 2.2px;
+}
+
+.btn-primary {
+    background-color: #087FF5;
+    color: #FFFFFF;
+}
+
+.btn-primary:hover {
+    background-color: #066FD6;
+}
+
+.btn-primary:active {
+    background-color: #055CB5;
+}
+
+.btn-secondary,
+.btn-outline {
+    background-color: #FFFFFF;
+    border: 1px solid #CBD5E1;
+    color: #1E293B;
+}
+
+[data-theme="dark"] .btn-secondary,
+[data-theme="dark"] .btn-outline {
+    background-color: var(--surface);
+    border: 1px solid var(--border-dark);
+    color: var(--text-primary);
+}
+
+.btn-secondary:hover,
+.btn-outline:hover {
+    background-color: #F8FAFC;
+    border-color: #CBD5E1;
+    color: #1E293B;
+}
+
+.btn-secondary svg,
+.btn-outline svg {
+    color: #087FF5;
+}
+
+[data-theme="dark"] .btn-secondary svg,
+[data-theme="dark"] .btn-outline svg {
+    color: #2F8FFF;
+}
+
+.btn-danger {
+    background-color: var(--danger);
+    color: white;
+}
+
+.btn-sm {
+    padding: 6px 12px;
+    min-height: 34px;
+    font-size: 0.75rem;
+    width: auto;
+}
+
+/* ==========================================================================
+   CENTERED NESTED FLOATING ACTION BUTTON (FAB)
+   ========================================================================== */
+.fab,
+#global-action-fab {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 42px;
+    bottom: calc(42px + env(safe-area-inset-bottom, 0px));
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    background-color: #087FF5;
+    color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 5px 14px rgba(8, 127, 245, 0.25);
+    border: none;
+    cursor: pointer;
+    z-index: 600;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s, box-shadow 0.2s;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+@media print {
+    body {
+        background: #ffffff !important;
+        color: #000000 !important;
+    }
+
+    #app-header, #app-navigation, #screenStep1, #screenStep2, #screenStep3, #cameraScanModal, #successModal,
+    #screenStep4 > header, #screenStep4 #posSuccessArea, #screenStep4 .pt-3, footer, nav {
+        display: none !important;
+    }
+
+    #screenStep4 {
+        display: block !important;
+        background: transparent !important;
+        min-height: 0 !important;
+        padding: 0 !important;
+        box-shadow: none !important;
+    }
+
+    #digitalSuperBillMount {
+        padding: 0 !important;
+        margin: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    .pos-receipt-wrapper {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 0 !important;
+    }
+
+    .pos-receipt-card {
+        box-shadow: none !important;
+        border: 1px solid #d1d5db !important;
+        border-radius: 0 !important;
+        color: #000000 !important;
+        background: #ffffff !important;
+        padding: 15px !important;
+    }
+
+    .pos-receipt-card::after {
+        display: none !important;
+    }
+
+    .pos-shop-name, .pos-amount-value, .pos-customer-name, .pos-payment-method, .pos-item-title, .pos-item-price, .pos-total-row.grand-total, .pos-detail-val {
+        color: #000000 !important;
+    }
+
+/* Digital Transaction Summary Badge & Card Styles */
+.tx-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 9999px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+/* ==========================================================================
+   POS PAYMENT CONFIRMATION CSS VARIABLE TOKEN SYSTEM
+   ========================================================================== */
+:root {
+    --pos-bg: #F3F7FC;
+    --pos-header-bg: #FFFFFF;
+    --pos-header-border: #E2E8F0;
+    --pos-surface: linear-gradient(135deg, #DCEEFF 0%, #B9DAFF 100%);
+    --pos-surface-solid: #DCEEFF;
+    --pos-surface-subtle: #E8F4FF;
+    --pos-text-main: #08243D;
+    --pos-text-navy: #061A2B;
+    --pos-text-sub: #46657F;
+    --pos-text-muted: #64819A;
+    --pos-border: rgba(8, 127, 245, 0.18);
+    --pos-divider: rgba(8, 127, 245, 0.14);
+    --pos-primary: #087FF5;
+    --pos-primary-dark: #0568D8;
+    --pos-success: #16A34A;
+    --pos-success-bg: #DCFCE7;
+    --pos-success-border: #BBF7D0;
+    --pos-whatsapp: #22C55E;
+    --pos-shadow: 0 14px 35px rgba(8, 127, 245, 0.14);
+}
+
+.dark, [data-theme="dark"] {
+    --pos-bg: #07111F;
+    --pos-header-bg: #0D1726;
+    --pos-header-border: #1F3B5C;
+    --pos-surface: linear-gradient(145deg, #102A49 0%, #0C1F36 100%);
+    --pos-surface-solid: #102A49;
+    --pos-surface-subtle: #133256;
+    --pos-text-main: #F8FAFC;
+    --pos-text-navy: #FFFFFF;
+    --pos-text-sub: #A8BCD0;
+    --pos-text-muted: #7891AA;
+    --pos-border: #1E466C;
+    --pos-divider: rgba(30, 70, 110, 0.5);
+    --pos-primary: #2F8FFF;
+    --pos-primary-dark: #1A7FE6;
+    --pos-success: #34D399;
+    --pos-success-bg: rgba(52, 211, 153, 0.12);
+    --pos-success-border: rgba(52, 211, 153, 0.3);
+    --pos-whatsapp: #22C55E;
+    --pos-shadow: 0 14px 35px rgba(0, 0, 0, 0.4);
+}
+
+/* Theme Transition for POS Screen */
+#screenStep4, #screenStep4 * {
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+/* POS Payment Success Screen Component Styles */
+#screenStep4.pos-success-screen {
+    background-color: var(--pos-bg) !important;
+    color: var(--pos-text-main) !important;
+}
+
+#screenStep4 header.pos-header {
+    background-color: var(--pos-header-bg) !important;
+    border-bottom: 1px solid var(--pos-header-border) !important;
+}
+
+.pos-header-link {
+    color: var(--pos-text-sub) !important;
+}
+.pos-header-link:hover {
+    color: var(--pos-primary) !important;
+}
+
+.pos-header-badge {
+    background-color: var(--pos-surface-subtle) !important;
+    color: var(--pos-primary) !important;
+    border: 1px solid var(--pos-border) !important;
+}
+
+.pos-header-menu-btn {
+    color: var(--pos-text-sub) !important;
+}
+.pos-header-menu-btn:hover {
+    color: var(--pos-text-main) !important;
+    background-color: var(--pos-surface-subtle) !important;
+}
+
+.pos-hero-status {
+    color: var(--pos-text-sub) !important;
+}
+
+.pos-hero-amount {
+    color: var(--pos-text-navy) !important;
+}
+
+.pos-hero-timestamp {
+    color: var(--pos-text-muted) !important;
+}
+
+.pos-hero-secure-badge {
+    background-color: var(--pos-success-bg) !important;
+    color: var(--pos-success) !important;
+    border: 1px solid var(--pos-success-border) !important;
+}
+
+/* Card typography & colors */
+.pos-card-main {
+    color: var(--pos-text-main) !important;
+}
+.pos-card-navy {
+    color: var(--pos-text-navy) !important;
+}
+.pos-card-sub {
+    color: var(--pos-text-sub) !important;
+}
+.pos-card-muted {
+    color: var(--pos-text-muted) !important;
+}
+.pos-card-divider {
+    border-color: var(--pos-divider) !important;
+}
+
+/* Action Buttons */
+.pos-btn-whatsapp {
+    background-color: var(--pos-whatsapp) !important;
+    color: #FFFFFF !important;
+}
+
+.pos-btn-secondary {
+    background-color: var(--pos-header-bg) !important;
+    border: 1px solid var(--pos-header-border) !important;
+    color: var(--pos-text-main) !important;
+}
+.pos-btn-secondary:hover {
+    background-color: var(--pos-surface-subtle) !important;
+}
+.pos-btn-secondary svg {
+    color: var(--pos-primary) !important;
+}
+
+.pos-btn-primary {
+    background-color: var(--pos-primary) !important;
+    color: #FFFFFF !important;
+}
+.pos-btn-primary:hover {
+    background-color: var(--pos-primary-dark) !important;
+}
+
+.pos-back-link {
+    color: var(--pos-text-sub) !important;
+}
+.pos-back-link:hover {
+    color: var(--pos-primary) !important;
+}
+
+/* Digital Transaction Summary Card */
+.digital-tx-card {
+    background: var(--pos-surface) !important;
+    border: 1px solid var(--pos-border) !important;
+    color: var(--pos-text-main) !important;
+    box-shadow: var(--pos-shadow) !important;
+    border-radius: 22px !important;
+    position: relative;
+    overflow: hidden;
+}
+
+.tx-status-badge.status-paid {
+    background-color: var(--pos-success-bg) !important;
+    color: var(--pos-success) !important;
+    border: 1px solid rgba(34, 197, 94, 0.25) !important;
+}
+
+[data-theme="dark"] .tx-status-badge.status-paid {
+    border: 1px solid rgba(52, 211, 153, 0.3) !important;
+}
+
+.tx-status-badge.status-failed {
+    background-color: #FEE2E2;
+    color: #B91C1C;
+    border: 1px solid rgba(239, 68, 68, 0.25);
+}
+
+[data-theme="dark"] .tx-status-badge.status-failed {
+    background-color: rgba(239, 68, 68, 0.15);
+    color: #F87171;
+    border: 1px solid rgba(248, 113, 113, 0.3);
+}
+
+.tx-status-badge.status-pending {
+    background-color: #FEF3C7;
+    color: #B45309;
+    border: 1px solid rgba(245, 158, 11, 0.25);
+}
+
+[data-theme="dark"] .tx-status-badge.status-pending {
+    background-color: rgba(245, 158, 11, 0.15);
+    color: #FBBF24;
+    border: 1px solid rgba(251, 191, 36, 0.3);
+}
+
+.check-scale-anim {
+    animation: checkScaleIn 250ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes checkScaleIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* ==========================================================================
+   PAYMENT SUCCESS PAGE ANIMATION SYSTEM & MICRO-INTERACTIONS
+   ========================================================================== */
+
+/* 1. Circular check badge scale overshoot */
+@keyframes checkBadgeScaleIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.65);
+    }
+    70% {
+        opacity: 1;
+        transform: scale(1.06);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Single-shot transient success glow (350ms duration, non-repeating) */
+@keyframes checkGlowSingle {
+    0% {
+        box-shadow: 0 0 0 0px rgba(22, 163, 74, 0.25);
+    }
+    100% {
+        box-shadow: 0 0 0 10px rgba(22, 163, 74, 0);
+    }
+}
+
+.check-badge-anim {
+    animation: checkBadgeScaleIn 240ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards,
+               checkGlowSingle 350ms ease-out 300ms 1 forwards;
+}
+
+/* 2. SVG checkmark path stroke-draw animation */
+@keyframes checkPathDraw {
+    0% {
+        stroke-dashoffset: 30;
+    }
+    100% {
+        stroke-dashoffset: 0;
+    }
+}
+
+.check-path-anim {
+    stroke-dasharray: 30;
+    stroke-dashoffset: 30;
+    animation: checkPathDraw 280ms cubic-bezier(0.65, 0, 0.35, 1) 100ms forwards;
+}
+
+/* 3. Hero elements staggered fade-up */
+@keyframes heroTextFadeUp {
+    0% {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.hero-label-anim {
+    opacity: 0;
+    animation: heroTextFadeUp 180ms ease-out 100ms forwards;
+}
+
+@keyframes heroAmountFadeUp {
+    0% {
+        opacity: 0;
+        transform: translateY(8px) scale(0.97);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.hero-amount-anim {
+    opacity: 0;
+    animation: heroAmountFadeUp 220ms cubic-bezier(0.16, 1, 0.3, 1) 150ms forwards;
+}
+
+@keyframes heroTimeFadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+.hero-time-anim {
+    opacity: 0;
+    animation: heroTimeFadeIn 150ms ease-out 250ms forwards;
+}
+
+/* 4. Digital Transaction Card entrance */
+@keyframes posCardEntrance {
+    0% {
+        opacity: 0;
+        transform: translateY(16px) scale(0.98);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.pos-card-entrance {
+    opacity: 0;
+    animation: posCardEntrance 300ms cubic-bezier(0.22, 1, 0.36, 1) 280ms forwards;
+}
+
+@keyframes cardSheenOnce {
+    0% {
+        transform: translateX(-150%) rotate(25deg);
+        opacity: 0;
+    }
+    20% {
+        opacity: 0.8;
+    }
+    100% {
+        transform: translateX(250%) rotate(25deg);
+        opacity: 0;
+    }
+}
+
+.card-sheen-sweep {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 60%;
+    height: 200%;
+    background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.22) 50%, rgba(255,255,255,0) 100%);
+    pointer-events: none;
+    z-index: 5;
+    animation: cardSheenOnce 450ms cubic-bezier(0.16, 1, 0.3, 1) 580ms 1 forwards;
+}
+
+[data-theme="dark"] .card-sheen-sweep {
+    background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.10) 50%, rgba(255,255,255,0) 100%);
+}
+
+/* 5. Bottom action buttons stagger fade-in */
+@keyframes actionsFadeUp {
+    0% {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.actions-fade-in {
+    opacity: 0;
+    animation: actionsFadeUp 250ms ease-out 450ms forwards;
+}
+
+/* Accessibility: Reduced Motion Overrides */
+@media (prefers-reduced-motion: reduce) {
+    .check-badge-anim,
+    .check-scale-anim,
+    .hero-label-anim,
+    .hero-amount-anim,
+    .hero-time-anim,
+    .pos-card-entrance,
+    .actions-fade-in {
+        animation: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+        box-shadow: none !important;
+    }
+    .check-path-anim {
+        stroke-dashoffset: 0 !important;
+        animation: none !important;
+    }
+}
+
+@media print {
+    header, footer, nav, button, a, #cameraScanModal, .no-print {
+        display: none !important;
+    }
+
+    #printable-bill-surface, .digital-tx-card {
+        box-shadow: none !important;
+        border: 1px solid #d1d5db !important;
+        background: #ffffff !important;
+        color: #000000 !important;
+    }
+}
+
+
+

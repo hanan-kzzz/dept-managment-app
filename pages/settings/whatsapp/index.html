@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>WhatsApp Integration - Cashly</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Application Styles -->
+    <link rel="stylesheet" href="../../../css/style.css">
+    <link rel="stylesheet" href="../../../css/settings.css">
+</head>
+<body data-page="settings-whatsapp">
+
+    <!-- Injected Global Header -->
+    <div id="app-header"></div>
+
+    <main class="settings-subpage-standalone">
+<div class="settings-subpage" id="subpage-whatsapp">
+        <div class="settings-subpage-header">
+            <a href="../settings.html" class="back-nav-settings"><i data-lucide="arrow-left"></i></a>
+            <span class="settings-subpage-title">WhatsApp Customer Reminders</span>
+        </div>
+        <div class="settings-subpage-content">
+                        <div class="wa-redesign-container">
+                <!-- ELEVATED CONNECTION & HERO CARD -->
+                <div class="wa-hero-card disconnected" id="wa-hero-card">
+                    <div class="wa-hero-top">
+                        <div class="wa-hero-badge disconnected" id="wa-hero-badge">
+                            <span class="status-dot"></span>
+                            <span id="sub-whatsapp-status-lbl">Not Connected</span>
+                        </div>
+                        <span class="wa-hero-meta" id="wa-hero-meta-text">Reminders are paused until you connect an account</span>
+                    </div>
+
+                    <div class="wa-hero-body">
+                        <div class="wa-hero-icon-box">
+                            <i data-lucide="message-circle" class="wa-hero-icon" style="fill: var(--wa-green, #25D366); color: var(--wa-green, #25D366);"></i>
+                        </div>
+                        <div class="wa-hero-text">
+                            <h3 class="wa-hero-title">WhatsApp Customer Reminders</h3>
+                            <p class="wa-hero-desc">Automate customer payment due alerts via WhatsApp Business. Connect your account to enable rule triggers and automatic delivery.</p>
+                        </div>
+                    </div>
+
+                    <div class="wa-hero-actions" style="display: flex; flex-direction: column; align-items: center; gap: 15px; width: 100%;">
+                        <button type="button" class="wa-connect-btn" id="btn-connect-whatsapp">
+                            <i data-lucide="message-circle"></i>
+                            <span id="btn-whatsapp-connect-text">Connect WhatsApp Business</span>
+                        </button>
+                        <div id="wa-qr-container" style="display: none; text-align: center; margin-top: 10px; width: 100%; max-width: 320px; background: var(--surface); padding: 16px; border-radius: 12px; border: 1px solid var(--border);">
+                            <div id="wa-qr-loading" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; gap: 10px;">
+                                <i data-lucide="loader-2" class="animate-spin" style="width: 32px; height: 32px; color: #25D366;"></i>
+                                <span style="font-size: 13px; color: var(--text-muted); font-weight: 500;">Generating WhatsApp QR Code...</span>
+                            </div>
+                            <div id="wa-qr-content" style="display: none;">
+                                <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px; font-weight: 500;">Scan this QR code with WhatsApp (Linked Devices)</p>
+                                <img id="wa-qr-image" src="" alt="WhatsApp QR Code" style="max-width: 200px; border-radius: 8px; border: 2px solid var(--border); box-shadow: 0 4px 14px rgba(0,0,0,0.2);">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- QUICK PRESET BAR & FREQUENCY CONTROL -->
+                <div class="wa-controls-bar">
+                    <div class="wa-presets-wrap" style="flex-direction: column; align-items: flex-start; gap: 8px;">
+                        <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+                            <span class="wa-presets-title">Presets:</span>
+                            <div class="wa-preset-segmented">
+                                <button type="button" class="wa-preset-segment active" id="btn-wa-preset-standard">
+                                    <i data-lucide="check" class="wa-preset-check"></i> Standard
+                                </button>
+                                <button type="button" class="wa-preset-segment" id="btn-wa-preset-custom">
+                                    Custom
+                                </button>
+                            </div>
+                        </div>
+                        <div class="wa-presets-actions" style="display: flex; gap: 12px; margin-left: auto;">
+                            <button type="button" class="wa-preset-link" id="btn-wa-preset-all">Enable All</button>
+                            <button type="button" class="wa-preset-link" id="btn-wa-preset-clear">Disable All</button>
+                        </div>
+                    </div>
+                    
+                    <div class="wa-timing-box">
+                        <div class="wa-timing-left">
+                            <i data-lucide="clock"></i>
+                            <div>
+                                <span class="wa-timing-title">Dispatch Schedule</span>
+                                <span class="wa-timing-sub">Daily reminder window</span>
+                            </div>
+                        </div>
+                        <select class="wa-timing-select" id="wa-dispatch-time">
+                            <option value="09:00">09:00 AM (Default)</option>
+                            <option value="10:00">10:00 AM</option>
+                            <option value="11:00">11:00 AM</option>
+                            <option value="16:00">04:00 PM</option>
+                            <option value="18:00">06:00 PM</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- SECTION HEADER WITH STATUS BADGE -->
+                <div class="wa-section-header">
+                    <div>
+                        <h4 class="wa-section-title">Automatic Reminder Sequence</h4>
+                        <p class="wa-section-subtitle">Timeline progression from before due date to overdue escalation</p>
+                    </div>
+                </div>
+
+                <!-- TIMELINE RULES SECTION WITH GATED OVERLAY CONTAINER -->
+                <div class="wa-rules-wrapper locked" id="wa-rules-wrapper">
+                    <!-- Lock overlay when disconnected -->
+                    <div class="wa-lock-overlay" id="wa-lock-overlay">
+                        <div class="wa-lock-card">
+                            <div class="wa-lock-icon-circle">
+                                <i data-lucide="lock"></i>
+                            </div>
+                            <h5>Connect WhatsApp to Enable</h5>
+                            <p>Reminder rules and automated dispatches are paused until your WhatsApp account is connected.</p>
+                            <button type="button" class="wa-overlay-connect-btn" id="btn-overlay-connect">
+                                <i data-lucide="message-circle"></i> Connect Now
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- SEQUENCED TIMELINE -->
+                    <div class="wa-timeline">
+                        <!-- TIMELINE ITEM 1: DUE TOMORROW -->
+                        <div class="wa-timeline-item" data-rule="due-tomorrow">
+                            <div class="wa-timeline-node node-before">
+                                <div class="wa-node-circle">
+                                    <i data-lucide="bell"></i>
+                                </div>
+                                <div class="wa-timeline-line"></div>
+                            </div>
+                            <div class="wa-timeline-content">
+                                <div class="wa-rule-header">
+                                    <div class="wa-rule-info">
+                                        <div class="wa-badge-row">
+                                            <span class="wa-tag tag-upcoming">BEFORE DUE DATE</span>
+                                            <span class="wa-offset-badge">-1 Day</span>
+                                        </div>
+                                        <span class="wa-rule-name">Due Tomorrow</span>
+                                        <span class="wa-rule-desc">Friendly heads-up sent 1 day prior to due date</span>
+                                    </div>
+                                    <label class="settings-switch">
+                                        <input type="checkbox" id="whatsapp-opt-due-tomorrow">
+                                        <span class="settings-switch-slider"></span>
+                                    </label>
+                                </div>
+                                <div class="wa-preview-toggle" data-preview-target="msg-preview-tomorrow">
+                                    <i data-lucide="eye"></i> <span>Preview message</span>
+                                    <i data-lucide="chevron-down" class="chevron"></i>
+                                </div>
+                                <div class="wa-msg-bubble-wrap hidden" id="msg-preview-tomorrow">
+                                    <div class="wa-bubble">
+                                        <div class="wa-bubble-header">
+                                            <i data-lucide="store" class="wa-store-icon"></i>
+                                            <span class="wa-store-name">Greenway Groceries</span>
+                                        </div>
+                                        <p class="wa-bubble-text">Hi <b>Rahul</b>! 👋 Friendly reminder from <b>Greenway Groceries</b>. Your payment of <b>₹1,450.00</b> for Invoice #INV-1082 is due <b>tomorrow (Sep 2)</b>. Click to view or pay online: https://pay.greenway.com/inv1082</p>
+                                        <span class="wa-bubble-time">09:00 AM <i data-lucide="check-check"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- TIMELINE ITEM 2: DUE TODAY -->
+                        <div class="wa-timeline-item" data-rule="due-today">
+                            <div class="wa-timeline-node node-today">
+                                <div class="wa-node-circle">
+                                    <i data-lucide="calendar-check"></i>
+                                </div>
+                                <div class="wa-timeline-line"></div>
+                            </div>
+                            <div class="wa-timeline-content">
+                                <div class="wa-rule-header">
+                                    <div class="wa-rule-info">
+                                        <div class="wa-badge-row">
+                                            <span class="wa-tag tag-due">ON DUE DATE</span>
+                                            <span class="wa-offset-badge">Day 0</span>
+                                        </div>
+                                        <span class="wa-rule-name">Due Today</span>
+                                        <span class="wa-rule-desc">Prompt notification sent on the exact payment due date</span>
+                                    </div>
+                                    <label class="settings-switch">
+                                        <input type="checkbox" id="whatsapp-opt-due-today">
+                                        <span class="settings-switch-slider"></span>
+                                    </label>
+                                </div>
+                                <div class="wa-preview-toggle" data-preview-target="msg-preview-today">
+                                    <i data-lucide="eye"></i> <span>Preview message</span>
+                                    <i data-lucide="chevron-down" class="chevron"></i>
+                                </div>
+                                <div class="wa-msg-bubble-wrap hidden" id="msg-preview-today">
+                                    <div class="wa-bubble">
+                                        <div class="wa-bubble-header">
+                                            <i data-lucide="store" class="wa-store-icon"></i>
+                                            <span class="wa-store-name">Greenway Groceries</span>
+                                        </div>
+                                        <p class="wa-bubble-text">Hello <b>Rahul</b>, your payment of <b>₹1,450.00</b> for Invoice #INV-1082 is <b>due today</b>. Kindly clear the balance to avoid overdue charges. UPI/QR link: https://pay.greenway.com/inv1082</p>
+                                        <span class="wa-bubble-time">09:00 AM <i data-lucide="check-check"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- TIMELINE ITEM 3: 1 DAY OVERDUE -->
+                        <div class="wa-timeline-item" data-rule="overdue-1">
+                            <div class="wa-timeline-node node-overdue">
+                                <div class="wa-node-circle">
+                                    <i data-lucide="alert-circle"></i>
+                                </div>
+                                <div class="wa-timeline-line"></div>
+                            </div>
+                            <div class="wa-timeline-content">
+                                <div class="wa-rule-header">
+                                    <div class="wa-rule-info">
+                                        <div class="wa-badge-row">
+                                            <span class="wa-tag tag-overdue">OVERDUE</span>
+                                            <span class="wa-offset-badge">+1 Day</span>
+                                        </div>
+                                        <span class="wa-rule-name">1 Day Overdue</span>
+                                        <span class="wa-rule-desc">First follow-up sent 1 day after due date</span>
+                                    </div>
+                                    <label class="settings-switch">
+                                        <input type="checkbox" id="whatsapp-opt-overdue-1">
+                                        <span class="settings-switch-slider"></span>
+                                    </label>
+                                </div>
+                                <div class="wa-preview-toggle" data-preview-target="msg-preview-overdue1">
+                                    <i data-lucide="eye"></i> <span>Preview message</span>
+                                    <i data-lucide="chevron-down" class="chevron"></i>
+                                </div>
+                                <div class="wa-msg-bubble-wrap hidden" id="msg-preview-overdue1">
+                                    <div class="wa-bubble">
+                                        <div class="wa-bubble-header">
+                                            <i data-lucide="store" class="wa-store-icon"></i>
+                                            <span class="wa-store-name">Greenway Groceries</span>
+                                        </div>
+                                        <p class="wa-bubble-text">Notice: Hi <b>Rahul</b>, your payment of <b>₹1,450.00</b> (Invoice #INV-1082) was due yesterday and is now <b>1 day overdue</b>. Please submit payment today.</p>
+                                        <span class="wa-bubble-time">09:00 AM <i data-lucide="check-check"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- TIMELINE ITEM 4: 3 DAYS OVERDUE -->
+                        <div class="wa-timeline-item" data-rule="overdue-3">
+                            <div class="wa-timeline-node node-overdue">
+                                <div class="wa-node-circle">
+                                    <i data-lucide="alert-triangle"></i>
+                                </div>
+                                <div class="wa-timeline-line"></div>
+                            </div>
+                            <div class="wa-timeline-content">
+                                <div class="wa-rule-header">
+                                    <div class="wa-rule-info">
+                                        <div class="wa-badge-row">
+                                            <span class="wa-tag tag-overdue">OVERDUE</span>
+                                            <span class="wa-offset-badge">+3 Days</span>
+                                        </div>
+                                        <span class="wa-rule-name">3 Days Overdue</span>
+                                        <span class="wa-rule-desc">Urgent reminder sent 3 days after due date</span>
+                                    </div>
+                                    <label class="settings-switch">
+                                        <input type="checkbox" id="whatsapp-opt-overdue-3">
+                                        <span class="settings-switch-slider"></span>
+                                    </label>
+                                </div>
+                                <div class="wa-preview-toggle" data-preview-target="msg-preview-overdue3">
+                                    <i data-lucide="eye"></i> <span>Preview message</span>
+                                    <i data-lucide="chevron-down" class="chevron"></i>
+                                </div>
+                                <div class="wa-msg-bubble-wrap hidden" id="msg-preview-overdue3">
+                                    <div class="wa-bubble">
+                                        <div class="wa-bubble-header">
+                                            <i data-lucide="store" class="wa-store-icon"></i>
+                                            <span class="wa-store-name">Greenway Groceries</span>
+                                        </div>
+                                        <p class="wa-bubble-text">Urgent: Dear <b>Rahul</b>, your invoice #INV-1082 (<b>₹1,450.00</b>) is now <b>3 days overdue</b>. Please settle the pending amount to keep your credit account active.</p>
+                                        <span class="wa-bubble-time">09:00 AM <i data-lucide="check-check"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- TIMELINE ITEM 5: 7 DAYS OVERDUE -->
+                        <div class="wa-timeline-item" data-rule="overdue-7">
+                            <div class="wa-timeline-node node-critical">
+                                <div class="wa-node-circle">
+                                    <i data-lucide="shield-alert"></i>
+                                </div>
+                            </div>
+                            <div class="wa-timeline-content">
+                                <div class="wa-rule-header">
+                                    <div class="wa-rule-info">
+                                        <div class="wa-badge-row">
+                                            <span class="wa-tag tag-critical">CRITICAL</span>
+                                            <span class="wa-offset-badge">+7 Days</span>
+                                        </div>
+                                        <span class="wa-rule-name">7 Days Overdue</span>
+                                        <span class="wa-rule-desc">Final notice sent 7 days after due date</span>
+                                    </div>
+                                    <label class="settings-switch">
+                                        <input type="checkbox" id="whatsapp-opt-overdue-7">
+                                        <span class="settings-switch-slider"></span>
+                                    </label>
+                                </div>
+                                <div class="wa-preview-toggle" data-preview-target="msg-preview-overdue7">
+                                    <i data-lucide="eye"></i> <span>Preview message</span>
+                                    <i data-lucide="chevron-down" class="chevron"></i>
+                                </div>
+                                <div class="wa-msg-bubble-wrap hidden" id="msg-preview-overdue7">
+                                    <div class="wa-bubble">
+                                        <div class="wa-bubble-header">
+                                            <i data-lucide="store" class="wa-store-icon"></i>
+                                            <span class="wa-store-name">Greenway Groceries</span>
+                                        </div>
+                                        <p class="wa-bubble-text">FINAL NOTICE: Dear <b>Rahul</b>, invoice #INV-1082 (<b>₹1,450.00</b>) is <b>7 days overdue</b>. Please contact Greenway Groceries immediately at 9876543210 to arrange payment.</p>
+                                        <span class="wa-bubble-time">09:00 AM <i data-lucide="check-check"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </main>
+
+    <!-- Injected Global Bottom Navigation -->
+    <nav id="app-navigation"></nav>
+
+    <!-- Application Script -->
+    <script src="../../../js/storage.js"></script>
+    <script src="../../../js/utils.js"></script>
+    <script src="../../../js/notifications.js"></script>
+    <script src="../../../js/settings.js"></script>
+</body>
+</html>

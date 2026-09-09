@@ -1,3 +1,13 @@
+
+window.routeMap = {"index.html":"","sales.html":"pages/sales/","new-sale.html":"pages/sales/","dues.html":"pages/sales/","stock.html":"pages/inventory/","product-details.html":"pages/inventory/","barcode-management.html":"pages/inventory/","market-prices.html":"pages/inventory/","customers.html":"pages/customers/","customer-details.html":"pages/customers/","settings.html":"pages/settings/","notifications.html":"pages/settings/","login.html":"auth/","signup.html":"auth/","forgot-password.html":"auth/","reset-password.html":"auth/","otp-verification.html":"auth/"};
+window.getAppLink = function(targetFile) {
+    const basePath = window.BASE_PATH || '';
+    const parts = targetFile.split('?');
+    const baseFile = parts[0];
+    const query = parts.length > 1 ? '?' + parts[1] : '';
+    const folder = window.routeMap[baseFile] || '';
+    return basePath + folder + baseFile + query;
+};
 /**
  * Shared Helper Utilities & UI Layout Components (UI Redesigned - Light Mode Default, Teal Accent)
  */
@@ -34,6 +44,16 @@ const Utils = {
             hour: '2-digit',
             minute: '2-digit'
         });
+    },
+
+    escapeHtml(str) {
+        if (!str) return '';
+        return String(str)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
     },
 
     // --- FORM VALIDATION ---
@@ -155,7 +175,7 @@ const Utils = {
         // Apply saved theme on boot
         let savedTheme = localStorage.getItem('theme');
         if (!savedTheme) {
-            savedTheme = settings.theme || 'dark';
+            savedTheme = settings.theme || 'light';
         }
         if (savedTheme === 'system') {
             const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -184,11 +204,11 @@ const Utils = {
                     <button type="button" id="global-theme-toggle-btn" class="icon-btn" aria-label="Toggle Dark/Light Mode" title="Toggle Theme">
                         <i data-lucide="${savedTheme === 'light' ? 'sun' : 'moon'}"></i>
                     </button>
-                    <a href="notifications.html" class="icon-btn" aria-label="Notifications" title="Notifications" style="position: relative;">
+                    <a href="${window.getAppLink('notifications.html')}" class="icon-btn" aria-label="Notifications" title="Notifications" style="position: relative;">
                         <i data-lucide="bell"></i>
                         ${unreadCount > 0 ? `<span class="badge-unread-dot" style="position: absolute; top: 0; right: 0; width: 8px; height: 8px; border-radius: 50%; background-color: var(--danger); border: 1.5px solid var(--surface);"></span>` : ''}
                     </a>
-                    <a href="settings.html" class="icon-btn" aria-label="Settings" title="Settings">
+                    <a href="${window.getAppLink('settings.html')}" class="icon-btn" aria-label="Settings" title="Settings">
                         <i data-lucide="settings"></i>
                     </a>
                 </div>
@@ -198,7 +218,7 @@ const Utils = {
             const themeToggleBtn = document.getElementById('global-theme-toggle-btn');
             if (themeToggleBtn) {
                 themeToggleBtn.addEventListener('click', () => {
-                    const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+                    const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
                     const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
                     document.documentElement.setAttribute('data-theme', newTheme);
                     document.documentElement.classList.toggle('dark', newTheme === 'dark');
@@ -234,11 +254,11 @@ const Utils = {
         navContainer.setAttribute('role', 'navigation');
         navContainer.setAttribute('aria-label', 'Main Navigation');
         navContainer.innerHTML = `
-            <a href="index.html" class="bottom-nav-item ${activePage === 'home' ? 'active' : ''}" aria-label="Home" ${activePage === 'home' ? 'aria-current="page"' : ''}>
+            <a href="${window.getAppLink('index.html')}" class="bottom-nav-item ${activePage === 'home' ? 'active' : ''}" aria-label="Home" ${activePage === 'home' ? 'aria-current="page"' : ''}>
                 <div class="bottom-nav-icon"><i data-lucide="home"></i></div>
                 <span class="bottom-nav-label">Home</span>
             </a>
-            <a href="sales.html" class="bottom-nav-item ${activePage === 'sales' ? 'active' : ''}" aria-label="Sales" ${activePage === 'sales' ? 'aria-current="page"' : ''}>
+            <a href="${window.getAppLink('sales.html')}" class="bottom-nav-item ${activePage === 'sales' ? 'active' : ''}" aria-label="Sales" ${activePage === 'sales' ? 'aria-current="page"' : ''}>
                 <div class="bottom-nav-icon"><i data-lucide="receipt"></i></div>
                 <span class="bottom-nav-label">Sales</span>
             </a>
@@ -251,11 +271,11 @@ const Utils = {
                 </svg>
             </div>
 
-            <a href="stock.html" class="bottom-nav-item ${activePage === 'stock' ? 'active' : ''}" aria-label="Stock" ${activePage === 'stock' ? 'aria-current="page"' : ''}>
+            <a href="${window.getAppLink('stock.html')}" class="bottom-nav-item ${activePage === 'stock' ? 'active' : ''}" aria-label="Stock" ${activePage === 'stock' ? 'aria-current="page"' : ''}>
                 <div class="bottom-nav-icon"><i data-lucide="package"></i></div>
                 <span class="bottom-nav-label">Stock</span>
             </a>
-            <a href="customers.html" class="bottom-nav-item ${activePage === 'customers' ? 'active' : ''}" aria-label="Customers" ${activePage === 'customers' ? 'aria-current="page"' : ''}>
+            <a href="${window.getAppLink('customers.html')}" class="bottom-nav-item ${activePage === 'customers' ? 'active' : ''}" aria-label="Customers" ${activePage === 'customers' ? 'aria-current="page"' : ''}>
                 <div class="bottom-nav-icon"><i data-lucide="users"></i></div>
                 <span class="bottom-nav-label">Customers</span>
             </a>
@@ -526,7 +546,7 @@ const Utils = {
                         <button class="modal-close" id="actions-sheet-close"><i data-lucide="x"></i></button>
                     </div>
                     <div class="actions-grid">
-                        <a href="new-sale.html" class="action-grid-card action-primary" style="grid-column: span 2; display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 16px; padding: 20px; background-color: var(--accent); color: var(--text-on-accent);">
+                        <a href="${window.getAppLink('new-sale.html')}" class="action-grid-card action-primary" style="grid-column: span 2; display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 16px; padding: 20px; background-color: var(--accent); color: var(--text-on-accent);">
                             <div class="action-grid-icon-wrap" style="background-color: rgba(255, 255, 255, 0.15); color: var(--text-on-accent); width: 44px; height: 44px;">
                                 <i data-lucide="shopping-cart" style="width: 22px; height: 22px;"></i>
                             </div>
@@ -534,7 +554,7 @@ const Utils = {
                                 <div class="action-grid-title" style="font-size: 1.1rem; color: var(--text-on-accent);">New Sale</div>
                             </div>
                         </a>
-                        <a href="customers.html?openAdd=true" class="action-grid-card">
+                        <a href="${window.getAppLink('customers.html?openAdd=true')}" class="action-grid-card">
                             <div class="action-grid-icon-wrap" style="background-color: var(--info-tint); color: var(--info);">
                                 <i data-lucide="user-plus"></i>
                             </div>
@@ -542,7 +562,7 @@ const Utils = {
                                 <div class="action-grid-title">Add Customer</div>
                             </div>
                         </a>
-                        <a href="stock.html?openAddStock=true" class="action-grid-card">
+                        <a href="${window.getAppLink('stock.html?openAddStock=true')}" class="action-grid-card">
                             <div class="action-grid-icon-wrap" style="background-color: var(--warning-tint); color: var(--warning);">
                                 <i data-lucide="package-plus"></i>
                             </div>
@@ -550,7 +570,7 @@ const Utils = {
                                 <div class="action-grid-title">Add Stock</div>
                             </div>
                         </a>
-                        <a href="stock.html?openAddProduct=true" class="action-grid-card">
+                        <a href="${window.getAppLink('stock.html?openAddProduct=true')}" class="action-grid-card">
                             <div class="action-grid-icon-wrap" style="background-color: var(--accent-tint); color: var(--accent);">
                                 <i data-lucide="package"></i>
                             </div>
@@ -558,7 +578,7 @@ const Utils = {
                                 <div class="action-grid-title">Add Product</div>
                             </div>
                         </a>
-                        <a href="dues.html?openRecordPayment=true" class="action-grid-card">
+                        <a href="${window.getAppLink('dues.html?openRecordPayment=true')}" class="action-grid-card">
                             <div class="action-grid-icon-wrap" style="background-color: var(--danger-tint); color: var(--danger);">
                                 <i data-lucide="circle-dollar-sign"></i>
                             </div>
@@ -566,7 +586,7 @@ const Utils = {
                                 <div class="action-grid-title">Record Payment</div>
                             </div>
                         </a>
-                        <a href="market-prices.html" class="action-grid-card">
+                        <a href="${window.getAppLink('market-prices.html')}" class="action-grid-card">
                             <div class="action-grid-icon-wrap" style="background-color: var(--accent-tint); color: var(--accent);">
                                 <i data-lucide="scale"></i>
                             </div>
@@ -616,11 +636,11 @@ const Utils = {
                         <button class="modal-close" id="more-menu-close"><i data-lucide="x"></i></button>
                     </div>
                     <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px; padding-bottom: 16px;">
-                        <a href="barcode-management.html" class="btn btn-outline" style="justify-content: flex-start; padding-left: 20px;">
+                        <a href="${window.getAppLink('barcode-management.html')}" class="btn btn-outline" style="justify-content: flex-start; padding-left: 20px;">
                             <i data-lucide="barcode" style="color: var(--primary);"></i> 
                             <span style="margin-left: 8px;">Barcode Management</span>
                         </a>
-                        <a href="dues.html" class="btn btn-outline" style="justify-content: flex-start; padding-left: 20px;">
+                        <a href="${window.getAppLink('dues.html')}" class="btn btn-outline" style="justify-content: flex-start; padding-left: 20px;">
                             <i data-lucide="wallet-cards" style="color: var(--danger);"></i> 
                             <span style="margin-left: 8px;">Due Management</span>
                         </a>
@@ -632,15 +652,15 @@ const Utils = {
                             <i data-lucide="truck" style="color: var(--info);"></i> 
                             <span style="margin-left: 8px;">Suppliers</span>
                         </a>
-                        <a href="notifications.html" class="btn btn-outline" style="justify-content: flex-start; padding-left: 20px;">
+                        <a href="${window.getAppLink('notifications.html')}" class="btn btn-outline" style="justify-content: flex-start; padding-left: 20px;">
                             <i data-lucide="bell" style="color: var(--warning);"></i> 
                             <span style="margin-left: 8px;">Notifications</span>
                         </a>
-                        <a href="settings.html" class="btn btn-outline" style="justify-content: flex-start; padding-left: 20px;">
+                        <a href="${window.getAppLink('settings.html')}" class="btn btn-outline" style="justify-content: flex-start; padding-left: 20px;">
                             <i data-lucide="settings" style="color: var(--text-muted);"></i> 
                             <span style="margin-left: 8px;">Settings</span>
                         </a>
-                        <a href="settings.html" class="btn btn-outline" style="justify-content: flex-start; padding-left: 20px;">
+                        <a href="${window.getAppLink('settings.html')}" class="btn btn-outline" style="justify-content: flex-start; padding-left: 20px;">
                             <i data-lucide="download" style="color: var(--accent);"></i> 
                             <span style="margin-left: 8px;">Data Backup</span>
                         </a>
@@ -730,6 +750,21 @@ const Utils = {
         `;
     },
 
+    // Toggles expandable items list in digital transaction summary
+    toggleMoreItems(btn) {
+        const container = document.getElementById('moreItemsContainer');
+        if (!container) return;
+        const isHidden = container.classList.contains('hidden');
+        if (isHidden) {
+            container.classList.remove('hidden');
+            btn.innerHTML = `<span>- Show less</span><svg class="w-3.5 h-3.5 rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>`;
+        } else {
+            container.classList.add('hidden');
+            const hiddenCount = container.children.length;
+            btn.innerHTML = `<span>+ ${hiddenCount} more item${hiddenCount === 1 ? '' : 's'}</span><svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>`;
+        }
+    },
+
     // Resolves a sale object from an ID or returns the object
     _resolveSale(saleIdOrObject) {
         if (!saleIdOrObject) return null;
@@ -743,7 +778,7 @@ const Utils = {
         if (!sale) return '<div class="bill-error">Sale record not found.</div>';
 
         const settings = Storage.getSettings();
-        const shopName = settings.shopName || 'My Grocery Shop';
+        const shopName = settings.shopName || 'My Shop';
         const shopPhone = settings.shopPhone || '';
         const shopAddress = settings.shopAddress || '';
         const shopEmail = settings.shopEmail || '';
@@ -776,6 +811,192 @@ const Utils = {
             statusBadge = `<span class="bill-status-badge badge-partial">PARTIAL PAID (DUE: ${this.formatCurrency(due)})</span>`;
         } else {
             statusBadge = '<span class="bill-status-badge badge-due">PAYMENT DUE</span>';
+        }
+
+        if (format === 'digital-super') {
+            // ==========================================
+            // MODERN DIGITAL TRANSACTION SUMMARY EXPERIENCE
+            // ==========================================
+            let formattedDateStr = saleDate;
+            try {
+                const d = sale.date ? new Date(sale.date) : new Date();
+                if (!isNaN(d.getTime())) {
+                    const month = d.toLocaleString('en-US', { month: 'short' });
+                    const day = d.getDate();
+                    const time = d.toLocaleString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+                    formattedDateStr = `${month} ${day} · ${time}`;
+                }
+            } catch (e) {}
+
+            const refId = sale.id ? (sale.id.replace(/[^0-9]/g, '') + '2026272216250').slice(0, 12) : '2026272216250';
+            const payStatus = sale.paymentStatus || (due <= 0.001 ? 'paid' : (paid > 0.001 ? 'partial' : 'due'));
+
+            // Status Badge HTML
+            let statusBadgeHtml = '<span class="tx-status-badge status-paid"><svg class="w-3 h-3 stroke-[2.5]" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg> PAID</span>';
+            if (payStatus === 'failed') {
+                statusBadgeHtml = '<span class="tx-status-badge status-failed"><svg class="w-3 h-3 stroke-[2.5]" viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> FAILED</span>';
+            } else if (payStatus === 'pending') {
+                statusBadgeHtml = '<span class="tx-status-badge status-pending"><svg class="w-3 h-3 stroke-[2.5]" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> PENDING</span>';
+            } else if (payStatus === 'partial') {
+                statusBadgeHtml = `<span class="tx-status-badge status-partial">PARTIAL (DUE: ${this.formatCurrency(due)})</span>`;
+            }
+
+            const visibleItems = items.slice(0, 3);
+            const hiddenItems = items.slice(3);
+
+            return `
+                <div class="digital-tx-wrapper w-full max-w-md md:max-w-lg mx-auto space-y-3" id="printable-bill-surface">
+                    
+                    <!-- PREMIUM BLUE TRANSACTION CARD (Fintech Banking Style) -->
+                    <div class="digital-tx-card rounded-[18px] p-4 sm:p-5 space-y-4 relative overflow-hidden">
+                        
+                        <!-- Translucent Decorative Top-Right Corner Highlight Accent -->
+                        <div class="absolute -top-12 -right-12 w-36 h-36 rounded-full bg-blue-500/10 dark:bg-blue-400/10 pointer-events-none blur-xl"></div>
+                        
+                        <!-- Single Sheen Highlight Sweep Animation -->
+                        <div class="card-sheen-sweep"></div>
+                        
+                        <!-- Header: Shop Name & Receipt # -->
+                        <div class="flex items-start justify-between gap-2 pb-2.5 border-b pos-card-divider relative z-10">
+                            <div>
+                                <div class="font-extrabold text-[15px] sm:text-base pos-card-navy leading-tight">${shopName}</div>
+                                <div class="text-[9px] sm:text-[10px] font-bold pos-card-sub uppercase tracking-wider mt-0.5">Payment Receipt</div>
+                            </div>
+                            <div class="text-[10px] sm:text-[11px] font-semibold pos-card-muted font-mono tracking-tight text-right">Receipt #${invoiceNum}</div>
+                        </div>
+
+                        <!-- Customer & Payment Blocks (Grouped with Spacing) -->
+                        <div class="space-y-3 pt-0.5 relative z-10">
+                            <!-- Customer Info -->
+                            ${customerName ? `
+                                <div class="space-y-0.5">
+                                    <div class="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider pos-card-sub flex items-center gap-1">
+                                        <svg class="w-3 h-3 pos-card-sub" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                                        <span>CUSTOMER</span>
+                                    </div>
+                                    <div class="font-bold text-[13px] sm:text-sm pos-card-navy">${customerName}</div>
+                                    ${customerPhone ? `<div class="text-[11px] pos-card-sub font-mono">${customerPhone}</div>` : ''}
+                                </div>
+                            ` : ''}
+
+                            <!-- Payment Method Compact Row -->
+                            <div class="space-y-1 pt-0.5">
+                                <div class="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider pos-card-sub flex items-center gap-1">
+                                    <svg class="w-3 h-3 pos-card-sub" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                                    <span>PAYMENT</span>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <span class="font-bold text-xs sm:text-[13px] pos-card-navy">${paymentMethod}</span>
+                                    ${statusBadgeHtml}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Items Section -->
+                        ${items.length > 0 ? `
+                            <div class="space-y-2 pt-0.5 relative z-10">
+                                <div class="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider pos-card-sub flex items-center justify-between">
+                                    <span>ITEMS</span>
+                                    <span>${items.length} ITEM${items.length === 1 ? '' : 'S'}</span>
+                                </div>
+
+                                <div class="space-y-2">
+                                    ${visibleItems.map(it => `
+                                        <div class="flex justify-between items-center text-xs">
+                                            <div class="space-y-0.5">
+                                                <div class="font-semibold text-[12px] sm:text-[13px] pos-card-navy">${it.productName || 'Item'}</div>
+                                                <div class="text-[11px] pos-card-sub">${it.quantity} ${it.unit || ''} &times; ${this.formatCurrency(it.rate || (it.total / (it.quantity || 1)))}</div>
+                                            </div>
+                                            <div class="font-bold pos-card-navy font-mono-num text-xs sm:text-[13px]">${this.formatCurrency(it.total)}</div>
+                                        </div>
+                                    `).join('')}
+
+                                    ${hiddenItems.length > 0 ? `
+                                        <div id="moreItemsContainer" class="hidden space-y-2 pt-1">
+                                            ${hiddenItems.map(it => `
+                                                <div class="flex justify-between items-center text-xs">
+                                                    <div class="space-y-0.5">
+                                                        <div class="font-semibold text-[12px] sm:text-[13px] pos-card-navy">${it.productName || 'Item'}</div>
+                                                        <div class="text-[11px] pos-card-sub">${it.quantity} ${it.unit || ''} &times; ${this.formatCurrency(it.rate || (it.total / (it.quantity || 1)))}</div>
+                                                    </div>
+                                                    <div class="font-bold pos-card-navy font-mono-num text-xs sm:text-[13px]">${this.formatCurrency(it.total)}</div>
+                                                </div>
+                                            `).join('')}
+                                        </div>
+                                        
+                                        <button type="button" onclick="Utils.toggleMoreItems(this)" class="w-full py-1 text-center text-xs font-bold text-[#087FF5] dark:text-[#2F8FFF] hover:underline flex items-center justify-center gap-1 transition-all">
+                                            <span>+ ${hiddenItems.length} more item${hiddenItems.length === 1 ? '' : 's'}</span>
+                                            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                                        </button>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        ` : ''}
+
+                        <!-- Total Breakdown Section (Subtle Divider) -->
+                        <div class="pt-3 border-t pos-card-divider space-y-1.5 relative z-10">
+                            <div class="flex justify-between items-center text-xs pos-card-sub">
+                                <span>Subtotal</span>
+                                <span class="font-bold pos-card-navy font-mono-num">${this.formatCurrency(subtotal)}</span>
+                            </div>
+                            ${discount > 0 ? `
+                                <div class="flex justify-between items-center text-xs text-[#16A34A] dark:text-[#34D399]">
+                                    <span>Discount</span>
+                                    <span class="font-bold font-mono-num">-${this.formatCurrency(discount)}</span>
+                                </div>
+                            ` : ''}
+                            ${tax > 0 ? `
+                                <div class="flex justify-between items-center text-xs pos-card-sub">
+                                    <span>Tax</span>
+                                    <span class="font-bold pos-card-navy font-mono-num">+${this.formatCurrency(tax)}</span>
+                                </div>
+                            ` : ''}
+                            <div class="flex justify-between items-center pt-2">
+                                <span class="font-extrabold text-[14px] sm:text-[15px] pos-card-navy uppercase tracking-tight">TOTAL PAID</span>
+                                <span class="font-extrabold text-[18px] sm:text-[20px] pos-card-navy font-mono-num">${this.formatCurrency(grandTotal)}</span>
+                            </div>
+                        </div>
+
+                        <!-- Collapsible Transaction Details Accordion (Subtle Divider) -->
+                        <details class="group pt-2 border-t pos-card-divider relative z-10">
+                            <summary class="flex items-center justify-between text-xs font-bold pos-card-sub hover:text-[#087FF5] p-1.5 rounded-lg cursor-pointer transition-colors select-none">
+                                <span class="flex items-center gap-1.5">
+                                    <svg class="w-3.5 h-3.5 pos-card-sub" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                                    Transaction details
+                                </span>
+                                <svg class="w-4 h-4 transition-transform group-open:rotate-180 pos-card-sub" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                            </summary>
+                            <div class="pt-2 pb-1 space-y-1.5 text-[11px] pos-card-sub">
+                                <div class="flex justify-between items-center">
+                                    <span class="pos-card-sub font-medium">Transaction ID</span>
+                                    <span class="font-mono font-bold pos-card-navy">${invoiceNum}</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="pos-card-sub font-medium">Payment reference</span>
+                                    <span class="font-mono pos-card-navy">${refId}</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="pos-card-sub font-medium">Payment method</span>
+                                    <span class="font-semibold pos-card-navy">${paymentMethod}</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-[#526B84] dark:text-[#9DB0C6] font-medium">Date & Time</span>
+                                    <span class="font-medium text-[#0F172A] dark:text-[#F8FAFC]">${formattedDateStr}</span>
+                                </div>
+                            </div>
+                        </details>
+
+                        <!-- Clean Subtle Success Footer -->
+                        <div class="text-center pt-2 space-y-0.5 relative z-10">
+                            <div class="text-xs font-bold text-[#16A34A] dark:text-[#34D399] flex items-center justify-center gap-1">
+                                <svg class="w-3.5 h-3.5 stroke-[2.5]" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg>
+                                <span>Payment received</span>
+                            </div>
+                            <div class="text-[10px] text-[#526B84] dark:text-[#9DB0C6] font-medium">Thank you for shopping with us.</div>
+                        </div>
+                    </div>
+                </div>
+            `;
         }
 
         if (format === 'a4') {
@@ -908,6 +1129,9 @@ const Utils = {
 
         return `
             <div class="${thermalClass}" id="printable-bill-surface">
+                <!-- Serrated Paper Top Trim -->
+                <div class="receipt-paper-serrated-top"></div>
+
                 <!-- Shop Header -->
                 <div class="receipt-header">
                     ${shopLogo ? `<img src="${shopLogo}" alt="${shopName}" class="receipt-logo" />` : ''}
@@ -922,17 +1146,19 @@ const Utils = {
                 <!-- Invoice & Customer Metadata -->
                 <div class="receipt-meta-block">
                     <div class="receipt-meta-row">
-                        <span class="font-bold">Invoice:</span>
-                        <span class="font-bold">${invoiceNum}</span>
+                        <span class="font-bold">Invoice No:</span>
+                        <span class="font-bold font-mono">${invoiceNum}</span>
                     </div>
                     <div class="receipt-meta-row">
                         <span>Date:</span>
                         <span>${saleDate}</span>
                     </div>
-                    <div class="receipt-meta-row">
-                        <span>Customer:</span>
-                        <span class="font-bold">${customerName}</span>
-                    </div>
+                    ${customerName ? `
+                        <div class="receipt-meta-row">
+                            <span>Customer:</span>
+                            <span class="font-bold">${customerName}</span>
+                        </div>
+                    ` : ''}
                     ${customerPhone ? `
                         <div class="receipt-meta-row">
                             <span>Phone:</span>
@@ -956,9 +1182,9 @@ const Utils = {
                         <div class="receipt-item-row">
                             <div class="receipt-item-name">${it.productName || 'Item'}</div>
                             <div class="receipt-item-cols">
-                                <span style="flex: 2; text-align: left; color: #737982; font-size: 0.85em;">&nbsp;</span>
+                                <span style="flex: 2; text-align: left; color: #64748B; font-size: 0.85em;">&nbsp;</span>
                                 <span style="flex: 1; text-align: center;">${it.quantity} ${it.unit ? it.unit.slice(0, 3) : ''}</span>
-                                <span style="flex: 1; text-align: right;">${this.formatCurrency(it.rate)}</span>
+                                <span style="flex: 1; text-align: right;">${this.formatCurrency(it.rate || (it.total / (it.quantity || 1)))}</span>
                                 <span style="flex: 1.2; text-align: right; font-weight: 700;">${this.formatCurrency(it.total)}</span>
                             </div>
                         </div>
@@ -1020,11 +1246,14 @@ const Utils = {
                     <div class="receipt-footer-msg">${footerMsg}</div>
                     <div class="receipt-footer-sub">*** Please Visit Again ***</div>
                 </div>
+
+                <!-- Serrated Paper Bottom Trim -->
+                <div class="receipt-paper-serrated-bottom"></div>
             </div>
         `;
     },
 
-    // Global Interactive Bill Modal
+    // Global Interactive Full Screen Bill UI - Modern Fintech Invoice Sheet
     showBillModal(saleIdOrObject, initialFormat = null) {
         const sale = this._resolveSale(saleIdOrObject);
         if (!sale) {
@@ -1033,130 +1262,300 @@ const Utils = {
         }
 
         const settings = Storage.getSettings();
-        let activeFormat = initialFormat || settings.defaultBillFormat || 'thermal-80';
+        const shopName = settings.shopName || 'My Grocery Shop';
+        const items = sale.items || [];
+        const invoiceNum = sale.invoiceNumber || `INV-${(sale.id || '2026').slice(-6).toUpperCase()}`;
+        const subtotal = sale.subtotal !== undefined ? sale.subtotal : (sale.total || 0);
+        const discount = sale.discountAmount || sale.discount || 0;
+        const tax = sale.taxAmount || sale.tax || 0;
+        const grandTotal = sale.grandTotal !== undefined ? sale.grandTotal : (sale.total || 0);
+        const paid = sale.paidAmount !== undefined ? sale.paidAmount : grandTotal;
+        const due = sale.dueAmount !== undefined ? sale.dueAmount : (grandTotal - paid);
+        const customerName = sale.customerName || sale.customer || '';
+        const customerPhone = sale.customerPhone || '';
+        const paymentMethod = sale.paymentMethod || 'Cash';
+
+        let formattedDateStr = sale.date ? this.formatDateTime(sale.date) : '';
+        try {
+            const d = sale.date ? new Date(sale.date) : new Date();
+            if (!isNaN(d.getTime())) {
+                const month = d.toLocaleString('en-US', { month: 'short' });
+                const day = d.getDate();
+                const time = d.toLocaleString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+                formattedDateStr = `${month} ${day} · ${time}`;
+            }
+        } catch (e) {}
+
+        const refId = sale.id ? (sale.id.replace(/[^0-9]/g, '') + '296294852926').slice(0, 12) : '296294852926';
 
         let modal = document.getElementById('global-bill-modal');
         if (!modal) {
             modal = document.createElement('div');
             modal.id = 'global-bill-modal';
-            modal.className = 'modal-overlay bill-modal-overlay';
-            modal.innerHTML = `
-                <div class="modal-container bill-modal-dialog">
-                    <div class="bill-modal-header">
-                        <div class="bill-modal-title-group">
-                            <h3 class="bill-modal-heading">
-                                <i data-lucide="receipt" style="width: 18px; height: 18px; color: var(--accent);"></i>
-                                Invoice Preview
-                            </h3>
-                            <span class="bill-modal-inv-badge" id="bill-modal-inv-num">INV-000000</span>
-                        </div>
-                        <button type="button" class="modal-close" id="btn-bill-modal-close"><i data-lucide="x"></i></button>
-                    </div>
-
-                    <!-- Format switcher bar -->
-                    <div class="bill-format-toolbar">
-                        <span class="bill-format-label">Format:</span>
-                        <div class="bill-format-toggles">
-                            <button type="button" class="btn-bill-format active" data-format="thermal-80">Thermal 80mm</button>
-                            <button type="button" class="btn-bill-format" data-format="thermal-58">Thermal 58mm</button>
-                            <button type="button" class="btn-bill-format" data-format="a4">A4 Invoice</button>
-                        </div>
-                    </div>
-
-                    <!-- Scrollable Bill Preview Area -->
-                    <div class="bill-preview-viewport" id="bill-preview-viewport">
-                        <div id="bill-render-mount"></div>
-                    </div>
-
-                    <!-- Modal Actions Footer -->
-                    <div class="bill-modal-actions">
-                        <button type="button" class="btn btn-primary" id="btn-bill-action-print">
-                            <i data-lucide="printer"></i> Print Bill
-                        </button>
-                        <button type="button" class="btn btn-outline" id="btn-bill-action-pdf">
-                            <i data-lucide="download"></i> Download PDF
-                        </button>
-                        <button type="button" class="btn btn-outline" id="btn-bill-action-share">
-                            <i data-lucide="share-2"></i> Share
-                        </button>
-                    </div>
-                </div>
-            `;
+            modal.className = 'bill-modal-wrapper';
             document.body.appendChild(modal);
-
-            // Bind close triggers
-            document.getElementById('btn-bill-modal-close').addEventListener('click', () => {
-                modal.classList.remove('active');
-                document.body.style.overflow = '';
-            });
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) {
-                    modal.classList.remove('active');
-                    document.body.style.overflow = '';
-                }
-            });
         }
 
-        // Store active sale on modal element
+        modal.innerHTML = `
+            <div class="bill-modal-backdrop" id="bill-modal-backdrop"></div>
+            <div class="bill-modal-sheet" id="bill-modal-sheet">
+                
+                <!-- STICKY HEADER -->
+                <header class="bill-modal-header">
+                    <button type="button" class="bill-nav-back-btn" id="btn-bill-nav-back">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+                        <span>Bill Details</span>
+                    </button>
+
+                    <div class="bill-header-title-text">
+                        <span>Bill #${invoiceNum}</span>
+                    </div>
+
+                    <div class="bill-header-right-actions">
+                        <button type="button" class="bill-modal-close-btn" id="btn-bill-nav-close" aria-label="Close">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                        </button>
+                    </div>
+                </header>
+
+                <!-- SCROLLABLE BODY -->
+                <div class="bill-modal-body">
+                    
+                    <!-- 3. RECEIPT HERO CARD -->
+                    <div class="bill-hero-accent-card">
+                        <div class="bill-hero-shop-title">${shopName}</div>
+                        <div class="bill-hero-subtitle">Payment Receipt</div>
+                        
+                        <div class="bill-hero-amount-wrap">
+                            <span class="bill-hero-currency-amount">${this.formatCurrency(grandTotal)}</span>
+                            <span class="bill-hero-status-pill status-pill-paid">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                                PAID
+                            </span>
+                        </div>
+
+                        <div class="bill-hero-timestamp">${formattedDateStr}</div>
+                    </div>
+
+                    <!-- MAIN BILL CONTENT SURFACE -->
+                    <div class="bill-content-card-surface">
+
+                        <!-- 4. CUSTOMER CARD -->
+                        <div class="bill-section-block">
+                            <div class="bill-section-label">CUSTOMER</div>
+                            <div class="bill-customer-row">
+                                <div class="bill-cust-avatar-icon">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                                </div>
+                                <div class="bill-cust-info">
+                                    <div class="bill-cust-name">${customerName || 'Walk-in Customer'}</div>
+                                    ${customerPhone ? `<div class="bill-cust-phone">${customerPhone}</div>` : ''}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bill-card-divider"></div>
+
+                        <!-- 5. PAYMENT SECTION -->
+                        <div class="bill-section-block">
+                            <div class="bill-section-label">PAYMENT</div>
+                            <div class="bill-payment-row">
+                                <div class="bill-pay-method flex items-center gap-2">
+                                    <div class="bill-pay-icon">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+                                    </div>
+                                    <span class="bill-pay-method-name">${paymentMethod}</span>
+                                </div>
+                                <div class="bill-pay-status-tag">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                                    <span>PAID</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bill-card-divider"></div>
+
+                        <!-- 6. ITEMS SECTION -->
+                        <div class="bill-section-block">
+                            <div class="bill-section-label">ITEMS</div>
+                            <div class="bill-items-list">
+                                ${items.map(it => `
+                                    <div class="bill-item-line">
+                                        <div class="bill-item-left">
+                                            <div class="bill-item-name">${it.productName || 'Item'}</div>
+                                            <div class="bill-item-sub">${it.quantity} ${it.unit || ''} &times; ${this.formatCurrency(it.rate || (it.total / (it.quantity || 1)))}</div>
+                                        </div>
+                                        <div class="bill-item-right font-mono-num">${this.formatCurrency(it.total)}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+
+                        <div class="bill-card-divider"></div>
+
+                        <!-- 7. BILL SUMMARY -->
+                        <div class="bill-section-block bill-summary-block">
+                            <div class="bill-summary-row">
+                                <span class="bill-summary-lbl">Subtotal</span>
+                                <span class="bill-summary-val font-mono-num">${this.formatCurrency(subtotal)}</span>
+                            </div>
+                            ${discount > 0 ? `
+                                <div class="bill-summary-row bill-discount-row">
+                                    <span class="bill-summary-lbl">Discount</span>
+                                    <span class="bill-summary-val font-mono-num">-${this.formatCurrency(discount)}</span>
+                                </div>
+                            ` : ''}
+                            ${tax > 0 ? `
+                                <div class="bill-summary-row">
+                                    <span class="bill-summary-lbl">Tax</span>
+                                    <span class="bill-summary-val font-mono-num">+${this.formatCurrency(tax)}</span>
+                                </div>
+                            ` : ''}
+                            
+                            <div class="bill-card-divider-strong"></div>
+
+                            <div class="bill-summary-row bill-grand-total-row">
+                                <span class="bill-total-paid-lbl">TOTAL PAID</span>
+                                <span class="bill-total-paid-val font-mono-num">${this.formatCurrency(grandTotal)}</span>
+                            </div>
+                        </div>
+
+                        <div class="bill-card-divider"></div>
+
+                        <!-- 8. COLLAPSIBLE TRANSACTION DETAILS -->
+                        <details class="bill-tx-details-accordion">
+                            <summary class="bill-accordion-summary">
+                                <span class="flex items-center gap-1.5">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="16" y2="12"/><line x1="12" x2="12.01" y1="8" y2="8"/></svg>
+                                    <span>Transaction details</span>
+                                </span>
+                                <svg class="bill-accordion-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                            </summary>
+                            <div class="bill-accordion-content">
+                                <div class="bill-detail-entry">
+                                    <span class="bill-detail-key">Transaction ID</span>
+                                    <span class="bill-detail-val font-mono">${invoiceNum}</span>
+                                </div>
+                                <div class="bill-detail-entry">
+                                    <span class="bill-detail-key">Payment reference</span>
+                                    <span class="bill-detail-val font-mono">${refId}</span>
+                                </div>
+                                <div class="bill-detail-entry">
+                                    <span class="bill-detail-key">Payment method</span>
+                                    <span class="bill-detail-val">${paymentMethod}</span>
+                                </div>
+                                <div class="bill-detail-entry">
+                                    <span class="bill-detail-key">Date & Time</span>
+                                    <span class="bill-detail-val">${formattedDateStr}</span>
+                                </div>
+                            </div>
+                        </details>
+
+                    </div>
+
+                </div>
+
+                <!-- 12. BILL ACTIONS STICKY DOCK -->
+                <footer class="bill-sticky-action-dock">
+                    <button type="button" class="btn-bill-action-whatsapp" id="btn-bill-whatsapp">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                        <span>Send Receipt via WhatsApp</span>
+                    </button>
+
+                    <div class="bill-secondary-actions-row">
+                        <button type="button" class="btn-bill-action-secondary" id="btn-bill-action-share">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg>
+                            <span>Share</span>
+                        </button>
+                        <button type="button" class="btn-bill-action-secondary" id="btn-bill-action-print">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect width="12" height="8" x="6" y="14"/></svg>
+                            <span>Print</span>
+                        </button>
+                        <button type="button" class="btn-bill-action-secondary" id="btn-bill-action-pdf">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                            <span>PDF</span>
+                        </button>
+                    </div>
+                </footer>
+
+            </div>
+        `;
+
         modal._activeSale = sale;
-        modal._activeFormat = activeFormat;
 
-        const invoiceNum = sale.invoiceNumber || `INV-${sale.id.slice(-6).toUpperCase()}`;
-        document.getElementById('bill-modal-inv-num').textContent = invoiceNum;
+        const closeModal = () => {
+            modal.classList.remove('active');
+            document.body.classList.remove('modal-open');
+            document.body.style.overflow = '';
+            document.removeEventListener('keydown', handleEsc);
+        };
 
-        // Render current format
-        const renderMount = document.getElementById('bill-render-mount');
-        renderMount.innerHTML = this.formatBillHTML(sale, activeFormat);
+        const handleEsc = (e) => {
+            if (e.key === 'Escape') closeModal();
+        };
 
-        // Update format toggle buttons
-        modal.querySelectorAll('.btn-bill-format').forEach(btn => {
-            if (btn.dataset.format === activeFormat) {
-                btn.classList.add('active');
-            } else {
-                btn.classList.remove('active');
-            }
+        // Bind Close Triggers
+        document.getElementById('btn-bill-nav-back').addEventListener('click', closeModal);
+        document.getElementById('btn-bill-nav-close').addEventListener('click', closeModal);
+        document.getElementById('bill-modal-backdrop').addEventListener('click', closeModal);
+        document.addEventListener('keydown', handleEsc);
 
-            // Clean previous listener
-            const newBtn = btn.cloneNode(true);
-            btn.parentNode.replaceChild(newBtn, btn);
-            newBtn.addEventListener('click', () => {
-                modal.querySelectorAll('.btn-bill-format').forEach(b => b.classList.remove('active'));
-                newBtn.classList.add('active');
-                activeFormat = newBtn.dataset.format;
-                modal._activeFormat = activeFormat;
-                renderMount.innerHTML = Utils.formatBillHTML(sale, activeFormat);
-                if (typeof lucide !== 'undefined') lucide.createIcons();
-            });
+        // Bind Action Buttons
+        document.getElementById('btn-bill-whatsapp').addEventListener('click', () => {
+            this.sendWhatsAppBill(sale);
         });
-
-        // Bind Action buttons
-        const printBtn = document.getElementById('btn-bill-action-print');
-        const newPrintBtn = printBtn.cloneNode(true);
-        printBtn.parentNode.replaceChild(newPrintBtn, printBtn);
-        newPrintBtn.addEventListener('click', () => {
-            this.printBill(sale, modal._activeFormat);
-        });
-
-        const pdfBtn = document.getElementById('btn-bill-action-pdf');
-        const newPdfBtn = pdfBtn.cloneNode(true);
-        pdfBtn.parentNode.replaceChild(newPdfBtn, pdfBtn);
-        newPdfBtn.addEventListener('click', () => {
-            this.downloadBillPDF(sale, modal._activeFormat);
-        });
-
-        const shareBtn = document.getElementById('btn-bill-action-share');
-        const newShareBtn = shareBtn.cloneNode(true);
-        shareBtn.parentNode.replaceChild(newShareBtn, shareBtn);
-        newShareBtn.addEventListener('click', () => {
+        document.getElementById('btn-bill-action-share').addEventListener('click', () => {
             this.shareBill(sale);
         });
+        document.getElementById('btn-bill-action-print').addEventListener('click', () => {
+            this.printBill(sale, 'thermal-80');
+        });
+        document.getElementById('btn-bill-action-pdf').addEventListener('click', () => {
+            this.downloadBillPDF(sale, 'digital-super');
+        });
 
-        modal.classList.add('active');
-        document.body.style.overflow = 'hidden';
+        // Activate modal sheet animation
+        requestAnimationFrame(() => {
+            modal.classList.add('active');
+            document.body.classList.add('modal-open');
+            document.body.style.overflow = 'hidden';
+        });
+    },
 
-        if (typeof lucide !== 'undefined') {
-            lucide.createIcons();
+
+    // Send Invoice via WhatsApp Web / App
+    sendWhatsAppBill(saleIdOrObject) {
+        const sale = this._resolveSale(saleIdOrObject);
+        if (!sale) return;
+
+        const settings = Storage.getSettings();
+        const shopName = settings.shopName || 'My Grocery Shop';
+        const invoiceNum = sale.invoiceNumber || `INV-${(sale.id || '2026').slice(-6).toUpperCase()}`;
+        const totalStr = this.formatCurrency(sale.grandTotal !== undefined ? sale.grandTotal : sale.total);
+        const dateStr = sale.date ? this.formatDateTime(sale.date) : '';
+        const custName = sale.customerName || sale.customer || 'Customer';
+        const rawPhone = (sale.customerPhone || '').replace(/[^0-9]/g, '');
+
+        let text = `*${shopName}*\n` +
+            `*Payment Receipt*\n` +
+            `-----------------------------\n` +
+            `Invoice: *${invoiceNum}*\n` +
+            `Date: ${dateStr}\n` +
+            `Customer: ${custName}\n` +
+            `-----------------------------\n` +
+            `Total Paid: *${totalStr}* ✓\n` +
+            `-----------------------------\n` +
+            `Thank you for shopping with us! Please visit again.`;
+
+        let phone = rawPhone;
+        if (!phone) {
+            phone = prompt("Enter customer WhatsApp phone number with country code (e.g. 919876543210):", "91");
+            if (!phone) return;
+            phone = phone.replace(/[^0-9]/g, '');
         }
+
+        const whatsappUrl = `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(text)}`;
+        window.open(whatsappUrl, '_blank');
     },
 
     // Print Bill Handler using @media print
@@ -1200,13 +1599,13 @@ const Utils = {
 
         if (typeof html2pdf !== 'undefined') {
             const opt = {
-                margin: format === 'a4' ? [10, 10, 10, 10] : [4, 4, 4, 4],
+                margin: format === 'a4' ? [10, 10, 10, 10] : (format === 'digital-super' ? [0, 0, 0, 0] : [4, 4, 4, 4]),
                 filename: fileName,
                 image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
+                html2canvas: { scale: 2, useCORS: true, backgroundColor: format === 'digital-super' ? '#4f36e3' : '#ffffff' },
                 jsPDF: {
                     unit: 'mm',
-                    format: format === 'a4' ? 'a4' : (format === 'thermal-58' ? [58, 180] : [80, 220]),
+                    format: format === 'a4' ? 'a4' : (format === 'thermal-58' ? [58, 180] : (format === 'digital-super' ? [90, 220] : [80, 220])),
                     orientation: 'portrait'
                 }
             };
@@ -1236,7 +1635,7 @@ const Utils = {
         if (!sale) return;
 
         const settings = Storage.getSettings();
-        const shopName = settings.shopName || 'My Grocery Shop';
+        const shopName = settings.shopName || 'My Shop';
         const invoiceNum = sale.invoiceNumber || `INV-${sale.id.slice(-6).toUpperCase()}`;
         const totalStr = this.formatCurrency(sale.grandTotal !== undefined ? sale.grandTotal : sale.total);
         const dateStr = sale.date ? this.formatDateTime(sale.date) : '';
@@ -1285,4 +1684,5 @@ document.addEventListener('DOMContentLoaded', () => {
 if (typeof window !== 'undefined') {
     window.Utils = Utils;
 }
+
 

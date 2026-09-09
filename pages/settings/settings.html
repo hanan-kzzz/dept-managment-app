@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>window.BASE_PATH = '../../';</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Greenway Groceries - Settings</title>
+    <script>
+      (function() {
+        var t = localStorage.getItem('theme');
+        if (!t) {
+          try {
+            var s = JSON.parse(localStorage.getItem('grocery_settings'));
+            t = s && s.theme;
+          } catch(e) {}
+        }
+        if (!t || t === 'system') {
+          t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+        }
+        document.documentElement.setAttribute('data-theme', t);
+        if (t === 'dark') document.documentElement.classList.add('dark');
+        else document.documentElement.classList.remove('dark');
+      })();
+    </script>
+    <!-- Jakarta Font & Lucide Icons -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Base Styles -->
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/responsive.css">
+    <!-- Redesigned Settings Styles -->
+    <link rel="stylesheet" href="../../css/settings.css">
+    <meta name="theme-color" content="#07090d">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232563EB' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><path d='M21 12V7H5a2 2 0 0 1 0-4h14v4'/><path d='M3 5v14a2 2 0 0 0 2 2h16v-5'/><path d='M18 12a2 2 0 0 0 0 4h4v-4Z'/></svg>">
+</head>
+<body data-page="settings">
+
+    <!-- Injected Global Header -->
+    <div id="app-header"></div>
+
+    <main class="settings-container">
+        <!-- Back Navigation Header -->
+        <a href="../../index.html" class="back-nav-settings">
+            <i data-lucide="arrow-left"></i> Dashboard
+        </a>
+        
+        <h1 class="settings-header-title">Settings</h1>
+
+        <!-- SHOP PROFILE IDENTITY -->
+        <div class="settings-profile-section" id="row-profile-card">
+            <div class="settings-profile-left">
+                <div class="settings-profile-icon">
+                    <i data-lucide="store"></i>
+                </div>
+                <div class="settings-profile-info">
+                    <span class="settings-profile-shop-name" id="profile-shop-name">My Shop</span>
+                    <span class="settings-profile-owner" id="profile-owner-name">Hanan</span>
+                    <span class="settings-profile-role">Shop Owner</span>
+                </div>
+            </div>
+            <div class="settings-profile-edit-btn">
+                Edit Profile <i data-lucide="chevron-right"></i>
+            </div>
+        </div>
+
+        <!-- SEARCH BAR -->
+        <div class="settings-search-wrap">
+            <input type="text" id="settings-search" class="settings-search-input" placeholder="Search settings...">
+            <div class="settings-search-icon">
+                <i data-lucide="search"></i>
+            </div>
+        </div>
+
+        <!-- SEARCH RESULTS PANEL -->
+        <div class="settings-search-results" id="search-results-panel">
+            <div class="search-results-heading">Search Results</div>
+            <div id="search-results-list"></div>
+        </div>
+
+        <!-- MAIN SETTINGS DIRECTORY -->
+        <div id="main-settings-content">
+            <!-- SECTION 1: YOUR SHOP -->
+            <div class="settings-group">
+                <div class="settings-group-title">Your Shop</div>
+                <div class="settings-rows-list">
+                    <div class="settings-row" id="row-shop-profile">
+                        <div class="settings-row-left">
+                            <div class="settings-row-icon">
+                                <i data-lucide="user"></i>
+                            </div>
+                            <div class="settings-row-content">
+                                <span class="settings-row-title">Shop Profile</span>
+                                <span class="settings-row-desc">Manage shop name, owner details and contact information</span>
+                            </div>
+                        </div>
+                        <div class="settings-row-right">
+                            <div class="settings-row-chevron"><i data-lucide="chevron-right"></i></div>
+                        </div>
+                    </div>
+                    <div class="settings-row" id="row-business-details">
+                        <div class="settings-row-left">
+                            <div class="settings-row-icon">
+                                <i data-lucide="building-2"></i>
+                            </div>
+                            <div class="settings-row-content">
+                                <span class="settings-row-title">Business Details</span>
+                                <span class="settings-row-desc">Address, phone, GST/tax information</span>
+                            </div>
+                        </div>
+                        <div class="settings-row-right">
+                            <div class="settings-row-chevron"><i data-lucide="chevron-right"></i></div>
+                        </div>
+                    </div>
+                    <div class="settings-row" id="row-currency">
+                        <div class="settings-row-left">
+                            <div class="settings-row-icon">
+                                <i data-lucide="indian-rupee"></i>
+                            </div>
+                            <div class="settings-row-content">
+                                <span class="settings-row-title">Currency</span>
+                                <span class="settings-row-desc">Configure default transaction currency</span>
+                            </div>
+                        </div>
+                        <div class="settings-row-right">
+                            <span class="settings-row-value" id="val-currency">₹ Indian Rupee</span>
+                            <div class="settings-row-chevron"><i data-lucide="chevron-right"></i></div>
+                        </div>
+                    </div>
+                    <div class="settings-row" id="row-language">
+                        <div class="settings-row-left">
+                            <div class="settings-row-icon">
+                                <i data-lucide="languages"></i>
+                            </div>
+                            <div class="settings-row-content">
+                                <span class="settings-row-title">Language</span>
+                                <span class="settings-row-desc">Change application language</span>
+                            </div>
+                        </div>
+                        <div class="settings-row-right">
+                            <span class="settings-row-value" id="val-language">English</span>
+                            <div class="settings-row-chevron"><i data-lucide="chevron-right"></i></div>
+                        </div>
+                    </div>
+                    <div class="settings-row" id="row-invoice-settings">
+                        <div class="settings-row-left">
+                            <div class="settings-row-icon">
+                                <i data-lucide="receipt"></i>
+                            </div>
+                            <div class="settings-row-content">
+                                <span class="settings-row-title">Bill & Invoice Settings</span>
+                                <span class="settings-row-desc">GST/Tax %, shop logo, invoice prefix & receipt format</span>
+                            </div>
+                        </div>
+                        <div class="settings-row-right">
+                            <div class="settings-row-chevron"><i data-lucide="chevron-right"></i></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STAGE 5: MARKET PRICES & SMART INVENTORY -->
+            <div class="settings-group">
+                <div class="settings-group-title">Market Reference & Inventory</div>
+                <div class="settings-rows-list">
+                    <div class="settings-row" id="row-market-settings">
+                        <div class="settings-row-left">
+                            <div class="settings-row-icon" style="background: var(--accent-tint); color: var(--accent);">
+                                <i data-lucide="scale"></i>
+                            </div>
+                            <div class="settings-row-content">
+                                <span class="settings-row-title">Market Price & Smart Stock</span>
+                                <span class="settings-row-desc">Government data source, location & reorder parameters</span>
+                            </div>
+                        </div>
+                        <div class="settings-row-right">
+                            <span class="settings-row-value" id="val-market-loc">Kerala</span>
+                            <div class="settings-row-chevron"><i data-lucide="chevron-right"></i></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 2: CONNECTIONS -->
+            <div class="settings-group">
+                <div class="settings-group-title">Connections</div>
+                <div class="settings-rows-list">
+                    <div class="settings-row" id="row-whatsapp">
+                        <div class="settings-row-left">
+                            <div class="settings-row-icon icon-whatsapp">
+                                <i data-lucide="message-circle"></i>
+                            </div>
+                            <div class="settings-row-content">
+                                <span class="settings-row-title">WhatsApp</span>
+                                <span class="settings-row-desc">Connect WhatsApp for customer reminders</span>
+                            </div>
+                        </div>
+                        <div class="settings-row-right">
+                            <span class="status-tag disconnected" id="val-whatsapp-status">Not connected</span>
+                            <div class="settings-row-chevron"><i data-lucide="chevron-right"></i></div>
+                        </div>
+                    </div>
+                    <div class="settings-row" id="row-telegram">
+                        <div class="settings-row-left">
+                            <div class="settings-row-icon icon-telegram">
+                                <i data-lucide="send"></i>
+                            </div>
+                            <div class="settings-row-content">
+                                <span class="settings-row-title">Telegram</span>
+                                <span class="settings-row-desc">Connect Telegram for owner alerts</span>
+                            </div>
+                        </div>
+                        <div class="settings-row-right">
+                            <span class="status-tag disconnected" id="val-telegram-status">Not connected</span>
+                            <div class="settings-row-chevron"><i data-lucide="chevron-right"></i></div>
+                        </div>
+                    </div>
+                    <div class="settings-row" id="row-notifications-group">
+                        <div class="settings-row-left">
+                            <div class="settings-row-icon">
+                                <i data-lucide="bell"></i>
+                            </div>
+                            <div class="settings-row-content">
+                                <span class="settings-row-title">Notifications</span>
+                                <span class="settings-row-desc">Manage alerts and reminders</span>
+                            </div>
+                        </div>
+                        <div class="settings-row-right">
+                            <span class="settings-row-value" id="val-notifications-overall">On</span>
+                            <div class="settings-row-chevron"><i data-lucide="chevron-right"></i></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 3: APPEARANCE -->
+            <div class="settings-group">
+                <div class="settings-group-title">Appearance</div>
+                <div class="settings-rows-list">
+                    <div class="settings-row" id="row-appearance">
+                        <div class="settings-row-left">
+                            <div class="settings-row-icon">
+                                <i data-lucide="sun-moon"></i>
+                            </div>
+                            <div class="settings-row-content">
+                                <span class="settings-row-title">Appearance</span>
+                                <span class="settings-row-desc">Theme preference</span>
+                            </div>
+                        </div>
+                        <div class="settings-row-right">
+                            <span class="settings-row-value" id="val-theme">Light</span>
+                            <div class="settings-row-chevron"><i data-lucide="chevron-right"></i></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 4: DATA & STORAGE -->
+            <div class="settings-group">
+                <div class="settings-group-title">Data & Storage</div>
+                <div class="settings-rows-list">
+                    <div class="settings-row" id="row-backup">
+                        <div class="settings-row-left">
+                            <div class="settings-row-icon">
+                                <i data-lucide="database"></i>
+                            </div>
+                            <div class="settings-row-content">
+                                <span class="settings-row-title">Backup & Restore</span>
+                                <span class="settings-row-desc">Protect your shop data</span>
+                            </div>
+                        </div>
+                        <div class="settings-row-right">
+                            <div class="settings-row-chevron"><i data-lucide="chevron-right"></i></div>
+                        </div>
+                    </div>
+                    <div class="settings-row" id="row-export-data">
+                        <div class="settings-row-left">
+                            <div class="settings-row-icon">
+                                <i data-lucide="download"></i>
+                            </div>
+                            <div class="settings-row-content">
+                                <span class="settings-row-title">Export Data</span>
+                                <span class="settings-row-desc">Save a backup of your shop data</span>
+                            </div>
+                        </div>
+                        <div class="settings-row-right">
+                            <div class="settings-row-chevron"><i data-lucide="chevron-right"></i></div>
+                        </div>
+                    </div>
+                    <div class="settings-row" id="row-import-data" style="position: relative;">
+                        <div class="settings-row-left">
+                            <div class="settings-row-icon">
+                                <i data-lucide="upload"></i>
+                            </div>
+                            <div class="settings-row-content">
+                                <span class="settings-row-title">Import Data</span>
+                                <span class="settings-row-desc">Restore from a backup</span>
+                            </div>
+                        </div>
+                        <input type="file" id="data-import-file-loader" style="position: absolute; left: 0; top: 0; opacity: 0; width: 100%; height: 100%; cursor: pointer;" accept=".json">
+                        <div class="settings-row-right">
+                            <div class="settings-row-chevron"><i data-lucide="chevron-right"></i></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 5: SECURITY -->
+            <div class="settings-group">
+                <div class="settings-group-title">Security</div>
+                <div class="settings-rows-list">
+                    <div class="settings-row" id="row-app-lock">
+                        <div class="settings-row-left">
+                            <div class="settings-row-icon">
+                                <i data-lucide="lock"></i>
+                            </div>
+                            <div class="settings-row-content">
+                                <span class="settings-row-title">App Lock</span>
+                                <span class="settings-row-desc">Protect the application</span>
+                            </div>
+                        </div>
+                        <div class="settings-row-right">
+                            <div class="settings-row-chevron"><i data-lucide="chevron-right"></i></div>
+                        </div>
+                    </div>
+                    <div class="settings-row" id="row-login-security">
+                        <div class="settings-row-left">
+                            <div class="settings-row-icon">
+                                <i data-lucide="shield-check"></i>
+                            </div>
+                            <div class="settings-row-content">
+                                <span class="settings-row-title">Login & Security</span>
+                                <span class="settings-row-desc">Manage authentication</span>
+                            </div>
+                        </div>
+                        <div class="settings-row-right">
+                            <div class="settings-row-chevron"><i data-lucide="chevron-right"></i></div>
+                        </div>
+                    </div>
+                    <div class="settings-row" id="row-activity-log">
+                        <div class="settings-row-left">
+                            <div class="settings-row-icon">
+                                <i data-lucide="history"></i>
+                            </div>
+                            <div class="settings-row-content">
+                                <span class="settings-row-title">Activity Log</span>
+                                <span class="settings-row-desc">Review important account activity</span>
+                            </div>
+                        </div>
+                        <div class="settings-row-right">
+                            <div class="settings-row-chevron"><i data-lucide="chevron-right"></i></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 6: SHOP MANAGEMENT -->
+            <div class="settings-group">
+                <div class="settings-group-title">Shop Management</div>
+                <div class="settings-rows-list">
+                    <div class="settings-row" id="row-manage-shop-profile">
+                        <div class="settings-row-left">
+                            <div class="settings-row-icon">
+                                <i data-lucide="store"></i>
+                            </div>
+                            <div class="settings-row-content">
+                                <span class="settings-row-title">Shop Profile</span>
+                                <span class="settings-row-desc">Business information</span>
+                            </div>
+                        </div>
+                        <div class="settings-row-right">
+                            <div class="settings-row-chevron"><i data-lucide="chevron-right"></i></div>
+                        </div>
+                    </div>
+                    <div class="settings-row" id="row-products-categories">
+                        <div class="settings-row-left">
+                            <div class="settings-row-icon">
+                                <i data-lucide="package"></i>
+                            </div>
+                            <div class="settings-row-content">
+                                <span class="settings-row-title">Products & Categories</span>
+                                <span class="settings-row-desc">Manage product categories</span>
+                            </div>
+                        </div>
+                        <div class="settings-row-right">
+                            <div class="settings-row-chevron"><i data-lucide="chevron-right"></i></div>
+                        </div>
+                    </div>
+                    <div class="settings-row" id="row-units">
+                        <div class="settings-row-left">
+                            <div class="settings-row-icon">
+                                <i data-lucide="scale"></i>
+                            </div>
+                            <div class="settings-row-content">
+                                <span class="settings-row-title">Units</span>
+                                <span class="settings-row-desc">Manage kg, g, L, ml, pcs, packs, etc.</span>
+                            </div>
+                        </div>
+                        <div class="settings-row-right">
+                            <div class="settings-row-chevron"><i data-lucide="chevron-right"></i></div>
+                        </div>
+                    </div>
+                    <div class="settings-row" id="row-suppliers">
+                        <div class="settings-row-left">
+                            <div class="settings-row-icon">
+                                <i data-lucide="truck"></i>
+                            </div>
+                            <div class="settings-row-content">
+                                <span class="settings-row-title">Suppliers</span>
+                                <span class="settings-row-desc">Manage suppliers</span>
+                            </div>
+                        </div>
+                        <div class="settings-row-right">
+                            <div class="settings-row-chevron"><i data-lucide="chevron-right"></i></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 7: BUSINESS SETTINGS -->
+            <div class="settings-group">
+                <div class="settings-group-title">Business Settings</div>
+                <div class="settings-rows-list">
+                    <div class="settings-row" id="row-sales-settings">
+                        <div class="settings-row-left">
+                            <div class="settings-row-icon">
+                                <i data-lucide="sliders"></i>
+                            </div>
+                            <div class="settings-row-content">
+                                <span class="settings-row-title">Sales Settings</span>
+                                <span class="settings-row-desc">Configure sales behaviour</span>
+                            </div>
+                        </div>
+                        <div class="settings-row-right">
+                            <div class="settings-row-chevron"><i data-lucide="chevron-right"></i></div>
+                        </div>
+                    </div>
+                    <div class="settings-row" id="row-payment-methods">
+                        <div class="settings-row-left">
+                            <div class="settings-row-icon">
+                                <i data-lucide="credit-card"></i>
+                            </div>
+                            <div class="settings-row-content">
+                                <span class="settings-row-title">Payment Methods</span>
+                                <span class="settings-row-desc">Cash, UPI, Card and Due</span>
+                            </div>
+                        </div>
+                        <div class="settings-row-right">
+                            <div class="settings-row-chevron"><i data-lucide="chevron-right"></i></div>
+                        </div>
+                    </div>
+                    <div class="settings-row" id="row-customer-settings">
+                        <div class="settings-row-left">
+                            <div class="settings-row-icon">
+                                <i data-lucide="users"></i>
+                            </div>
+                            <div class="settings-row-content">
+                                <span class="settings-row-title">Customer Settings</span>
+                                <span class="settings-row-desc">Manage customer behaviour</span>
+                            </div>
+                        </div>
+                        <div class="settings-row-right">
+                            <div class="settings-row-chevron"><i data-lucide="chevron-right"></i></div>
+                        </div>
+                    </div>
+                    <div class="settings-row" id="row-due-settings">
+                        <div class="settings-row-left">
+                            <div class="settings-row-icon">
+                                <i data-lucide="clock"></i>
+                            </div>
+                            <div class="settings-row-content">
+                                <span class="settings-row-title">Due Settings</span>
+                                <span class="settings-row-desc">Configure customer due rules</span>
+                            </div>
+                        </div>
+                        <div class="settings-row-right">
+                            <div class="settings-row-chevron"><i data-lucide="chevron-right"></i></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 8: ABOUT -->
+            <div class="settings-group">
+                <div class="settings-group-title">About</div>
+                <div class="settings-rows-list">
+                    <div class="settings-row" id="row-help-support">
+                        <div class="settings-row-left">
+                            <div class="settings-row-icon">
+                                <i data-lucide="circle-help"></i>
+                            </div>
+                            <div class="settings-row-content">
+                                <span class="settings-row-title">Help & Support</span>
+                                <span class="settings-row-desc">Get help using the application</span>
+                            </div>
+                        </div>
+                        <div class="settings-row-right">
+                            <div class="settings-row-chevron"><i data-lucide="chevron-right"></i></div>
+                        </div>
+                    </div>
+                    <div class="settings-row" id="row-about-app">
+                        <div class="settings-row-left">
+                            <div class="settings-row-icon">
+                                <i data-lucide="info"></i>
+                            </div>
+                            <div class="settings-row-content">
+                                <span class="settings-row-title">About App</span>
+                                <span class="settings-row-desc">Version and application information</span>
+                            </div>
+                        </div>
+                        <div class="settings-row-right">
+                            <span class="settings-row-value">v1.0.0</span>
+                            <div class="settings-row-chevron"><i data-lucide="chevron-right"></i></div>
+                        </div>
+                    </div>
+                    <div class="settings-row" id="row-privacy">
+                        <div class="settings-row-left">
+                            <div class="settings-row-icon">
+                                <i data-lucide="shield-check"></i>
+                            </div>
+                            <div class="settings-row-content">
+                                <span class="settings-row-title">Privacy</span>
+                                <span class="settings-row-desc">Privacy information</span>
+                            </div>
+                        </div>
+                        <div class="settings-row-right">
+                            <div class="settings-row-chevron"><i data-lucide="chevron-right"></i></div>
+                        </div>
+                    </div>
+                    <div class="settings-row" id="row-terms">
+                        <div class="settings-row-left">
+                            <div class="settings-row-icon">
+                                <i data-lucide="file-text"></i>
+                            </div>
+                            <div class="settings-row-content">
+                                <span class="settings-row-title">Terms</span>
+                                <span class="settings-row-desc">Terms and conditions</span>
+                            </div>
+                        </div>
+                        <div class="settings-row-right">
+                            <div class="settings-row-chevron"><i data-lucide="chevron-right"></i></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- SUBPAGES CONTAINERS -->
+
+    <!-- SUBPAGE: WHATSAPP -->
+    
+    <!-- Injected Global Bottom Navigation -->
+    <nav id="app-navigation"></nav>
+
+    <!-- Application Script -->
+    <script src="../../js/storage.js"></script>
+    <script src="../../js/utils.js"></script>
+    <script src="../../js/notifications.js"></script>
+    <script src="../../js/settings.js"></script>
+</body>
+</html>

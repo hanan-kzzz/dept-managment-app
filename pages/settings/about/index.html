@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>About Cashly - Cashly</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Application Styles -->
+    <link rel="stylesheet" href="../../../css/style.css">
+    <link rel="stylesheet" href="../../../css/settings.css">
+</head>
+<body data-page="settings-about">
+
+    <!-- Injected Global Header -->
+    <div id="app-header"></div>
+
+    <main class="settings-subpage-standalone">
+<div class="settings-subpage" id="subpage-about">
+        <div class="settings-subpage-header">
+            <a href="../settings.html" class="back-nav-settings"><i data-lucide="arrow-left"></i></a>
+            <span class="settings-subpage-title">About Application</span>
+        </div>
+        <div class="settings-subpage-content" style="text-align: center; padding-top: 40px;">
+            <div style="background-color: var(--accent-tint); color: var(--accent); width: 80px; height: 80px; border-radius: 20px; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+                <i data-lucide="store" style="width: 40px; height: 40px; stroke-width: 2px;"></i>
+            </div>
+            <h2 style="font-size: 22px; font-weight: 800; color: var(--text); margin-bottom: 4px;">Greenway Groceries</h2>
+            <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 24px;">Groceries & Debts Registry Manager</p>
+            
+            <div class="settings-rows-list" style="text-align: left; margin-bottom: 30px;">
+                <div class="settings-row" style="cursor: default; background-color: var(--surface);">
+                    <div class="settings-row-left">
+                        <div class="settings-row-content">
+                            <span class="settings-row-title">Version</span>
+                        </div>
+                    </div>
+                    <div class="settings-row-right">
+                        <span class="settings-row-value">1.0.0 (Build 2026.08)</span>
+                    </div>
+                </div>
+                <div class="settings-row" style="cursor: default; background-color: var(--surface);">
+                    <div class="settings-row-left">
+                        <div class="settings-row-content">
+                            <span class="settings-row-title">Developer</span>
+                        </div>
+                    </div>
+                    <div class="settings-row-right">
+                        <span class="settings-row-value">Google DeepMind - Antigravity</span>
+                    </div>
+                </div>
+            </div>
+            <p style="font-size: 12px; color: var(--text-light); line-height: 1.4;">
+                &copy; 2026 Greenway Groceries App. All rights reserved.
+            </p>
+        </div>
+    </div>
+    </main>
+
+    <!-- Injected Global Bottom Navigation -->
+    <nav id="app-navigation"></nav>
+
+    <!-- Application Script -->
+    <script src="../../../js/storage.js"></script>
+    <script src="../../../js/utils.js"></script>
+    <script src="../../../js/notifications.js"></script>
+    <script src="../../../js/settings.js"></script>
+</body>
+</html>

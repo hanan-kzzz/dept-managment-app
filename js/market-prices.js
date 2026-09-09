@@ -201,6 +201,8 @@ function setupCommodityModalListeners() {
 
     const closeModal = () => {
         if (modal) modal.classList.remove('active');
+        document.body.style.overflow = '';
+        document.body.classList.remove('modal-open');
     };
 
     if (closeIcon) closeIcon.addEventListener('click', closeModal);
@@ -211,6 +213,12 @@ function setupCommodityModalListeners() {
             if (e.target === modal) closeModal();
         });
     }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal && modal.classList.contains('active')) {
+            closeModal();
+        }
+    });
 
     // Range tab buttons
     const rangeTabs = document.querySelectorAll('.market-range-tab');
@@ -259,7 +267,11 @@ function openCommodityDetailModal(commodityId) {
 
     renderChartForSelected();
 
-    if (modal) modal.classList.add('active');
+    if (modal) {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        document.body.classList.add('modal-open');
+    }
     if (typeof lucide !== 'undefined') lucide.createIcons();
 }
 
@@ -314,9 +326,9 @@ function renderChartForSelected() {
             <circle cx="${points[points.length - 1].x.toFixed(1)}" cy="${points[points.length - 1].y.toFixed(1)}" r="4" fill="var(--accent)" stroke="var(--surface)" stroke-width="2"/>
             
             <!-- Labels -->
-            <text x="${padding}" y="${padding - 4}" font-size="9" fill="var(--text-muted)" font-family="sans-serif">₹${maxP.toFixed(1)}</text>
-            <text x="${padding}" y="${height - 4}" font-size="9" fill="var(--text-muted)" font-family="sans-serif">₹${minP.toFixed(1)}</text>
-            <text x="${width - padding}" y="${height - 4}" text-anchor="end" font-size="9" fill="var(--text-muted)" font-family="sans-serif">Today: ₹${prices[prices.length - 1].toFixed(2)}</text>
+            <text x="${padding}" y="${padding - 4}" font-size="10" font-weight="700" fill="var(--chart-text-color, #334155)" font-family="sans-serif">₹${maxP.toFixed(1)}</text>
+            <text x="${padding}" y="${height - 4}" font-size="10" font-weight="700" fill="var(--chart-text-color, #334155)" font-family="sans-serif">₹${minP.toFixed(1)}</text>
+            <text x="${width - padding}" y="${height - 4}" text-anchor="end" font-size="10" font-weight="700" fill="var(--chart-text-color, #334155)" font-family="sans-serif">Today: ₹${prices[prices.length - 1].toFixed(2)}</text>
         </svg>
     `;
 

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Data Backup & Recovery - Cashly</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Application Styles -->
+    <link rel="stylesheet" href="../../../css/style.css">
+    <link rel="stylesheet" href="../../../css/settings.css">
+</head>
+<body data-page="settings-backup">
+
+    <!-- Injected Global Header -->
+    <div id="app-header"></div>
+
+    <main class="settings-subpage-standalone">
+<div class="settings-subpage" id="subpage-backup">
+        <div class="settings-subpage-header">
+            <a href="../settings.html" class="back-nav-settings"><i data-lucide="arrow-left"></i></a>
+            <span class="settings-subpage-title">Backup & Restore</span>
+        </div>
+        <div class="settings-subpage-content">
+            <h2 style="font-size: 19px; font-weight: 700; margin-bottom: 8px;">Backup Shop Database</h2>
+            
+            <div class="settings-subpage-info-box" style="margin-bottom: 16px;">
+                <p class="settings-subpage-info-text">
+                    Export your entire shop registry (customers, inventory catalogs, sales histories) as a JSON file backup, or upload a previously exported backup file.
+                </p>
+            </div>
+
+            <button class="settings-btn-primary" id="btn-data-export">
+                <i data-lucide="download"></i> Export Backup (.json)
+            </button>
+            
+            <button class="settings-btn-secondary" id="btn-data-import-trigger" style="position: relative; margin-bottom: 28px;">
+                <i data-lucide="upload"></i> Import Backup (.json)
+                <input type="file" id="data-import-file-loader-subpage" style="position: absolute; left:0; top:0; opacity:0; width:100%; height:100%; cursor:pointer;" accept=".json">
+            </button>
+
+            <div class="settings-group-title" style="color: var(--danger);">Danger Zone</div>
+            <div class="settings-warning-box">
+                <p class="settings-warning-text">
+                    These actions modify your database permanently. Confirm warning prompts before execution.
+                </p>
+            </div>
+
+            <button class="settings-btn-secondary" id="btn-clear-demo" style="border-color: var(--danger); color: var(--danger); font-weight: 600;">
+                <i data-lucide="trash-2"></i> Clear Demo Data
+            </button>
+            
+            <button class="settings-btn-primary" id="btn-reset-app" style="background-color: var(--danger); color: white;">
+                <i data-lucide="alert-octagon"></i> Hard Reset Application
+            </button>
+        </div>
+    </div>
+    </main>
+
+    <!-- Injected Global Bottom Navigation -->
+    <nav id="app-navigation"></nav>
+
+    <!-- Application Script -->
+    <script src="../../../js/storage.js"></script>
+    <script src="../../../js/utils.js"></script>
+    <script src="../../../js/notifications.js"></script>
+    <script src="../../../js/settings.js"></script>
+</body>
+</html>

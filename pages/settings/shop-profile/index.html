@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Shop Profile - Cashly</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Application Styles -->
+    <link rel="stylesheet" href="../../../css/style.css">
+    <link rel="stylesheet" href="../../../css/settings.css">
+</head>
+<body data-page="settings-profile">
+
+    <!-- Injected Global Header -->
+    <div id="app-header"></div>
+
+    <main class="settings-subpage-standalone">
+<div class="settings-subpage" id="subpage-profile">
+        <div class="settings-subpage-header">
+            <a href="../settings.html" class="back-nav-settings"><i data-lucide="arrow-left"></i> Shop Profile</a>
+            <span class="profile-autosave-tag" id="profile-autosave-status"><i data-lucide="check"></i> Auto-saved</span>
+        </div>
+        <div class="settings-subpage-content profile-redesign-content">
+            
+            <!-- SHOP AVATAR / LOGO UPLOAD CARD -->
+            <div class="shop-logo-upload-card">
+                <div class="logo-avatar-wrap" onclick="document.getElementById('set-shop-logo-file').click()">
+                    <div class="logo-avatar-box" id="logo-avatar-preview">
+                        <i data-lucide="store" id="logo-avatar-icon"></i>
+                        <img id="logo-avatar-img" style="display: none;" alt="Shop Logo">
+                    </div>
+                    <div class="logo-camera-badge">
+                        <i data-lucide="camera"></i>
+                    </div>
+                </div>
+                <input type="file" id="set-shop-logo-file" accept="image/*" style="display: none !important;">
+                <div class="shop-logo-info">
+                    <span class="shop-logo-title" id="preview-shop-title">My Shop</span>
+                    <span class="shop-logo-sub">Tap photo to upload or update store logo</span>
+                </div>
+                <button type="button" class="shop-logo-btn" onclick="document.getElementById('set-shop-logo-file').click()">
+                    <i data-lucide="upload-cloud"></i> Upload Logo
+                </button>
+            </div>
+
+            <!-- CORE BUSINESS INFO (REQUIRED FIELDS) -->
+            <div class="profile-section-header">
+                <span class="profile-section-title"><i data-lucide="shield-alert"></i> Core Business Details</span>
+                <span class="profile-section-badge required">Required Fields *</span>
+            </div>
+
+            <!-- FIELD 1: SHOP NAME -->
+            <div class="settings-form-group profile-field-card">
+                <div class="profile-field-top">
+                    <label for="set-shop-name-input">Shop Name <span class="req-star">*</span></label>
+                    <span class="field-badge req-pill">Required</span>
+                </div>
+                <div class="icon-input-wrap" id="wrap-shop-name">
+                    <i data-lucide="store" class="input-icon"></i>
+                    <input type="text" id="set-shop-name-input" class="settings-form-control icon-input" placeholder="My Shop">
+                    <i data-lucide="check-circle" class="status-icon valid-icon" id="valid-shop-name"></i>
+                </div>
+                <span class="field-helper-text">Official store name printed on customer bills and receipts</span>
+            </div>
+
+            <!-- FIELD 2: OWNER NAME -->
+            <div class="settings-form-group profile-field-card">
+                <div class="profile-field-top">
+                    <label for="set-owner-name-input">Owner Name</label>
+                    <span class="field-badge opt-pill">Optional</span>
+                </div>
+                <div class="icon-input-wrap">
+                    <i data-lucide="user" class="input-icon"></i>
+                    <input type="text" id="set-owner-name-input" class="settings-form-control icon-input" placeholder="Hanan">
+                </div>
+                <span class="field-helper-text">Primary owner / store manager contact name</span>
+            </div>
+
+            <!-- CONTACT & LOCATION SECTION -->
+            <div class="profile-section-header" style="margin-top: 20px;">
+                <span class="profile-section-title"><i data-lucide="phone-call"></i> Contact & Location</span>
+            </div>
+
+            <!-- FIELD 3: CONTACT PHONE -->
+            <div class="settings-form-group profile-field-card">
+                <div class="profile-field-top">
+                    <label for="set-shop-phone-input">Contact Phone <span class="req-star">*</span></label>
+                    <span class="field-badge req-pill" id="badge-phone-val">Required</span>
+                </div>
+                <div class="icon-input-wrap" id="wrap-shop-phone">
+                    <i data-lucide="phone" class="input-icon"></i>
+                    <input type="tel" id="set-shop-phone-input" class="settings-form-control icon-input" placeholder="+91 98765 43210">
+                    <i data-lucide="check-circle" class="status-icon valid-icon" id="valid-shop-phone"></i>
+                </div>
+                <span class="field-helper-text" id="helper-shop-phone">10-digit mobile number for order & WhatsApp notifications</span>
+            </div>
+
+            <!-- FIELD 4: EMAIL ADDRESS -->
+            <div class="settings-form-group profile-field-card">
+                <div class="profile-field-top">
+                    <label for="set-shop-email-input">Email Address</label>
+                    <span class="field-badge opt-pill" id="badge-email-val">Optional</span>
+                </div>
+                <div class="icon-input-wrap" id="wrap-shop-email">
+                    <i data-lucide="mail" class="input-icon"></i>
+                    <input type="email" id="set-shop-email-input" class="settings-form-control icon-input" placeholder="owner@grocery.com">
+                    <i data-lucide="check-circle" class="status-icon valid-icon" id="valid-shop-email"></i>
+                </div>
+                <span class="field-helper-text" id="helper-shop-email">Used for digital invoices, sales summaries & security alerts</span>
+            </div>
+
+            <!-- FIELD 5: SHOP ADDRESS -->
+            <div class="settings-form-group profile-field-card">
+                <div class="profile-field-top">
+                    <label for="set-shop-address-input">Shop Address</label>
+                    <span class="field-badge opt-pill">Optional</span>
+                </div>
+                <div class="icon-input-wrap">
+                    <i data-lucide="map-pin" class="input-icon"></i>
+                    <input type="text" id="set-shop-address-input" class="settings-form-control icon-input" placeholder="123 Main Street, Delhi">
+                </div>
+                <span class="field-helper-text">Physical address shown on customer invoices</span>
+            </div>
+
+            <!-- USEFUL SPACE FILLER 1: TERMINAL & STORE STATUS SUMMARY -->
+            <div class="profile-stats-card">
+                <div class="stats-card-header">
+                    <div class="stats-card-status">
+                        <span class="status-pulse"></span>
+                        <span class="status-title">POS Terminal Connected</span>
+                    </div>
+                    <span class="stats-card-tag">Active &bull; Syncing</span>
+                </div>
+                <div class="stats-card-grid">
+                    <div class="stats-item">
+                        <span class="stats-label">Terminal ID</span>
+                        <span class="stats-val code">POS-MBL-8821</span>
+                    </div>
+                    <div class="stats-item">
+                        <span class="stats-label">License Plan</span>
+                        <span class="stats-val">Retail Pro</span>
+                    </div>
+                    <div class="stats-item">
+                        <span class="stats-label">Today's Transactions</span>
+                        <span class="stats-val accent">142 Sales</span>
+                    </div>
+                    <div class="stats-item">
+                        <span class="stats-label">Cloud Backup</span>
+                        <span class="stats-val">Automated</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- USEFUL SPACE FILLER 2: DANGER ZONE -->
+            <div class="profile-danger-card">
+                <div class="danger-card-header">
+                    <i data-lucide="alert-triangle"></i> Danger Zone
+                </div>
+                <p class="danger-card-desc">Unlink POS device terminal or reset local shop configuration cache.</p>
+                <div class="danger-card-actions">
+                    <button type="button" class="btn-danger-outline" id="btn-deactivate-terminal">
+                        Deactivate Device Terminal
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </main>
+
+    <!-- Injected Global Bottom Navigation -->
+    <nav id="app-navigation"></nav>
+
+    <!-- Application Script -->
+    <script src="../../../js/storage.js"></script>
+    <script src="../../../js/utils.js"></script>
+    <script src="../../../js/notifications.js"></script>
+    <script src="../../../js/settings.js"></script>
+</body>
+</html>

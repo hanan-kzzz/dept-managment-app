@@ -3,7 +3,8 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-    if (document.body.dataset.page !== 'settings') return;
+    const page = document.body.dataset.page;
+    if (!page || !page.startsWith('settings')) return;
 
     initRedesignedSettings();
 });
@@ -65,6 +66,11 @@ function openSubpage(subpageId) {
     if (placeholder && window.innerWidth >= 768) {
         placeholder.style.display = 'none';
     }
+
+    // Subpages are position:fixed so they overlay the main page.
+    // Just lock body scroll so the background list doesn't scroll behind.
+    document.body.style.overflow = 'hidden';
+
     if (typeof lucide !== 'undefined') {
         lucide.createIcons();
     }
@@ -84,33 +90,34 @@ function closeSubpage(subpageId) {
     if (placeholder && window.innerWidth >= 768) {
         placeholder.style.display = 'block';
     }
+
+    // Restore background scrolling
+    document.body.style.overflow = '';
 }
 
+
 function setupSubpageNavigation() {
-    const subpagesMap = {
-        'row-profile-card': 'subpage-profile',
-        'row-shop-profile': 'subpage-profile',
-        'row-business-details': 'subpage-business',
-        'row-invoice-settings': 'subpage-invoice-settings',
-        'row-currency': 'subpage-currency',
-        'row-language': 'subpage-language',
-        'row-whatsapp': 'subpage-whatsapp',
-        'row-telegram': 'subpage-telegram',
-        'row-notifications-group': 'subpage-notifications',
-        'row-appearance': 'subpage-appearance',
-        'row-backup': 'subpage-backup',
-        'row-manage-shop-profile': 'subpage-profile',
-        'row-about-app': 'subpage-about'
+    const pageUrlMap = {
+        'row-profile-card': 'shop-profile/index.html',
+        'row-shop-profile': 'shop-profile/index.html',
+        'row-manage-shop-profile': 'shop-profile/index.html',
+        'row-business-details': 'business-details/index.html',
+        'row-invoice-settings': 'bill-settings/index.html',
+        'row-currency': 'currency/index.html',
+        'row-language': 'language/index.html',
+        'row-whatsapp': 'whatsapp/index.html',
+        'row-telegram': 'telegram/index.html',
+        'row-notifications-group': 'notifications/index.html',
+        'row-appearance': 'appearance/index.html',
+        'row-backup': 'backup/index.html',
+        'row-about-app': 'about/index.html'
     };
 
-    // Open subpage triggers
-    Object.keys(subpagesMap).forEach(triggerId => {
+    Object.keys(pageUrlMap).forEach(triggerId => {
         const trigger = document.getElementById(triggerId);
-        const subpageId = subpagesMap[triggerId];
-
         if (trigger) {
             trigger.addEventListener('click', () => {
-                openSubpage(subpageId);
+                window.location.href = pageUrlMap[triggerId];
             });
         }
     });
@@ -181,22 +188,19 @@ function setupSubpageNavigation() {
 }
 
 function restoreActiveSubpageOnLoad() {
-    let targetId = null;
+    // Always clear any stale sessionStorage from previous sessions
+    sessionStorage.removeItem('active_settings_subpage');
+    
+    // Only restore if there's an explicit URL hash pointing to a subpage
     const hash = window.location.hash.replace('#', '').trim();
-    if (hash) {
-        if (hash.startsWith('subpage-')) {
-            targetId = hash;
-        } else {
-            targetId = 'subpage-' + hash;
-        }
-    }
-    if (!targetId || !document.getElementById(targetId)) {
-        targetId = sessionStorage.getItem('active_settings_subpage');
-    }
-    if (targetId && document.getElementById(targetId)) {
+    if (!hash) return;
+    
+    let targetId = hash.startsWith('subpage-') ? hash : 'subpage-' + hash;
+    if (document.getElementById(targetId)) {
         openSubpage(targetId);
     }
 }
+
 
 /* DATA LOADER */
 function loadSettingsData() {
@@ -205,7 +209,7 @@ function loadSettingsData() {
 
     // Owner info check
     const ownerName = auth && auth.user && auth.user.name ? auth.user.name : '';
-    const shopName = settings.shopName || 'My Grocery Shop';
+    const shopName = settings.shopName || 'My Shop';
 
     // Populate main page identity
     const profShopName = document.getElementById('profile-shop-name');
@@ -531,11 +535,11 @@ function setupSettingsSearch() {
                 } else if (match.action === 'coming-soon') {
                     Utils.showToast("Feature coming soon!", "info");
                 } else if (match.action === 'link-stock') {
-                    window.location.href = 'stock.html';
+                    window.location.href = (window.BASE_PATH || '') + `pages/inventory/stock.html`;
                 } else if (match.action === 'link-customers') {
-                    window.location.href = 'customers.html';
+                    window.location.href = (window.BASE_PATH || '') + `pages/customers/customers.html`;
                 } else if (match.action === 'link-dues') {
-                    window.location.href = 'dues.html';
+                    window.location.href = (window.BASE_PATH || '') + `pages/sales/dues.html`;
                 }
             });
 
@@ -556,22 +560,30 @@ function setupMockConnections() {
 
     if (btnConnectWA) {
         btnConnectWA.addEventListener('click', () => {
-            const isConnected = TelegramService ? WhatsAppService.isConnected() : false;
+            const isConnected = (typeof WhatsAppService !== 'undefined') ? WhatsAppService.getStatus().connected : false;
             let result;
             if (isConnected) {
                 result = WhatsAppService.disconnect();
-                Utils.showToast(result.message, "info");
+                if (typeof Utils !== 'undefined') Utils.showToast(result.message, "info");
+                updateWhatsAppConnectionUI(false);
             } else {
-                result = WhatsAppService.connect();
-                Utils.showToast(result.message, "success");
+                // Show circular loading animation while generating/waiting for QR scan
+                btnConnectWA.innerHTML = '<i data-lucide="loader-2" class="animate-spin"></i> <span>Generating QR Code...</span>';
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+                
+                const qrContainer = document.getElementById('wa-qr-container');
+                const qrLoading = document.getElementById('wa-qr-loading');
+                const qrContent = document.getElementById('wa-qr-content');
+                if (qrContainer) qrContainer.style.display = 'block';
+                if (qrLoading) qrLoading.style.display = 'flex';
+                if (qrContent) qrContent.style.display = 'none';
             }
-            updateWhatsAppConnectionUI(result.connected);
         });
     }
 
     if (btnConnectTG) {
         btnConnectTG.addEventListener('click', () => {
-            const isConnected = TelegramService ? TelegramService.isConnected() : false;
+            const isConnected = (typeof TelegramService !== 'undefined') ? TelegramService.isConnected() : false;
             let result;
             if (isConnected) {
                 result = TelegramService.disconnect();
@@ -598,6 +610,72 @@ function setupMockConnections() {
             }
         });
     }
+
+    // --- Sync UI on Load ---
+    if (typeof WhatsAppService !== 'undefined') {
+        const initialWAStatus = WhatsAppService.getStatus().connected;
+        updateWhatsAppConnectionUI(initialWAStatus);
+    }
+    
+    // --- Start Polling Local Node.js API for WhatsApp Status & QR Code ---
+    let isFetchingStatus = false;
+    
+    setInterval(() => {
+        if (isFetchingStatus) return;
+        isFetchingStatus = true;
+        
+        const qrContainer = document.getElementById('wa-qr-container');
+        const qrLoading = document.getElementById('wa-qr-loading');
+        const qrContent = document.getElementById('wa-qr-content');
+        const qrImage = document.getElementById('wa-qr-image');
+        const btnConnectWA = document.getElementById('btn-connect-whatsapp');
+        
+        fetch('http://localhost:3000/status')
+            .then(res => res.json())
+            .then(data => {
+                isFetchingStatus = false;
+                
+                // If we have a QR code and aren't connected
+                if (data.qr && !data.connected) {
+                    if (qrContainer && qrImage) {
+                        qrContainer.style.display = 'block';
+                        if (qrLoading) qrLoading.style.display = 'none';
+                        if (qrContent) qrContent.style.display = 'block';
+                        qrImage.src = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent(data.qr);
+                    }
+                    
+                    // If button is stuck on "Generating..." or "Connecting...", update text
+                    if (btnConnectWA && (btnConnectWA.innerHTML.includes('Connecting') || btnConnectWA.innerHTML.includes('Generating'))) {
+                        btnConnectWA.innerHTML = '<i data-lucide="scan"></i> <span>Scan QR Code Below</span>';
+                        if (typeof lucide !== 'undefined') lucide.createIcons();
+                    }
+                } else if (data.connected) {
+                    if (qrContainer) qrContainer.style.display = 'none';
+                }
+                
+                // If it becomes connected in the backend, sync the frontend UI automatically
+                const isCurrentlyConnected = (typeof WhatsAppService !== 'undefined') ? WhatsAppService.getStatus().connected : false;
+                if (data.connected && !isCurrentlyConnected) {
+                    if (typeof WhatsAppService !== 'undefined') WhatsAppService.connect();
+                    updateWhatsAppConnectionUI(true);
+                    if (typeof Utils !== 'undefined') Utils.showToast("WhatsApp connected successfully!", "success");
+                } else if (!data.connected && isCurrentlyConnected) {
+                    // Backend disconnected, sync frontend
+                    if (typeof WhatsAppService !== 'undefined') WhatsAppService.disconnect();
+                    updateWhatsAppConnectionUI(false);
+                }
+            })
+            .catch(err => {
+                isFetchingStatus = false;
+                if (qrContainer) qrContainer.style.display = 'none';
+                
+                if (btnConnectWA && (btnConnectWA.innerHTML.includes('Connecting') || btnConnectWA.innerHTML.includes('Generating'))) {
+                    btnConnectWA.innerHTML = '<i data-lucide="message-circle"></i> <span id="btn-whatsapp-connect-text">Connect WhatsApp Business</span>';
+                    if (typeof lucide !== 'undefined') lucide.createIcons();
+                    if (typeof Utils !== 'undefined') Utils.showToast("Server offline. Please run 'npm start' in terminal.", "error");
+                }
+            });
+    }, 2000);
 }
 
 function updateWhatsAppConnectionUI(isConnected) {
@@ -606,15 +684,24 @@ function updateWhatsAppConnectionUI(isConnected) {
     const btnText = document.getElementById('btn-whatsapp-connect-text');
     const heroCard = document.getElementById('wa-hero-card');
     const heroBadge = document.getElementById('wa-hero-badge');
+    const controlsBar = document.querySelector('.wa-controls-bar');
+    const sectionHeader = document.querySelector('.wa-section-header');
     const rulesWrapper = document.getElementById('wa-rules-wrapper');
 
     if (isConnected) {
         if (mainStatusVal) {
-            mainStatusVal.textContent = "Connected";
+            mainStatusVal.textContent = "Connected ✓";
             mainStatusVal.className = "status-tag connected";
         }
-        if (subStatusLbl) subStatusLbl.textContent = "Connected";
-        if (btnText) btnText.textContent = "Disconnect WhatsApp Business";
+        if (subStatusLbl) subStatusLbl.textContent = "Connected ✓";
+        
+        const btnConnectWA = document.getElementById('btn-connect-whatsapp');
+        if (btnConnectWA) {
+            btnConnectWA.innerHTML = '<i data-lucide="log-out"></i> <span id="btn-whatsapp-connect-text">Disconnect WhatsApp Business</span>';
+        }
+        
+        const metaText = document.getElementById('wa-hero-meta-text');
+        if (metaText) metaText.textContent = "Account: Greenway Groceries (+91 9876543210)";
         
         if (heroCard) {
             heroCard.classList.remove('disconnected');
@@ -626,14 +713,24 @@ function updateWhatsAppConnectionUI(isConnected) {
         }
         if (rulesWrapper) {
             rulesWrapper.classList.remove('locked');
+            rulesWrapper.style.display = 'block';
         }
+        if (controlsBar) controlsBar.style.display = 'flex';
+        if (sectionHeader) sectionHeader.style.display = 'block';
     } else {
         if (mainStatusVal) {
             mainStatusVal.textContent = "Not connected";
             mainStatusVal.className = "status-tag disconnected";
         }
         if (subStatusLbl) subStatusLbl.textContent = "Not Connected";
-        if (btnText) btnText.textContent = "Connect WhatsApp Business";
+        
+        const btnConnectWA = document.getElementById('btn-connect-whatsapp');
+        if (btnConnectWA) {
+            btnConnectWA.innerHTML = '<i data-lucide="message-circle"></i> <span id="btn-whatsapp-connect-text">Connect WhatsApp Business</span>';
+        }
+        
+        const metaText = document.getElementById('wa-hero-meta-text');
+        if (metaText) metaText.textContent = "Reminders are paused until you connect an account";
         
         if (heroCard) {
             heroCard.classList.remove('connected');
@@ -645,7 +742,10 @@ function updateWhatsAppConnectionUI(isConnected) {
         }
         if (rulesWrapper) {
             rulesWrapper.classList.add('locked');
+            rulesWrapper.style.display = 'none';
         }
+        if (controlsBar) controlsBar.style.display = 'none';
+        if (sectionHeader) sectionHeader.style.display = 'none';
     }
 
     if (typeof lucide !== 'undefined') {
@@ -659,6 +759,10 @@ function setupWhatsAppRedesignEvents() {
     const btnConnectWA = document.getElementById('btn-connect-whatsapp');
     if (btnOverlayConnect && btnConnectWA) {
         btnOverlayConnect.addEventListener('click', () => {
+            // Scroll the button itself into view
+            btnConnectWA.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            // Trigger the main connect button
             btnConnectWA.click();
         });
     }
@@ -681,10 +785,21 @@ function setupWhatsAppRedesignEvents() {
         });
     });
 
-    // 3. Preset Buttons
+    // 3. Preset Buttons & Sequence Toggles
     const btnStandard = document.getElementById('btn-wa-preset-standard');
+    const btnCustom = document.getElementById('btn-wa-preset-custom');
     const btnAll = document.getElementById('btn-wa-preset-all');
     const btnClear = document.getElementById('btn-wa-preset-clear');
+
+    function updatePresetUI(preset) {
+        if (preset === 'standard') {
+            if (btnStandard) btnStandard.classList.add('active');
+            if (btnCustom) btnCustom.classList.remove('active');
+        } else {
+            if (btnStandard) btnStandard.classList.remove('active');
+            if (btnCustom) btnCustom.classList.add('active');
+        }
+    }
 
     if (btnStandard) {
         btnStandard.addEventListener('click', () => {
@@ -694,7 +809,15 @@ function setupWhatsAppRedesignEvents() {
             setCheckbox('whatsapp-opt-overdue-3', true);
             setCheckbox('whatsapp-opt-overdue-7', false);
             saveConnectionPreferences();
-            Utils.showToast("Applied Standard Reminder Preset", "success");
+            updatePresetUI('standard');
+            triggerCheckboxChangeEvents();
+            if (typeof Utils !== 'undefined') Utils.showToast("Applied Standard Reminder Preset", "success");
+        });
+    }
+
+    if (btnCustom) {
+        btnCustom.addEventListener('click', () => {
+            updatePresetUI('custom');
         });
     }
 
@@ -706,7 +829,9 @@ function setupWhatsAppRedesignEvents() {
             setCheckbox('whatsapp-opt-overdue-3', true);
             setCheckbox('whatsapp-opt-overdue-7', true);
             saveConnectionPreferences();
-            Utils.showToast("Enabled All Reminder Rules", "success");
+            updatePresetUI('custom');
+            triggerCheckboxChangeEvents();
+            if (typeof Utils !== 'undefined') Utils.showToast("Enabled All Reminder Rules", "success");
         });
     }
 
@@ -718,9 +843,37 @@ function setupWhatsAppRedesignEvents() {
             setCheckbox('whatsapp-opt-overdue-3', false);
             setCheckbox('whatsapp-opt-overdue-7', false);
             saveConnectionPreferences();
-            Utils.showToast("Disabled All Reminder Rules", "info");
+            updatePresetUI('custom');
+            triggerCheckboxChangeEvents();
+            if (typeof Utils !== 'undefined') Utils.showToast("Disabled All Reminder Rules", "info");
         });
     }
+
+    // 4. Timeline Toggles (Gray out effect)
+    function triggerCheckboxChangeEvents() {
+        document.querySelectorAll('.wa-timeline-item input[type="checkbox"]').forEach(cb => {
+            cb.dispatchEvent(new Event('change'));
+        });
+    }
+
+    document.querySelectorAll('.wa-timeline-item input[type="checkbox"]').forEach(checkbox => {
+        const item = checkbox.closest('.wa-timeline-item');
+        if (item) {
+            // Initial state
+            if (!checkbox.checked) {
+                item.classList.add('disabled');
+            }
+            // On change
+            checkbox.addEventListener('change', () => {
+                if (checkbox.checked) {
+                    item.classList.remove('disabled');
+                } else {
+                    item.classList.add('disabled');
+                }
+                updatePresetUI('custom');
+            });
+        }
+    });
 }
 
 function updateTelegramConnectionUI(isConnected) {
@@ -1150,12 +1303,15 @@ function setupInvoiceLiveValidation() {
         if (prevInvNo) prevInvNo.textContent = sampleInv;
         if (prevBarcodeCode) prevBarcodeCode.textContent = sampleInv;
 
-        // Format Badge
-        const fmt = formatSelect ? formatSelect.value : 'thermal-80';
+        // Format Badge — read from active chip (dropdown was removed)
+        const activeChip = document.querySelector('.format-chip.active');
+        const fmt = activeChip ? activeChip.dataset.format : 'thermal-80';
         let fmtText = '80mm Thermal';
         if (fmt === 'thermal-58') fmtText = '58mm Thermal';
         if (fmt === 'a4') fmtText = 'A4 Full Page';
+        if (fmt === 'digital-super') fmtText = 'Digital (super.money)';
         if (prevFormatBadge) prevFormatBadge.textContent = fmtText;
+
 
         // Tax calculation preview
         const isTaxEnabled = taxToggle ? taxToggle.checked : false;
@@ -1284,14 +1440,15 @@ function setupInvoiceLiveValidation() {
                 reader.onload = (evt) => {
                     const dataUrl = evt.target.result;
                     if (hiddenLogoUrl) hiddenLogoUrl.value = dataUrl;
-                    if (logoImg) {
-                        logoImg.src = dataUrl;
-                        logoImg.style.display = 'block';
-                    }
-                    if (logoIcon) logoIcon.style.display = 'none';
+                    // Update the small thumbnail in the menu row
+                    const menuLogoImg = document.getElementById('invoice-logo-img');
+                    const menuLogoIcon = document.getElementById('invoice-logo-icon');
+                    if (menuLogoImg) { menuLogoImg.src = dataUrl; menuLogoImg.style.display = 'block'; }
+                    if (menuLogoIcon) menuLogoIcon.style.display = 'none';
                     if (logoFilename) logoFilename.textContent = file.name;
-                    if (btnUploadText) btnUploadText.textContent = "Change Logo";
-                    if (btnRemoveLogo) btnRemoveLogo.style.display = 'inline-flex';
+                    // Show the remove row
+                    const removeRow = document.getElementById('btn-remove-invoice-logo');
+                    if (removeRow) removeRow.style.display = '';
 
                     updateLiveReceiptPreview();
                     Utils.showToast("Logo attached successfully.", "success");
@@ -1301,45 +1458,43 @@ function setupInvoiceLiveValidation() {
         });
     }
 
-    if (btnRemoveLogo) {
-        btnRemoveLogo.addEventListener('click', () => {
+    // Remove Logo handler (now a div.settings-row)
+    const removeLogoRow = document.getElementById('btn-remove-invoice-logo');
+    if (removeLogoRow) {
+        removeLogoRow.addEventListener('click', () => {
             if (hiddenLogoUrl) hiddenLogoUrl.value = '';
-            if (logoImg) logoImg.style.display = 'none';
-            if (logoIcon) logoIcon.style.display = 'block';
-            if (logoFilename) logoFilename.textContent = 'No Custom Logo Selected';
-            if (btnUploadText) btnUploadText.textContent = 'Upload Logo';
-            if (btnRemoveLogo) btnRemoveLogo.style.display = 'none';
+            const menuLogoImg = document.getElementById('invoice-logo-img');
+            const menuLogoIcon = document.getElementById('invoice-logo-icon');
+            if (menuLogoImg) menuLogoImg.style.display = 'none';
+            if (menuLogoIcon) menuLogoIcon.style.display = '';
+            if (logoFilename) logoFilename.textContent = 'No logo — tap to upload';
+            removeLogoRow.style.display = 'none';
             if (fileLogoInput) fileLogoInput.value = '';
-
             updateLiveReceiptPreview();
             Utils.showToast("Logo removed.", "info");
         });
     }
 
-    // 6. Print Format Dropdown and Visual Chips Synchronization
-    if (formatSelect && formatChips.length) {
-        formatSelect.addEventListener('change', () => {
-            const selectedVal = formatSelect.value;
-            formatChips.forEach(chip => {
-                if (chip.dataset.format === selectedVal) {
-                    chip.classList.add('active');
-                } else {
-                    chip.classList.remove('active');
-                }
-            });
-            updateLiveReceiptPreview();
-        });
-
+    // 6. Print Format Visual Chips — chips are the single source of truth (dropdown removed)
+    if (formatChips.length) {
         formatChips.forEach(chip => {
             chip.addEventListener('click', () => {
-                const targetFmt = chip.dataset.format;
-                if (formatSelect) formatSelect.value = targetFmt;
                 formatChips.forEach(c => c.classList.remove('active'));
                 chip.classList.add('active');
                 updateLiveReceiptPreview();
+                // Save to storage
+                const s = Storage.getSettings();
+                s.defaultPrintFormat = chip.dataset.format;
+                Storage.saveSettings(s);
             });
         });
+        // Restore saved selection on load
+        const savedFmt = Storage.getSettings().defaultPrintFormat || 'thermal-80';
+        formatChips.forEach(c => {
+            c.classList.toggle('active', c.dataset.format === savedFmt);
+        });
     }
+
 
     // 7. Live listeners for inputs -> update receipt preview
     [taxRateInput, invPrefixInput, billFooterInput].forEach(inputEl => {
@@ -1425,7 +1580,7 @@ function setupDataOperations() {
                 () => {
                     Storage.resetApplication();
                     Utils.showToast("Application has been hard reset.", "success");
-                    setTimeout(() => { window.location.href = 'index.html'; }, 1000);
+                    setTimeout(() => { window.location.href = (window.BASE_PATH || '') + `index.html`; }, 1000);
                 }
             );
         });
@@ -1897,5 +2052,19 @@ function setupBusinessLiveValidation() {
 
     validateBizFields();
 }
+
+
+
+
+// triggerAutoSavePulse helper (used by bill settings autosave badge)
+window.triggerAutoSavePulse = function(id) {
+    const badge = document.getElementById(id);
+    if (!badge) return;
+    badge.classList.remove('pulse-save-anim');
+    void badge.offsetWidth;
+    badge.classList.add('pulse-save-anim');
+};
+
+
 
 

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Business Details - Cashly</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Application Styles -->
+    <link rel="stylesheet" href="../../../css/style.css">
+    <link rel="stylesheet" href="../../../css/settings.css">
+</head>
+<body data-page="settings-business">
+
+    <!-- Injected Global Header -->
+    <div id="app-header"></div>
+
+    <main class="settings-subpage-standalone">
+<div class="settings-subpage" id="subpage-business">
+        <div class="settings-subpage-header">
+            <a href="../settings.html" class="back-nav-settings"><i data-lucide="arrow-left"></i> Business Details</a>
+            <span class="profile-autosave-tag" id="biz-autosave-status"><i data-lucide="check"></i> Auto-saved</span>
+        </div>
+        <div class="settings-subpage-content profile-redesign-content">
+            
+            <!-- COMPLIANCE & LEGAL STATUS SUMMARY CARD -->
+            <div class="profile-stats-card">
+                <div class="stats-card-header">
+                    <div class="stats-card-status">
+                        <span class="status-pulse"></span>
+                        <span class="status-title">Tax & Legal Compliance</span>
+                    </div>
+                    <span class="stats-card-tag">GST Active &bull; Verified</span>
+                </div>
+                <div class="stats-card-grid">
+                    <div class="stats-item">
+                        <span class="stats-label">GSTIN Filing Status</span>
+                        <span class="stats-val accent"><i data-lucide="shield-check" style="width:14px; height:14px; display:inline;"></i> Verified</span>
+                    </div>
+                    <div class="stats-item">
+                        <span class="stats-label">B2B Tax Credit</span>
+                        <span class="stats-val code">Eligible (ITC)</span>
+                    </div>
+                    <div class="stats-item">
+                        <span class="stats-label">Trade License</span>
+                        <span class="stats-val">Active &bull; 2027</span>
+                    </div>
+                    <div class="stats-item">
+                        <span class="stats-label">Proof Documents</span>
+                        <span class="stats-val accent">2 Attached</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 1: ENTITY & CONTACT -->
+            <div class="profile-section-header" style="margin-top: 10px;">
+                <span class="profile-section-title"><i data-lucide="building-2"></i> Entity & Contact Info</span>
+                <span class="profile-section-badge required">Required Fields *</span>
+            </div>
+
+            <!-- FIELD 1: BUSINESS PHONE (REQUIRED) -->
+            <div class="settings-form-group profile-field-card">
+                <div class="profile-field-top">
+                    <label for="set-business-phone">Business Contact Phone <span class="req-star">*</span></label>
+                    <span class="field-badge req-pill" id="badge-biz-phone">Required</span>
+                </div>
+                <div class="icon-input-wrap" id="wrap-biz-phone">
+                    <i data-lucide="phone" class="input-icon"></i>
+                    <input type="tel" id="set-business-phone" class="settings-form-control icon-input" placeholder="+91 98765 43210">
+                    <i data-lucide="check-circle" class="status-icon valid-icon" id="valid-biz-phone"></i>
+                </div>
+                <span class="field-helper-text" id="helper-biz-phone">Official 10-digit line for tax invoices & supplier communications</span>
+            </div>
+
+            <!-- FIELD 2: REGISTER ADDRESS -->
+            <div class="settings-form-group profile-field-card">
+                <div class="profile-field-top">
+                    <label for="set-business-address">Registered Office Address</label>
+                    <span class="field-badge opt-pill">Optional</span>
+                </div>
+                <div class="icon-input-wrap">
+                    <i data-lucide="map-pin" class="input-icon"></i>
+                    <input type="text" id="set-business-address" class="settings-form-control icon-input" placeholder="123 Main Street, Market Area">
+                </div>
+                <span class="field-helper-text">Official registered office address shown on legal tax invoices</span>
+            </div>
+
+            <!-- SECTION 2: TAX COMPLIANCE & PROOF DOCUMENTS -->
+            <div class="profile-section-header" style="margin-top: 18px;">
+                <span class="profile-section-title"><i data-lucide="file-check-2"></i> Legal & Tax Registration</span>
+            </div>
+
+            <!-- FIELD 3: GST / TAX ID (WITH PROOF UPLOAD) -->
+            <div class="settings-form-group profile-field-card">
+                <div class="profile-field-top">
+                    <label for="set-business-gst">GSTIN / Tax ID</label>
+                    <span class="field-badge req-pill" id="badge-biz-gst">GSTIN Format</span>
+                </div>
+                <div class="icon-input-wrap" id="wrap-biz-gst">
+                    <i data-lucide="file-text" class="input-icon"></i>
+                    <input type="text" id="set-business-gst" class="settings-form-control icon-input" placeholder="07AAAAA1111A1Z1">
+                    <i data-lucide="check-circle" class="status-icon valid-icon" id="valid-biz-gst"></i>
+                </div>
+                <span class="field-helper-text" id="helper-biz-gst">15-digit GSTIN used for GST-compliant invoicing & tax filing</span>
+
+                <!-- PROOF UPLOAD AFFORDANCE: GST CERTIFICATE -->
+                <div class="doc-upload-pill">
+                    <div class="doc-upload-left">
+                        <i data-lucide="file-check" class="doc-icon"></i>
+                        <div class="doc-info">
+                            <span class="doc-title" id="text-gst-doc-name">GST_Certificate_2026.pdf</span>
+                            <span class="doc-status" id="text-gst-doc-status">&check; Certificate Uploaded (Verified)</span>
+                        </div>
+                    </div>
+                    <input type="file" id="file-gst-doc-input" accept=".pdf,image/*" style="display:none !important;">
+                    <button type="button" class="btn-doc-upload" onclick="document.getElementById('file-gst-doc-input').click()">
+                        <i data-lucide="upload-cloud"></i> Upload
+                    </button>
+                </div>
+            </div>
+
+            <!-- FIELD 4: SHOP REG / LICENSE NUMBER (WITH PROOF UPLOAD) -->
+            <div class="settings-form-group profile-field-card" style="margin-top: 10px;">
+                <div class="profile-field-top">
+                    <label for="set-business-reg">Shop Reg / Trade License Number</label>
+                    <span class="field-badge opt-pill">Optional</span>
+                </div>
+                <div class="icon-input-wrap">
+                    <i data-lucide="award" class="input-icon"></i>
+                    <input type="text" id="set-business-reg" class="settings-form-control icon-input" placeholder="REG/12345/2026 or FSSAI-2152000">
+                </div>
+                <span class="field-helper-text">FSSAI food registration or municipal trade license number</span>
+
+                <!-- PROOF UPLOAD AFFORDANCE: TRADE LICENSE -->
+                <div class="doc-upload-pill">
+                    <div class="doc-upload-left">
+                        <i data-lucide="shield-check" class="doc-icon"></i>
+                        <div class="doc-info">
+                            <span class="doc-title" id="text-license-doc-name">Trade_License_Copy.pdf</span>
+                            <span class="doc-status" id="text-license-doc-status">Proof Attached &bull; Ready for Audit</span>
+                        </div>
+                    </div>
+                    <input type="file" id="file-license-doc-input" accept=".pdf,image/*" style="display:none !important;">
+                    <button type="button" class="btn-doc-upload" onclick="document.getElementById('file-license-doc-input').click()">
+                        <i data-lucide="upload-cloud"></i> Upload
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </main>
+
+    <!-- Injected Global Bottom Navigation -->
+    <nav id="app-navigation"></nav>
+
+    <!-- Application Script -->
+    <script src="../../../js/storage.js"></script>
+    <script src="../../../js/utils.js"></script>
+    <script src="../../../js/notifications.js"></script>
+    <script src="../../../js/settings.js"></script>
+</body>
+</html>

@@ -80,12 +80,12 @@
    HERO CARD — TODAY'S SALES (Deep Navy-to-Teal Gradient Hero Card)
    ========================================================================== */
 .sales-hero-card.premium-fintech-hero {
-    background: linear-gradient(145deg, #0B1E2E 0%, #0F2D3C 50%, #09373D 100%);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: linear-gradient(135deg, #123A8F 0%, #1769D5 100%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 24px; /* 24px curvature */
     padding: 18px 18px 16px;
     margin-bottom: 24px;
-    box-shadow: 0 16px 36px -4px rgba(7, 30, 44, 0.35), 0 4px 14px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 10px 28px rgba(18, 58, 143, 0.25);
     display: flex;
     flex-direction: column;
     gap: 4px;
@@ -337,12 +337,16 @@
    SECTION TITLES (Uppercase Muted Gray)
    ========================================================================== */
 .dashboard-section-title {
-    font-size: 10.5px;
-    font-weight: 800;
-    color: var(--text-secondary);
+    font-size: 11px;
+    font-weight: 700;
+    color: #475569;
     text-transform: uppercase;
-    letter-spacing: 0.8px;
+    letter-spacing: .04em;
     margin-bottom: 12px;
+}
+
+[data-theme="dark"] .dashboard-section-title {
+    color: #94A3B8;
 }
 
 /* ==========================================================================
@@ -633,4 +637,357 @@
     font-size: 12px;
     font-weight: 500;
     margin: 0;
+}
+
+/* ==========================================================================
+   REDESIGNED COMPACT SALES HISTORY TRANSACTION CARDS
+   ========================================================================== */
+.sales-history-card-compact {
+    background: #FFFFFF;
+    border: 1px solid #D9E1EA;
+    border-radius: 14px;
+    padding: 10px 14px;
+    margin-bottom: 8px;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+[data-theme="dark"] .sales-history-card-compact {
+    background: #151C28;
+    border: 1px solid #263244;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+}
+
+.sales-history-card-compact:hover {
+    border-color: #CBD5E1;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+}
+
+[data-theme="dark"] .sales-history-card-compact:hover {
+    border-color: rgba(47, 143, 255, 0.35);
+}
+
+.sales-history-card-compact:active {
+    transform: scale(0.985);
+}
+
+/* Top Muted Meta Line: Invoice ID + Timestamp */
+.sales-card-meta-top {
+    font-size: 11px;
+    font-weight: 500;
+    color: #64748B;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    line-height: 1.2;
+}
+
+[data-theme="dark"] .sales-card-meta-top {
+    color: #94A3B8;
+}
+
+/* Primary Visual Row: Customer Name + Inline Status Pill (Left), Amount (Right) */
+.sales-card-primary-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 1px;
+}
+
+.sales-card-customer-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    flex: 1;
+}
+
+.sales-card-customer-name {
+    font-size: 15px;
+    font-weight: 750;
+    color: #111827;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    letter-spacing: -0.2px;
+}
+
+[data-theme="dark"] .sales-card-customer-name {
+    color: #F8FAFC;
+}
+
+/* Inline Status Badge */
+.sales-inline-status {
+    padding: 2px 7px;
+    border-radius: 6px;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    line-height: 1.2;
+    flex-shrink: 0;
+}
+
+.sales-inline-status.status-paid {
+    background: #DCFCE7;
+    color: #15803D;
+    border: 1px solid #BBF7D0;
+}
+
+.sales-inline-status.status-partial {
+    background: #FEF3C7;
+    color: #B45309;
+    border: 1px solid #FDE68A;
+}
+
+.sales-inline-status.status-due {
+    background: #FEE2E2;
+    color: #B91C1C;
+    border: 1px solid #FECACA;
+}
+
+[data-theme="dark"] .sales-inline-status.status-paid {
+    background: rgba(52, 211, 153, 0.15);
+    color: #34D399;
+    border-color: rgba(52, 211, 153, 0.3);
+}
+
+[data-theme="dark"] .sales-inline-status.status-partial {
+    background: rgba(251, 191, 36, 0.15);
+    color: #FBBF24;
+    border-color: rgba(251, 191, 36, 0.3);
+}
+
+[data-theme="dark"] .sales-inline-status.status-due {
+    background: rgba(248, 113, 113, 0.15);
+    color: #F87171;
+    border-color: rgba(248, 113, 113, 0.3);
+}
+
+.sales-card-amount {
+    font-size: 16px;
+    font-weight: 800;
+    color: #111827;
+    letter-spacing: -0.3px;
+    flex-shrink: 0;
+}
+
+[data-theme="dark"] .sales-card-amount {
+    color: #F8FAFC;
+}
+
+/* Row 3: Payment Method & Item Count Tag (Left) & Ghost View Bill (Right) */
+.sales-card-sub-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 3px;
+    padding-top: 4px;
+    border-top: 1px solid #F1F5F9;
+}
+
+[data-theme="dark"] .sales-card-sub-row {
+    border-top-color: #1E293B;
+}
+
+.sales-card-tag-group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: #475569;
+    font-weight: 500;
+}
+
+[data-theme="dark"] .sales-card-tag-group {
+    color: #94A3B8;
+}
+
+.sales-card-method-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: #475569;
+}
+
+[data-theme="dark"] .sales-card-method-tag {
+    color: #94A3B8;
+}
+
+.sales-card-method-tag svg {
+    width: 13px;
+    height: 13px;
+    stroke-width: 2.2px;
+    color: #087FF5;
+}
+
+[data-theme="dark"] .sales-card-method-tag svg {
+    color: #2F8FFF;
+}
+
+.sales-card-ghost-btn {
+    background: transparent;
+    border: none;
+    color: #087FF5;
+    font-size: 12px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    cursor: pointer;
+    padding: 2px 4px;
+    border-radius: 6px;
+    transition: background-color 0.15s ease;
+}
+
+[data-theme="dark"] .sales-card-ghost-btn {
+    color: #2F8FFF;
+}
+
+.sales-card-ghost-btn:hover {
+    background-color: #EAF3FF;
+}
+
+[data-theme="dark"] .sales-card-ghost-btn:hover {
+    background-color: rgba(47, 143, 255, 0.15);
+}
+
+.sales-card-ghost-btn svg {
+    width: 14px;
+    height: 14px;
+    stroke-width: 2.2px;
+}
+
+/* Repeated Consecutive Pattern Indicator / Group Card */
+.sales-repeat-group-card {
+    background: #FFFFFF;
+    border: 1px dashed #CBD5E1;
+    border-radius: 14px;
+    margin-bottom: 8px;
+    overflow: hidden;
+    transition: all 0.2s ease;
+}
+
+[data-theme="dark"] .sales-repeat-group-card {
+    background: #151C28;
+    border: 1px dashed #263244;
+}
+
+.sales-repeat-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 9px 14px;
+    cursor: pointer;
+    user-select: none;
+    background: #F8FAFC;
+    transition: background-color 0.15s ease;
+}
+
+[data-theme="dark"] .sales-repeat-header {
+    background: #1A2330;
+}
+
+.sales-repeat-header:hover {
+    background: #EAF3FF;
+}
+
+[data-theme="dark"] .sales-repeat-header:hover {
+    background: rgba(47, 143, 255, 0.15);
+}
+
+.sales-repeat-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+
+.sales-repeat-badge {
+    background: #087FF5;
+    color: #FFFFFF;
+    font-size: 10.5px;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 999px;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+}
+
+.sales-repeat-customer {
+    font-size: 13.5px;
+    font-weight: 750;
+    color: #111827;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+[data-theme="dark"] .sales-repeat-customer {
+    color: #F8FAFC;
+}
+
+.sales-repeat-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.sales-repeat-unit-price {
+    font-size: 13px;
+    font-weight: 700;
+    color: #475569;
+}
+
+[data-theme="dark"] .sales-repeat-unit-price {
+    color: #94A3B8;
+}
+
+.sales-repeat-toggle-btn {
+    background: transparent;
+    border: none;
+    color: #087FF5;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+[data-theme="dark"] .sales-repeat-toggle-btn {
+    color: #2F8FFF;
+}
+
+.sales-repeat-toggle-icon {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.2s ease;
+}
+
+.sales-repeat-group-card.open .sales-repeat-toggle-icon {
+    transform: rotate(180deg);
+}
+
+.sales-repeat-body {
+    padding: 8px 10px 4px;
+    display: none;
+    border-top: 1px dashed #E2E8F0;
+}
+
+[data-theme="dark"] .sales-repeat-body {
+    border-top-color: #263244;
+}
+
+.sales-repeat-group-card.open .sales-repeat-body {
+    display: block;
 }

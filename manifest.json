@@ -1,11 +1,11 @@
 {
-  "name": "Grocery Shop Management",
-  "short_name": "GroceryApp",
-  "description": "Mobile-First Grocery Store Credit, Sales & Stock Management Web App",
+  "name": "Cashly",
+  "short_name": "Cashly",
+  "description": "Sales, simplified.",
   "start_url": "index.html",
   "display": "standalone",
-  "background_color": "#f8fafc",
-  "theme_color": "#10b981",
+  "background_color": "#2563EB",
+  "theme_color": "#2563EB",
   "orientation": "portrait-primary",
   "icons": [
     {

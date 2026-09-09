@@ -31,6 +31,10 @@ function initSalesPage() {
     // Render sales history dashboard
     renderSalesHubDashboard();
 
+    // Auto update card on window storage changes or window focus
+    window.addEventListener('storage', () => renderSalesHubDashboard());
+    window.addEventListener('focus', () => renderSalesHubDashboard());
+
     // Bind sales history search
     const salesSearch = document.getElementById('sales-history-search');
     if (salesSearch) {
@@ -117,6 +121,51 @@ function renderSalesHubDashboard() {
     if (countEl) countEl.textContent = countVal;
     if (avgEl) avgEl.textContent = Utils.formatCurrency(avgVal);
 
+    // Calculate dynamic growth comparison vs yesterday
+    const yesterdayDate = new Date(today);
+    yesterdayDate.setDate(yesterdayDate.getDate() - 1);
+
+    const yesterdaySales = sales.filter(s => {
+        const saleDate = new Date(s.date || s.createdAt);
+        return saleDate >= yesterdayDate && saleDate < today;
+    });
+
+    const yesterdaySum = yesterdaySales.reduce((sum, s) => sum + (parseFloat(s.grandTotal !== undefined ? s.grandTotal : s.total) || 0), 0);
+
+    let growthText = '+0.0%';
+    let isNegative = false;
+
+    if (yesterdaySum === 0) {
+        if (totalSum > 0) {
+            growthText = '+100%';
+        } else {
+            growthText = '+0.0%';
+        }
+    } else {
+        const pct = ((totalSum - yesterdaySum) / yesterdaySum) * 100;
+        isNegative = pct < 0;
+        const sign = pct >= 0 ? '+' : '';
+        growthText = `${sign}${pct.toFixed(1)}%`;
+    }
+
+    const trendEl = document.getElementById('sales-hero-trend');
+    const trendTextEl = document.getElementById('sales-hero-trend-text');
+    const trendIconEl = document.getElementById('sales-hero-trend-icon');
+
+    if (trendEl && trendTextEl) {
+        trendTextEl.textContent = growthText;
+        if (isNegative) {
+            trendEl.classList.add('negative');
+            if (trendIconEl) trendIconEl.setAttribute('data-lucide', 'trending-down');
+        } else {
+            trendEl.classList.remove('negative');
+            if (trendIconEl) trendIconEl.setAttribute('data-lucide', 'trending-up');
+        }
+        if (typeof lucide !== 'undefined' && lucide.createIcons) {
+            lucide.createIcons();
+        }
+    }
+
     // Filter sales based on search keyword and status pill
     let filteredSales = [...sales];
 
@@ -131,8 +180,8 @@ function renderSalesHubDashboard() {
     // Keyword filter (invoice number, customer name, customer phone, product name, barcode)
     if (salesHistoryKeyword) {
         filteredSales = filteredSales.filter(s => {
-            const inv = (s.invoiceNumber || s.id || '').toLowerCase();
-            const cust = (s.customerName || '').toLowerCase();
+            const inv = String(s.invoiceNumber || s.id || '').toLowerCase();
+            const cust = String(s.customerName || '').toLowerCase();
             const phone = (s.customerPhone || '').replace(/[\s\-()]/g, '');
             const method = (s.paymentMethod || '').toLowerCase();
             const itemsMatch = s.items && s.items.some(it => 
@@ -218,80 +267,157 @@ function renderSalesHubDashboard() {
 
     let html = '';
 
+    // Helper to render single compact transaction card HTML
+    const renderCompactCard = (s) => {
+        const dateStr = Utils.formatDateTime(s.date || s.createdAt);
+        const invNum = s.invoiceNumber || `INV-${String(s.id || '').slice(-6).toUpperCase()}`;
+        const name = s.customerName || 'Walk-in Customer';
+        const method = s.paymentMethod || 'Cash';
+        const grandTotal = parseFloat(s.grandTotal !== undefined ? s.grandTotal : s.total) || 0;
+        const dueAmount = parseFloat(s.amountDue !== undefined ? s.amountDue : s.dueAmount) || 0;
+        const paidAmount = parseFloat(s.amountPaid !== undefined ? s.amountPaid : s.paymentAmount) || 0;
+        const itemQty = s.items ? s.items.reduce((sum, item) => sum + (parseFloat(item.quantity) || 1), 0) : 0;
+        
+        // Inline Status Pill
+        let statusBadge = '';
+        if (dueAmount <= 0.001) {
+            statusBadge = `<span class="sales-inline-status status-paid">PAID</span>`;
+        } else if (paidAmount > 0.001) {
+            statusBadge = `<span class="sales-inline-status status-partial">PARTIAL</span>`;
+        } else {
+            statusBadge = `<span class="sales-inline-status status-due">DUE</span>`;
+        }
+
+        // Method icon
+        let methodIcon = 'banknote';
+        const mLower = method.toLowerCase();
+        if (mLower.includes('upi')) methodIcon = 'qr-code';
+        else if (mLower.includes('card')) methodIcon = 'credit-card';
+        else if (mLower.includes('credit') || mLower.includes('udhar')) methodIcon = 'book-open';
+
+        let paymentTagText = method;
+        if (dueAmount > 0.001) {
+            if (paidAmount > 0.001) {
+                paymentTagText = `Paid ${Utils.formatCurrency(paidAmount)} &bull; Due ${Utils.formatCurrency(dueAmount)}`;
+            } else {
+                paymentTagText = `Due ${Utils.formatCurrency(dueAmount)}`;
+            }
+        }
+
+        return `
+            <div class="sales-history-card-compact card-hover-lift" data-id="${s.id}">
+                <!-- Top Muted Meta Line: Invoice ID + Timestamp -->
+                <div class="sales-card-meta-top">
+                    <span>${invNum}</span> &bull; <span>${dateStr}</span>
+                </div>
+
+                <!-- Primary Visual Row: Customer Name + Inline Status Pill (Left), Amount (Right) -->
+                <div class="sales-card-primary-row">
+                    <div class="sales-card-customer-wrap">
+                        <span class="sales-card-customer-name">${Utils.escapeHtml(name)}</span>
+                        ${statusBadge}
+                    </div>
+                    <span class="sales-card-amount">${Utils.formatCurrency(grandTotal)}</span>
+                </div>
+
+                <!-- Row 3: Payment Method & Item Count Tag (Left) & Ghost View Bill (Right) -->
+                <div class="sales-card-sub-row">
+                    <div class="sales-card-tag-group">
+                        <span class="sales-card-method-tag">
+                            <i data-lucide="${methodIcon}"></i> ${paymentTagText}
+                        </span>
+                        <span>&bull;</span>
+                        <span>${itemQty} item${itemQty !== 1 ? 's' : ''}</span>
+                    </div>
+                    <button type="button" class="sales-card-ghost-btn" data-id="${s.id}">
+                        View Bill <i data-lucide="chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+    };
+
+    // Helper to process sales within a group into cards, clustering 3+ consecutive identical transactions
+    const renderGroupSales = (groupSales) => {
+        let clusters = [];
+        let currentCluster = [];
+
+        groupSales.forEach(s => {
+            const name = s.customerName || 'Walk-in Customer';
+            const grandTotal = parseFloat(s.grandTotal !== undefined ? s.grandTotal : s.total) || 0;
+            const method = s.paymentMethod || 'Cash';
+
+            if (currentCluster.length === 0) {
+                currentCluster.push(s);
+            } else {
+                const prev = currentCluster[currentCluster.length - 1];
+                const prevName = prev.customerName || 'Walk-in Customer';
+                const prevTotal = parseFloat(prev.grandTotal !== undefined ? prev.grandTotal : prev.total) || 0;
+                const prevMethod = prev.paymentMethod || 'Cash';
+
+                if (prevName === name && Math.abs(prevTotal - grandTotal) < 0.01 && prevMethod === method) {
+                    currentCluster.push(s);
+                } else {
+                    clusters.push(currentCluster);
+                    currentCluster = [s];
+                }
+            }
+        });
+        if (currentCluster.length > 0) {
+            clusters.push(currentCluster);
+        }
+
+        let resultHtml = '';
+        clusters.forEach(cluster => {
+            if (cluster.length >= 3) {
+                const first = cluster[0];
+                const name = first.customerName || 'Walk-in Customer';
+                const grandTotal = parseFloat(first.grandTotal !== undefined ? first.grandTotal : first.total) || 0;
+                const groupId = 'group-repeat-' + Math.random().toString(36).substring(2, 9);
+
+                resultHtml += `
+                    <div class="sales-repeat-group-card" id="${groupId}">
+                        <div class="sales-repeat-header" onclick="document.getElementById('${groupId}').classList.toggle('open')">
+                            <div class="sales-repeat-left">
+                                <span class="sales-repeat-badge">&times;${cluster.length} similar</span>
+                                <span class="sales-repeat-customer">${Utils.escapeHtml(name)}</span>
+                            </div>
+                            <div class="sales-repeat-right">
+                                <span class="sales-repeat-unit-price">${Utils.formatCurrency(grandTotal)} each</span>
+                                <button type="button" class="sales-repeat-toggle-btn" aria-label="Toggle group">
+                                    <i data-lucide="chevron-down" class="sales-repeat-toggle-icon"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="sales-repeat-body">
+                            ${cluster.map(s => renderCompactCard(s)).join('')}
+                        </div>
+                    </div>
+                `;
+            } else {
+                resultHtml += cluster.map(s => renderCompactCard(s)).join('');
+            }
+        });
+
+        return resultHtml;
+    };
+
+    html = '';
+
     for (const [groupName, groupSales] of Object.entries(groups)) {
         if (groupSales.length === 0) continue;
 
         html += `
-            <div style="font-size: 0.72rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin: 18px 0 10px 4px; letter-spacing: 0.8px;">${groupName} (${groupSales.length})</div>
+            <div style="font-size: 0.72rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin: 16px 0 8px 4px; letter-spacing: 0.8px;">${groupName} (${groupSales.length})</div>
         `;
-
-        html += groupSales.map(s => {
-            const dateStr = Utils.formatDateTime(s.date || s.createdAt);
-            const invNum = s.invoiceNumber || `INV-${s.id.slice(-6).toUpperCase()}`;
-            const name = s.customerName || 'Walk-in Customer';
-            const method = s.paymentMethod || 'Cash';
-            const grandTotal = parseFloat(s.grandTotal !== undefined ? s.grandTotal : s.total) || 0;
-            const dueAmount = parseFloat(s.amountDue !== undefined ? s.amountDue : s.dueAmount) || 0;
-            const paidAmount = parseFloat(s.amountPaid !== undefined ? s.amountPaid : s.paymentAmount) || 0;
-            const itemQty = s.items ? s.items.reduce((sum, item) => sum + (parseFloat(item.quantity) || 1), 0) : 0;
-            
-            // Status bar & badge calculation
-            let statusBadge = '';
-            if (dueAmount <= 0.001) {
-                statusBadge = `<span style="padding: 3px 8px; background: rgba(34, 197, 94, 0.12); color: #166534; border: 1px solid rgba(34, 197, 94, 0.25); border-radius: 6px; font-size: 10px; font-weight: 900; letter-spacing: 0.5px;">PAID</span>`;
-            } else if (paidAmount > 0.001) {
-                statusBadge = `<span style="padding: 3px 8px; background: rgba(245, 158, 11, 0.12); color: #92400E; border: 1px solid rgba(245, 158, 11, 0.25); border-radius: 6px; font-size: 10px; font-weight: 900; letter-spacing: 0.5px;">PARTIAL (DUE: ${Utils.formatCurrency(dueAmount)})</span>`;
-            } else {
-                statusBadge = `<span style="padding: 3px 8px; background: rgba(239, 68, 68, 0.12); color: #991B1B; border: 1px solid rgba(239, 68, 68, 0.25); border-radius: 6px; font-size: 10px; font-weight: 900; letter-spacing: 0.5px;">DUE: ${Utils.formatCurrency(dueAmount)}</span>`;
-            }
-
-            // Method icon selection
-            let methodIcon = 'banknote';
-            const mLower = method.toLowerCase();
-            if (mLower.includes('upi')) methodIcon = 'qr-code';
-            else if (mLower.includes('card')) methodIcon = 'credit-card';
-            else if (mLower.includes('credit') || mLower.includes('udhar')) methodIcon = 'book-open';
-
-            return `
-                <div class="card card-hover-lift" style="padding: 14px 16px; margin-bottom: 10px; border-radius: 16px; border: 1px solid var(--border); background: var(--surface); box-shadow: var(--shadow-2xs); cursor: pointer; transition: all 0.2s ease;" data-id="${s.id}">
-                    <!-- Top Row: Invoice ID Tag & Status Pill -->
-                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
-                        <span style="font-family: monospace; font-size: 11px; font-weight: 800; background: var(--surface-sec); color: var(--text-muted); border: 1px solid var(--border); padding: 2px 8px; border-radius: 6px;">${invNum}</span>
-                        ${statusBadge}
-                    </div>
-
-                    <!-- Middle Row: Timestamp & Customer Name -->
-                    <div style="margin-bottom: 10px;">
-                        <div style="font-size: 0.95rem; font-weight: 800; color: var(--text); line-height: 1.3;">${Utils.escapeHtml(name)}</div>
-                        <div style="font-size: 0.75rem; font-weight: 600; color: var(--text-muted); margin-top: 2px;">${dateStr}</div>
-                    </div>
-
-                    <!-- Bottom Row: Payment Method Tag & Item Count Left, Amount & View Bill Right -->
-                    <div style="display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--border-light, #F1F5F9); pt-2.5; padding-top: 10px;">
-                        <div style="display: flex; align-items: center; gap: 6px; font-size: 0.75rem; font-weight: 700; color: var(--text-muted);">
-                            <span style="display: flex; align-items: center; gap: 4px; background: var(--surface-sec); border: 1px solid var(--border); padding: 2px 7px; border-radius: 6px; font-size: 11px;">
-                                <i data-lucide="${methodIcon}" style="width: 12px; height: 12px; color: var(--accent);"></i> ${method}
-                            </span>
-                            <span>&middot;</span>
-                            <span>${itemQty} item${itemQty !== 1 ? 's' : ''}</span>
-                        </div>
-
-                        <div style="display: flex; align-items: center; gap: 10px;">
-                            <span style="font-size: 1.05rem; font-weight: 900; color: var(--text); font-family: monospace;">${Utils.formatCurrency(grandTotal)}</span>
-                            <button type="button" class="btn btn-outline btn-sm btn-view-historical-bill" data-id="${s.id}" style="border-radius: 8px; padding: 3px 8px; font-size: 11px; font-weight: 700;">
-                                View Bill
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }).join('');
+        html += renderGroupSales(groupSales);
     }
 
-    // Append Load More button if total items exceed limit
+    // Auto-Load on Scroll Sentinel & Fallback Load More Button
     if (totalCount > salesHistoryLimit) {
         html += `
-            <div style="text-align: center; margin: 16px 0 24px;">
+            <div id="sales-scroll-sentinel" style="height: 10px; margin-top: 10px;"></div>
+            <div style="text-align: center; margin: 12px 0 24px;">
                 <button type="button" class="btn btn-outline" id="btn-load-more-sales" style="border-radius: 12px; font-weight: 800; font-size: 0.8rem; padding: 8px 20px;">
                     Load More Transactions (${totalCount - salesHistoryLimit} remaining)
                 </button>
@@ -301,17 +427,34 @@ function renderSalesHubDashboard() {
 
     listFeed.innerHTML = html;
 
-    // Bind Load More button
+    // Setup Infinite Scroll via IntersectionObserver
+    if ('IntersectionObserver' in window && totalCount > salesHistoryLimit) {
+        const sentinel = document.getElementById('sales-scroll-sentinel');
+        if (sentinel) {
+            if (window.salesInfiniteObserver) {
+                window.salesInfiniteObserver.disconnect();
+            }
+            window.salesInfiniteObserver = new IntersectionObserver((entries) => {
+                if (entries[0].isIntersecting) {
+                    salesHistoryLimit += 15;
+                    renderSalesHubDashboard();
+                }
+            }, { rootMargin: '150px' });
+            window.salesInfiniteObserver.observe(sentinel);
+        }
+    }
+
+    // Bind Load More fallback button
     const loadMoreBtn = document.getElementById('btn-load-more-sales');
     if (loadMoreBtn) {
         loadMoreBtn.addEventListener('click', () => {
-            salesHistoryLimit += 10;
+            salesHistoryLimit += 15;
             renderSalesHubDashboard();
         });
     }
 
-    // Bind card tap & View Bill buttons
-    listFeed.querySelectorAll('.card-hover-lift').forEach(card => {
+    // Bind card tap & View Bill buttons (whole card is tappable)
+    listFeed.querySelectorAll('.sales-history-card-compact').forEach(card => {
         card.addEventListener('click', (e) => {
             const saleId = card.dataset.id;
             if (typeof Utils !== 'undefined' && typeof Utils.showBillModal === 'function') {
@@ -1228,7 +1371,7 @@ function renderSaleSuccessScreen(sale) {
         const newBtn = viewBillBtn.cloneNode(true);
         viewBillBtn.parentNode.replaceChild(newBtn, viewBillBtn);
         newBtn.addEventListener('click', () => {
-            Utils.showBillModal(sale);
+            Utils.showBillModal(sale, 'digital-super');
         });
     }
 
@@ -1236,7 +1379,7 @@ function renderSaleSuccessScreen(sale) {
         const newBtn = printBtn.cloneNode(true);
         printBtn.parentNode.replaceChild(newBtn, printBtn);
         newBtn.addEventListener('click', () => {
-            Utils.printBill(sale);
+            Utils.printBill(sale, 'digital-super');
         });
     }
 
@@ -1244,7 +1387,7 @@ function renderSaleSuccessScreen(sale) {
         const newBtn = pdfBtn.cloneNode(true);
         pdfBtn.parentNode.replaceChild(newBtn, pdfBtn);
         newBtn.addEventListener('click', () => {
-            Utils.downloadBillPDF(sale);
+            Utils.downloadBillPDF(sale, 'digital-super');
         });
     }
 

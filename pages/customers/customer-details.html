@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script>window.BASE_PATH = '../../';</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Greenway Groceries - Customer Profile</title>
@@ -8,10 +9,11 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
     <script src="https://unpkg.com/lucide@latest"></script>
     <!-- Base Styles -->
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/customers.css">
-    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/customers.css">
+    <link rel="stylesheet" href="../../css/responsive.css">
     <meta name="theme-color" content="#07090d">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232563EB' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><path d='M21 12V7H5a2 2 0 0 1 0-4h14v4'/><path d='M3 5v14a2 2 0 0 0 2 2h16v-5'/><path d='M18 12a2 2 0 0 0 0 4h4v-4Z'/></svg>">
 </head>
 <body data-page="customer-details">
 
@@ -21,7 +23,7 @@
     <main class="container" style="padding-bottom: 40px;">
         <!-- Back Navigation Link -->
         <div style="margin-bottom: 14px;">
-            <a href="customers.html" class="back-nav-link">
+            <a href="../../pages/customers/customers.html" class="back-nav-link">
                 <i data-lucide="arrow-left" style="width: 14px; height: 14px; stroke-width: 2.5px;"></i> Customers
             </a>
         </div>
@@ -84,7 +86,7 @@
                             
                             <!-- Secondary Equal-width Action Buttons -->
                             <div class="secondary-actions-grid">
-                                <a href="sales.html?openNewSale=true" class="btn-glass-secondary" id="btn-new-sale-link">
+                                <a href="../../pages/sales/sales.html?openNewSale=true" class="btn-glass-secondary" id="btn-new-sale-link">
                                     <i data-lucide="plus" style="width: 15px; height: 15px;"></i> New Sale
                                 </a>
                                 <button class="btn-glass-secondary" id="btn-send-reminder">
@@ -430,9 +432,10 @@
     </div>
 
     <!-- Application Scripts -->
-    <script src="js/storage.js"></script>
-    <script src="js/utils.js"></script>
-    <script src="js/notifications.js"></script>
-    <script src="js/customers.js"></script>
+    <script src="../../js/storage.js"></script>
+    <script src="../../js/utils.js"></script>
+    <script src="../../js/notifications.js"></script>
+    <script src="../../js/customers.js"></script>
 </body>
 </html>
+

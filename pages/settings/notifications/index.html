@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Notification Settings - Cashly</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Application Styles -->
+    <link rel="stylesheet" href="../../../css/style.css">
+    <link rel="stylesheet" href="../../../css/settings.css">
+</head>
+<body data-page="settings-notifications">
+
+    <!-- Injected Global Header -->
+    <div id="app-header"></div>
+
+    <main class="settings-subpage-standalone">
+<div class="settings-subpage" id="subpage-notifications">
+        <div class="settings-subpage-header">
+            <a href="../settings.html" class="back-nav-settings"><i data-lucide="arrow-left"></i></a>
+            <span class="settings-subpage-title">Notification Settings</span>
+        </div>
+        <div class="settings-subpage-content">
+            <div class="settings-group-title">Shop Inventory Alerts</div>
+            <div class="settings-rows-list" style="margin-bottom: 24px;">
+                <div class="switch-row">
+                    <div class="switch-row-left">
+                        <span class="switch-row-title">Low Stock</span>
+                        <span class="switch-row-desc">Notify when products reach reorder level</span>
+                    </div>
+                    <label class="settings-switch">
+                        <input type="checkbox" id="notif-opt-low-stock">
+                        <span class="settings-switch-slider"></span>
+                    </label>
+                </div>
+                <div class="switch-row">
+                    <div class="switch-row-left">
+                        <span class="switch-row-title">Out of Stock</span>
+                        <span class="switch-row-desc">Critical alert when products run out</span>
+                    </div>
+                    <label class="settings-switch">
+                        <input type="checkbox" id="notif-opt-out-stock">
+                        <span class="settings-switch-slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="settings-group-title">Customer Alerts</div>
+            <div class="settings-rows-list" style="margin-bottom: 24px;">
+                <div class="switch-row">
+                    <div class="switch-row-left">
+                        <span class="switch-row-title">Customer Due</span>
+                        <span class="switch-row-desc">Notify when credit sales are registered</span>
+                    </div>
+                    <label class="settings-switch">
+                        <input type="checkbox" id="notif-opt-due">
+                        <span class="settings-switch-slider"></span>
+                    </label>
+                </div>
+                <div class="switch-row">
+                    <div class="switch-row-left">
+                        <span class="switch-row-title">Overdue Balances</span>
+                        <span class="switch-row-desc">Notify when payment due date has passed</span>
+                    </div>
+                    <label class="settings-switch">
+                        <input type="checkbox" id="notif-opt-overdue">
+                        <span class="settings-switch-slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="settings-group-title">Transactions</div>
+            <div class="settings-rows-list" style="margin-bottom: 24px;">
+                <div class="switch-row">
+                    <div class="switch-row-left">
+                        <span class="switch-row-title">Payment Received</span>
+                        <span class="switch-row-desc">Notify when payments are recorded</span>
+                    </div>
+                    <label class="settings-switch">
+                        <input type="checkbox" id="notif-opt-payment">
+                        <span class="settings-switch-slider"></span>
+                    </label>
+                </div>
+                <div class="switch-row">
+                    <div class="switch-row-left">
+                        <span class="switch-row-title">Sale Completed</span>
+                        <span class="switch-row-desc">Notify upon finalized invoice generation</span>
+                    </div>
+                    <label class="settings-switch">
+                        <input type="checkbox" id="notif-opt-sale">
+                        <span class="settings-switch-slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="settings-group-title">Reports</div>
+            <div class="settings-rows-list" style="margin-bottom: 24px;">
+                <div class="switch-row">
+                    <div class="switch-row-left">
+                        <span class="switch-row-title">Daily Sales Summary</span>
+                        <span class="switch-row-desc">Daily calculation of revenue and collection</span>
+                    </div>
+                    <label class="settings-switch">
+                        <input type="checkbox" id="notif-opt-summary">
+                        <span class="settings-switch-slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    </main>
+
+    <!-- Injected Global Bottom Navigation -->
+    <nav id="app-navigation"></nav>
+
+    <!-- Application Script -->
+    <script src="../../../js/storage.js"></script>
+    <script src="../../../js/utils.js"></script>
+    <script src="../../../js/notifications.js"></script>
+    <script src="../../../js/settings.js"></script>
+</body>
+</html>

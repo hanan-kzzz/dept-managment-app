@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script>window.BASE_PATH = '../../';</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Greenway Groceries - Inventory</title>
@@ -14,7 +15,7 @@
           } catch(e) {}
         }
         if (!t || t === 'system') {
-          t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'dark';
+          t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
         }
         document.documentElement.setAttribute('data-theme', t);
         if (t === 'dark') document.documentElement.classList.add('dark');
@@ -25,12 +26,13 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
     <script src="https://unpkg.com/lucide@latest"></script>
     <!-- Base Styles -->
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/settings.css">
-    <link rel="stylesheet" href="css/stock.css">
-    <link rel="stylesheet" href="css/market-prices.css">
-    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/settings.css">
+    <link rel="stylesheet" href="../../css/stock.css">
+    <link rel="stylesheet" href="../../css/market-prices.css">
+    <link rel="stylesheet" href="../../css/responsive.css">
     <meta name="theme-color" content="#07090d">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232563EB' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><path d='M21 12V7H5a2 2 0 0 1 0-4h14v4'/><path d='M3 5v14a2 2 0 0 0 2 2h16v-5'/><path d='M18 12a2 2 0 0 0 0 4h4v-4Z'/></svg>">
 </head>
 <body data-page="stock">
 
@@ -39,7 +41,7 @@
 
     <main class="stock-container">
         <!-- Back Navigation Header -->
-        <a href="index.html" class="back-nav-settings">
+        <a href="../../index.html" class="back-nav-settings">
             <i data-lucide="arrow-left"></i> Dashboard
         </a>
         
@@ -166,7 +168,7 @@
                         </div>
 
                         <!-- Print Barcodes Link -->
-                        <a href="barcode-management.html" class="settings-row" id="row-link-print-barcodes" style="text-decoration: none; color: inherit;" title="Generate, view and print product barcodes">
+                        <a href="../../pages/inventory/barcode-management.html" class="settings-row" id="row-link-print-barcodes" style="text-decoration: none; color: inherit;" title="Generate, view and print product barcodes">
                             <div class="settings-row-left">
                                 <div class="settings-row-icon icon-stock-barcode">
                                     <i data-lucide="printer"></i>
@@ -182,7 +184,7 @@
                         </a>
 
                         <!-- Market Prices Reference Page Link -->
-                        <a href="market-prices.html" class="settings-row" id="row-link-market-prices" style="text-decoration: none; color: inherit;" title="Browse Government Market Price References">
+                        <a href="../../pages/inventory/market-prices.html" class="settings-row" id="row-link-market-prices" style="text-decoration: none; color: inherit;" title="Browse Government Market Price References">
                             <div class="settings-row-left">
                                 <div class="settings-row-icon icon-stock-market">
                                     <i data-lucide="scale"></i>
@@ -681,12 +683,13 @@
     <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 
     <!-- Application Scripts -->
-    <script src="js/storage.js"></script>
-    <script src="js/utils.js"></script>
-    <script src="js/barcode.js"></script>
-    <script src="js/scanner.js"></script>
-    <script src="js/marketPriceService.js"></script>
-    <script src="js/notifications.js"></script>
-    <script src="js/stock.js"></script>
+    <script src="../../js/storage.js"></script>
+    <script src="../../js/utils.js"></script>
+    <script src="../../js/barcode.js"></script>
+    <script src="../../js/scanner.js"></script>
+    <script src="../../js/marketPriceService.js"></script>
+    <script src="../../js/notifications.js"></script>
+    <script src="../../js/stock.js"></script>
 </body>
 </html>
+

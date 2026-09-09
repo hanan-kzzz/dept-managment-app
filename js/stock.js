@@ -1770,7 +1770,7 @@ function initProductDetailsPage() {
     activeProductId = params.get('id');
 
     if (!activeProductId) {
-        window.location.href = 'stock.html';
+        window.location.href = (window.BASE_PATH || '') + `pages/inventory/stock.html`;
         return;
     }
 
@@ -1792,7 +1792,7 @@ function loadProductProfileDetails() {
     const product = Storage.getProduct(activeProductId);
     if (!product) {
         Utils.showToast("Product not found", "error");
-        setTimeout(() => { window.location.href = 'stock.html'; }, 1500);
+        setTimeout(() => { window.location.href = (window.BASE_PATH || '') + `pages/inventory/stock.html`; }, 1500);
         return;
     }
 
@@ -1884,8 +1884,12 @@ function loadProductProfileDetails() {
     if (typeof lucide !== 'undefined') lucide.createIcons();
 
     // Render Smart Stock & Market Reference
-    renderSmartStockDetails(product);
-    renderMarketPriceDetails(product);
+    try {
+        if (typeof renderSmartStockDetails === 'function') renderSmartStockDetails(product);
+        if (typeof renderMarketPriceDetails === 'function') renderMarketPriceDetails(product);
+    } catch (e) {
+        console.error("Missing render functions for smart stock / market price.", e);
+    }
 
     // Render stock ledger logs
     renderStockLedgerLogs(product.stockHistory || []);
@@ -1999,21 +2003,29 @@ function setupProductDetailsEventListeners() {
                     </div>
                 `;
                 document.body.appendChild(showBarcodeModal);
-
-                document.getElementById('modal-show-barcode-close')?.addEventListener('click', () => closeModal(showBarcodeModal));
-                document.getElementById('btn-download-barcode-png')?.addEventListener('click', () => {
-                    const p = Storage.getProduct(activeProductId);
-                    if (p) BarcodeService.downloadBarcode(p, 'png');
-                });
-                document.getElementById('btn-download-barcode-svg')?.addEventListener('click', () => {
-                    const p = Storage.getProduct(activeProductId);
-                    if (p) BarcodeService.downloadBarcode(p, 'svg');
-                });
-                document.getElementById('btn-print-barcode-label')?.addEventListener('click', () => {
-                    const p = Storage.getProduct(activeProductId);
-                    if (p) BarcodeService.printBarcode(p);
-                });
             }
+
+            // Always bind handlers (using onclick to prevent duplicate bindings on multiple clicks)
+            const closeBtn = document.getElementById('modal-show-barcode-close');
+            if (closeBtn) closeBtn.onclick = () => closeModal(showBarcodeModal);
+            
+            const btnPng = document.getElementById('btn-download-barcode-png');
+            if (btnPng) btnPng.onclick = () => {
+                const p = Storage.getProduct(activeProductId);
+                if (p) BarcodeService.downloadBarcode(p, 'png');
+            };
+            
+            const btnSvg = document.getElementById('btn-download-barcode-svg');
+            if (btnSvg) btnSvg.onclick = () => {
+                const p = Storage.getProduct(activeProductId);
+                if (p) BarcodeService.downloadBarcode(p, 'svg');
+            };
+            
+            const btnPrint = document.getElementById('btn-print-barcode-label');
+            if (btnPrint) btnPrint.onclick = () => {
+                const p = Storage.getProduct(activeProductId);
+                if (p) BarcodeService.printBarcode(p);
+            };
 
             const nameEl = document.getElementById('barcode-modal-prod-name');
             const metaEl = document.getElementById('barcode-modal-prod-meta');
@@ -2072,7 +2084,7 @@ function handleDeleteProductAction(prodId) {
         () => {
             Storage.deleteProduct(targetId);
             Utils.showToast("Product deleted successfully", "success");
-            setTimeout(() => { window.location.href = 'stock.html'; }, 800);
+            setTimeout(() => { window.location.href = (window.BASE_PATH || '') + `pages/inventory/stock.html`; }, 800);
         }
     );
 }

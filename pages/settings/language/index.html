@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Language Settings - Cashly</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Application Styles -->
+    <link rel="stylesheet" href="../../../css/style.css">
+    <link rel="stylesheet" href="../../../css/settings.css">
+</head>
+<body data-page="settings-language">
+
+    <!-- Injected Global Header -->
+    <div id="app-header"></div>
+
+    <main class="settings-subpage-standalone">
+<div class="settings-subpage" id="subpage-language">
+        <div class="settings-subpage-header">
+            <a href="../settings.html" class="back-nav-settings"><i data-lucide="arrow-left"></i></a>
+            <span class="settings-subpage-title">Language</span>
+        </div>
+        <div class="settings-subpage-content">
+            <div class="settings-group-title">App Language</div>
+            <div class="settings-rows-list" style="margin-bottom: 24px;">
+                <div class="radio-row" data-lang-val="English" id="lang-opt-en">
+                    <span class="radio-label">English</span>
+                    <span class="radio-check"><i data-lucide="check"></i></span>
+                </div>
+                <div class="radio-row" data-lang-val="Hindi" id="lang-opt-hi">
+                    <span class="radio-label">Hindi (हिंदी)</span>
+                    <span class="radio-check"><i data-lucide="check"></i></span>
+                </div>
+                <div class="radio-row" data-lang-val="Arabic" id="lang-opt-ar">
+                    <span class="radio-label">Arabic (العربية)</span>
+                    <span class="radio-check"><i data-lucide="check"></i></span>
+                </div>
+                <div class="radio-row" data-lang-val="Spanish" id="lang-opt-es">
+                    <span class="radio-label">Spanish (Español)</span>
+                    <span class="radio-check"><i data-lucide="check"></i></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    </main>
+
+    <!-- Injected Global Bottom Navigation -->
+    <nav id="app-navigation"></nav>
+
+    <!-- Application Script -->
+    <script src="../../../js/storage.js"></script>
+    <script src="../../../js/utils.js"></script>
+    <script src="../../../js/notifications.js"></script>
+    <script src="../../../js/settings.js"></script>
+</body>
+</html>

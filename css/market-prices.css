@@ -24,8 +24,13 @@
 
 .market-header-subtitle {
     font-size: 0.82rem;
-    color: var(--text-muted);
+    font-weight: 500;
+    color: #475569;
     margin: 0;
+}
+
+[data-theme="dark"] .market-header-subtitle {
+    color: #94A3B8;
 }
 
 .market-controls-bar {
@@ -63,7 +68,7 @@
     left: 12px;
     top: 50%;
     transform: translateY(-50%);
-    color: var(--text-muted);
+    color: #64748B;
     pointer-events: none;
     display: flex;
     align-items: center;
@@ -76,7 +81,7 @@
     transform: translateY(-50%);
     background: none;
     border: none;
-    color: var(--text-muted);
+    color: #64748B;
     cursor: pointer;
     padding: 4px;
     display: none;
@@ -167,38 +172,47 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 0.75rem;
-    color: var(--text-muted);
-    background: var(--surface-card, var(--surface));
+    font-size: 0.76rem;
+    font-weight: 600;
+    color: #334155;
+    background: var(--surface);
     border: 1px solid var(--border);
-    padding: 8px 12px;
+    padding: 10px 14px;
     border-radius: var(--radius-sm);
     margin-bottom: 16px;
     flex-wrap: wrap;
     gap: 8px;
 }
 
+[data-theme="dark"] .market-status-bar {
+    color: #CBD5E1;
+}
+
 .market-status-badge {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
+    gap: 6px;
     font-weight: 700;
-    color: var(--accent);
+    color: var(--primary, #087FF5);
 }
 
 .market-status-badge.cached {
-    color: var(--text-muted);
+    color: #64748B;
+}
+
+[data-theme="dark"] .market-status-badge.cached {
+    color: #94A3B8;
 }
 
 .market-status-dot {
-    width: 6px;
-    height: 6px;
+    width: 7px;
+    height: 7px;
     border-radius: 50%;
-    background-color: var(--accent);
+    background-color: var(--primary, #087FF5);
 }
 
 .market-status-dot.cached {
-    background-color: var(--text-muted);
+    background-color: #64748B;
 }
 
 /* Compact Cards Grid */
@@ -256,10 +270,14 @@
 .market-card-category {
     font-size: 0.68rem;
     font-weight: 700;
-    color: var(--text-muted);
+    color: #475569;
     text-transform: uppercase;
     letter-spacing: 0.4px;
     margin-top: 2px;
+}
+
+[data-theme="dark"] .market-card-category {
+    color: #94A3B8;
 }
 
 .market-card-price-wrap {
@@ -276,68 +294,168 @@
 .market-card-unit {
     font-size: 0.78rem;
     font-weight: 700;
-    color: var(--text-muted);
+    color: #475569;
+}
+
+[data-theme="dark"] .market-card-unit {
+    color: #94A3B8;
 }
 
 .market-card-badge {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
     font-size: 0.65rem;
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.4px;
-    padding: 2px 6px;
-    border-radius: 4px;
-    background: var(--border-light, rgba(0,0,0,0.05));
-    color: var(--text-muted);
+    padding: 3px 8px;
+    border-radius: 6px;
+    background: #EAF3FF;
+    color: #0369A1;
+    border: 1px solid rgba(8, 127, 245, 0.2);
+}
+
+[data-theme="dark"] .market-card-badge {
+    background: rgba(47, 143, 255, 0.15);
+    color: #60A5FA;
+    border-color: rgba(47, 143, 255, 0.3);
 }
 
 .market-card-footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 0.7rem;
-    color: var(--text-muted);
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #475569;
     border-top: 1px dashed var(--border);
     padding-top: 8px;
     margin-top: 6px;
+}
+
+[data-theme="dark"] .market-card-footer {
+    color: #94A3B8;
 }
 
 .market-card-change {
     font-weight: 700;
     display: inline-flex;
     align-items: center;
-    gap: 2px;
+    gap: 3px;
+    font-size: 0.72rem;
 }
 
 .market-card-change.up {
-    color: var(--danger);
+    color: #DC2626;
 }
 
 .market-card-change.down {
-    color: var(--success);
+    color: #15803D;
 }
 
 .market-card-change.neutral {
-    color: var(--text-muted);
+    color: #475569;
+}
+
+[data-theme="dark"] .market-card-change.up {
+    color: #F87171;
+}
+
+[data-theme="dark"] .market-card-change.down {
+    color: #4ADE80;
+}
+
+[data-theme="dark"] .market-card-change.neutral {
+    color: #94A3B8;
 }
 
 /* Disclaimer Banner */
 .market-disclaimer-box {
-    background: var(--surface-card, var(--surface));
-    border: 1px solid var(--border);
+    background: #EAF3FF;
+    border: 1px solid rgba(8, 127, 245, 0.22);
     border-radius: var(--radius-sm);
-    padding: 12px;
-    font-size: 0.75rem;
-    color: var(--text-muted);
-    line-height: 1.4;
+    padding: 12px 14px;
+    font-size: 0.78rem;
+    color: #1E293B;
+    line-height: 1.45;
     display: flex;
     align-items: flex-start;
-    gap: 8px;
+    gap: 10px;
     margin-top: 20px;
     margin-bottom: 24px;
 }
 
+.market-disclaimer-box i {
+    color: #087FF5 !important;
+}
+
+.market-disclaimer-box strong {
+    color: #0F172A;
+}
+
+[data-theme="dark"] .market-disclaimer-box {
+    background: rgba(30, 41, 59, 0.7);
+    border-color: rgba(59, 130, 246, 0.25);
+    color: #E2E8F0;
+}
+
+[data-theme="dark"] .market-disclaimer-box i {
+    color: #60A5FA !important;
+}
+
+[data-theme="dark"] .market-disclaimer-box strong {
+    color: #F8FAFC;
+}
+
 /* Detail Modal Styles */
+:root {
+    --chart-text-color: #334155;
+}
+
+[data-theme="dark"] {
+    --chart-text-color: #CBD5E1;
+}
+
+/* Prevent background scroll when modal is active */
+body.modal-open {
+    overflow: hidden !important;
+    touch-action: none;
+}
+
+/* Red Cross Close Button for Modal Header */
+#modal-comm-close,
+.modal-header .modal-close {
+    color: #EF4444 !important;
+    background-color: rgba(239, 68, 68, 0.12) !important;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+    border: none;
+    cursor: pointer;
+}
+
+#modal-comm-close:hover,
+.modal-header .modal-close:hover {
+    color: #DC2626 !important;
+    background-color: rgba(239, 68, 68, 0.22) !important;
+    transform: scale(1.08);
+}
+
+#modal-comm-close svg,
+.modal-header .modal-close svg {
+    stroke: #EF4444 !important;
+    stroke-width: 2.5px;
+}
+
+#modal-comm-close:hover svg,
+.modal-header .modal-close:hover svg {
+    stroke: #DC2626 !important;
+}
+
 .commodity-detail-head {
     display: flex;
     justify-content: space-between;
@@ -349,6 +467,17 @@
     font-size: 1.75rem;
     font-weight: 800;
     color: var(--text);
+}
+
+.commodity-vs-snapshot {
+    font-size: 0.68rem;
+    font-weight: 600;
+    color: #475569;
+    margin-top: 2px;
+}
+
+[data-theme="dark"] .commodity-vs-snapshot {
+    color: #94A3B8;
 }
 
 .commodity-meta-grid {
@@ -368,10 +497,15 @@
 }
 
 .commodity-meta-label {
-    font-size: 0.65rem;
+    font-size: 0.68rem;
     font-weight: 800;
-    color: var(--text-muted);
+    color: #334155;
     text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+[data-theme="dark"] .commodity-meta-label {
+    color: #94A3B8;
 }
 
 .commodity-meta-value {
@@ -400,8 +534,13 @@
 .market-history-title {
     font-size: 0.75rem;
     font-weight: 800;
-    color: var(--text-muted);
+    color: #1E293B;
     text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+[data-theme="dark"] .market-history-title {
+    color: #CBD5E1;
 }
 
 .market-range-tabs {
@@ -410,19 +549,25 @@
 }
 
 .market-range-tab {
-    padding: 3px 8px;
-    border-radius: 4px;
-    border: 1px solid var(--border);
+    padding: 4px 10px;
+    border-radius: 6px;
+    border: 1px solid #CBD5E1;
     background: var(--surface);
-    color: var(--text-muted);
-    font-size: 0.7rem;
+    color: #1E293B;
+    font-size: 0.72rem;
     font-weight: 700;
     cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+[data-theme="dark"] .market-range-tab {
+    color: #CBD5E1;
+    border-color: #334155;
 }
 
 .market-range-tab.active {
     background: var(--accent);
-    color: var(--text-on-accent, #fff);
+    color: #FFFFFF !important;
     border-color: var(--accent);
 }
 
@@ -430,6 +575,39 @@
     width: 100%;
     height: 120px;
     overflow: visible;
+}
+
+#modal-comm-close-btn {
+    border: none !important;
+    color: #FFFFFF !important;
+    font-weight: 700;
+    font-size: 0.85rem;
+    background: #EF4444 !important;
+    border-radius: var(--radius-btn, 12px);
+    box-shadow: 0 4px 14px rgba(239, 68, 68, 0.35);
+    transition: all 0.15s ease;
+    cursor: pointer;
+}
+
+#modal-comm-close-btn:hover {
+    background: #DC2626 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(220, 38, 38, 0.4);
+}
+
+#modal-comm-close-btn:active {
+    transform: scale(0.98);
+}
+
+[data-theme="dark"] #modal-comm-close-btn {
+    background: #EF4444 !important;
+    color: #FFFFFF !important;
+    border: none !important;
+    box-shadow: 0 4px 14px rgba(239, 68, 68, 0.4);
+}
+
+[data-theme="dark"] #modal-comm-close-btn:hover {
+    background: #DC2626 !important;
 }
 
 /* Price Comparison Badge Colors */

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Telegram Integration - Cashly</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Application Styles -->
+    <link rel="stylesheet" href="../../../css/style.css">
+    <link rel="stylesheet" href="../../../css/settings.css">
+</head>
+<body data-page="settings-telegram">
+
+    <!-- Injected Global Header -->
+    <div id="app-header"></div>
+
+    <main class="settings-subpage-standalone">
+<div class="settings-subpage" id="subpage-telegram">
+        <div class="settings-subpage-header">
+            <a href="../settings.html" class="back-nav-settings"><i data-lucide="arrow-left"></i></a>
+            <span class="settings-subpage-title">Telegram Owner Alerts</span>
+        </div>
+        <div class="settings-subpage-content">
+            <h2 style="font-size: 19px; font-weight: 700; margin-bottom: 8px;">Telegram Alerts</h2>
+            
+            <div class="settings-subpage-info-box">
+                <p class="settings-subpage-info-text">
+                    Receive critical inventory alerts, overdue customer notices, and daily sales summaries directly in your Telegram app.
+                </p>
+            </div>
+
+            <div class="settings-subpage-status-card">
+                <span class="status-label">Connection Status</span>
+                <span class="status-value status-tag disconnected" id="sub-telegram-status-lbl">Not Connected</span>
+            </div>
+
+            <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+                <button type="button" class="settings-btn-primary" id="btn-connect-telegram" style="flex: 1;">
+                    <i data-lucide="send"></i> <span id="btn-telegram-connect-text">Connect Telegram</span>
+                </button>
+                <button type="button" class="btn btn-outline" id="btn-test-telegram" style="min-height: 44px; font-weight: 700; font-size: 0.85rem; padding: 0 16px;">
+                    <i data-lucide="bell-ring"></i> Send Test
+                </button>
+            </div>
+
+            <div class="settings-group-title" style="margin-top: 8px;">Owner Alert Triggers</div>
+            <div class="settings-rows-list" style="margin-bottom: 24px;">
+                <div class="switch-row">
+                    <div class="switch-row-left">
+                        <span class="switch-row-title">Low Stock Alerts</span>
+                        <span class="switch-row-desc">Alert when stock falls below reorder level</span>
+                    </div>
+                    <label class="settings-switch">
+                        <input type="checkbox" id="telegram-opt-low-stock">
+                        <span class="settings-switch-slider"></span>
+                    </label>
+                </div>
+                <div class="switch-row">
+                    <div class="switch-row-left">
+                        <span class="switch-row-title">Out of Stock Alerts</span>
+                        <span class="switch-row-desc">Alert immediately when an item hits 0 quantity</span>
+                    </div>
+                    <label class="settings-switch">
+                        <input type="checkbox" id="telegram-opt-out-stock">
+                        <span class="settings-switch-slider"></span>
+                    </label>
+                </div>
+                <div class="switch-row">
+                    <div class="switch-row-left">
+                        <span class="switch-row-title">Customer Overdue Alerts</span>
+                        <span class="switch-row-desc">Alert when customer payments cross due dates</span>
+                    </div>
+                    <label class="settings-switch">
+                        <input type="checkbox" id="telegram-opt-customer-overdue">
+                        <span class="settings-switch-slider"></span>
+                    </label>
+                </div>
+                <div class="switch-row">
+                    <div class="switch-row-left">
+                        <span class="switch-row-title">Payment Received Alerts</span>
+                        <span class="switch-row-desc">Alert whenever a customer clears a payment</span>
+                    </div>
+                    <label class="settings-switch">
+                        <input type="checkbox" id="telegram-opt-payment">
+                        <span class="settings-switch-slider"></span>
+                    </label>
+                </div>
+                <div class="switch-row">
+                    <div class="switch-row-left">
+                        <span class="switch-row-title">Daily Summary Alerts</span>
+                        <span class="switch-row-desc">Receive evening sales & collection summary</span>
+                    </div>
+                    <label class="settings-switch">
+                        <input type="checkbox" id="telegram-opt-summary">
+                        <span class="settings-switch-slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    </main>
+
+    <!-- Injected Global Bottom Navigation -->
+    <nav id="app-navigation"></nav>
+
+    <!-- Application Script -->
+    <script src="../../../js/storage.js"></script>
+    <script src="../../../js/utils.js"></script>
+    <script src="../../../js/notifications.js"></script>
+    <script src="../../../js/settings.js"></script>
+</body>
+</html>

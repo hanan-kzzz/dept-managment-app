@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script>window.BASE_PATH = '../../';</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Greenway Groceries - Customers & Credit Management</title>
@@ -14,7 +15,7 @@
           } catch(e) {}
         }
         if (!t || t === 'system') {
-          t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'dark';
+          t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
         }
         document.documentElement.setAttribute('data-theme', t);
         if (t === 'dark') document.documentElement.classList.add('dark');
@@ -25,10 +26,11 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
     <script src="https://unpkg.com/lucide@latest"></script>
     <!-- Base Styles -->
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/customers.css">
-    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/customers.css">
+    <link rel="stylesheet" href="../../css/responsive.css">
     <meta name="theme-color" content="#07090d">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232563EB' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><path d='M21 12V7H5a2 2 0 0 1 0-4h14v4'/><path d='M3 5v14a2 2 0 0 0 2 2h16v-5'/><path d='M18 12a2 2 0 0 0 0 4h4v-4Z'/></svg>">
 </head>
 <body data-page="customers">
 
@@ -37,20 +39,20 @@
 
     <main class="container" style="padding-bottom: 110px;">
         <!-- Back Navigation & Page Header -->
-        <div class="page-header" style="margin-bottom: 16px;">
-            <a href="index.html" class="back-nav-link">
+        <div class="page-header" style="margin-bottom: 14px; width: 100%; align-items: stretch;">
+            <a href="../../index.html" class="back-nav-link" style="display: inline-flex; align-items: center; gap: 4px; margin-bottom: 8px;">
                 <i data-lucide="arrow-left" style="width: 14px; height: 14px; stroke-width: 2.5px;"></i> Dashboard
             </a>
-            <div class="page-title-row">
-                <div class="page-title-container">
-                    <h1 class="page-title-main">Customers</h1>
-                    <p class="page-subtitle-muted">Track credit balances, payment logs & customer ledger</p>
-                </div>
-                <div class="page-title-action">
-                    <button class="btn-add-customer-primary" id="btn-add-customer-header">
-                        <i data-lucide="user-plus" style="width: 16px; height: 16px;"></i> + Add Customer
+            <div class="page-title-container" style="margin-bottom: 0; width: 100%;">
+                <!-- Row with Heading on left and Small Add Customer Button on far right -->
+                <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; width: 100%;">
+                    <h1 class="page-title-main" style="font-size: 1.4rem; letter-spacing: -0.4px; margin: 0; line-height: 1.2;">Customers</h1>
+                    <button class="btn-add-customer-primary" id="btn-add-customer-header" style="width: auto !important; min-height: 0 !important; max-width: fit-content !important; height: 30px !important; padding: 0 12px !important; font-weight: 700; font-size: 0.75rem !important; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; gap: 5px; box-shadow: 0 2px 8px rgba(8, 127, 245, 0.25); border: none; cursor: pointer; white-space: nowrap; flex-shrink: 0; margin-left: auto !important;">
+                        <i data-lucide="user-plus" style="width: 14px; height: 14px; stroke-width: 2.5px;"></i> + Add Customer
                     </button>
                 </div>
+                <div class="page-title-accent" style="margin: 4px 0 4px 0;"></div>
+                <p class="page-subtitle-muted" style="font-size: 0.76rem; line-height: 1.35; white-space: normal; margin: 0;">Track credit balances, payment logs & customer ledger</p>
             </div>
         </div>
 
@@ -63,7 +65,7 @@
                         <i data-lucide="alert-circle" style="width: 14px; height: 14px; color: #F87171;"></i>
                         TOTAL OUTSTANDING RECEIVABLES
                     </div>
-                    <div class="hero-balance-val tabular-nums" id="sum-total-outstanding">₹2,690.00</div>
+                    <div class="hero-balance-val tabular-nums" id="sum-total-outstanding">₹0.00</div>
                 </div>
             </div>
             <div class="hero-chips-grid">
@@ -72,7 +74,7 @@
                         <i data-lucide="user" style="width: 16px; height: 16px;"></i>
                     </div>
                     <div class="hero-stat-meta">
-                        <span class="hero-stat-num tabular-nums" id="sum-due-customers-count">2</span>
+                        <span class="hero-stat-num tabular-nums" id="sum-due-customers-count">0</span>
                         <span class="hero-stat-title">Due Accounts</span>
                     </div>
                 </div>
@@ -278,9 +280,10 @@
     </div>
 
     <!-- Application Script -->
-    <script src="js/storage.js"></script>
-    <script src="js/utils.js"></script>
-    <script src="js/notifications.js"></script>
-    <script src="js/customers.js"></script>
+    <script src="../../js/storage.js"></script>
+    <script src="../../js/utils.js"></script>
+    <script src="../../js/notifications.js"></script>
+    <script src="../../js/customers.js"></script>
 </body>
 </html>
+

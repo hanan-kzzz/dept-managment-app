@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>window.BASE_PATH = '../';</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Welcome to Cashly</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="../css/auth.css">
+</head>
+<body class="onboarding-body">
+
+  <div class="hero-bg" style="height: 100vh;">
+    <div class="floating-shape shape-1"></div>
+    <div class="floating-shape shape-2"></div>
+    <div class="floating-shape shape-3"></div>
+  </div>
+
+  <div class="carousel-container">
+    
+    <div class="carousel-header">
+      <a href="login.html" class="skip-link">Skip</a>
+    </div>
+
+    <div class="carousel-track-container" id="track-container">
+      <div class="carousel-track" id="track">
+        
+        <!-- Slide 1: Analytics / Sales -->
+        <div class="carousel-slide relative" style="background-image: url('../images/welcome_slide_1.jpg'); background-size: cover; background-position: center;">
+          <div class="absolute inset-0 bg-gradient-to-t from-[#1b1e4b] via-[#1b1e4b]/60 to-transparent"></div>
+          <div class="slide-content z-10 relative mt-auto mb-32 px-4">
+            <h2 class="carousel-title shadow-text text-white">Track every sale</h2>
+            <p class="carousel-text shadow-text text-gray-200">Manage your store's performance in real-time, right from your counter.</p>
+          </div>
+        </div>
+
+        <!-- Slide 2: Inventory / Stock -->
+        <div class="carousel-slide relative" style="background-image: url('../images/welcome_slide_2.jpg'); background-size: cover; background-position: center;">
+          <div class="absolute inset-0 bg-gradient-to-t from-[#1b1e4b] via-[#1b1e4b]/60 to-transparent"></div>
+          <div class="slide-content z-10 relative mt-auto mb-32 px-4">
+            <h2 class="carousel-title shadow-text text-white">Manage your stock</h2>
+            <p class="carousel-text shadow-text text-gray-200">Never run out of your best-selling items with automated inventory alerts.</p>
+          </div>
+        </div>
+
+        <!-- Slide 3: Growth -->
+        <div class="carousel-slide relative" style="background-image: url('../images/welcome_slide_3.jpg'); background-size: cover; background-position: center;">
+          <div class="absolute inset-0 bg-gradient-to-t from-[#1b1e4b] via-[#1b1e4b]/60 to-transparent"></div>
+          <div class="slide-content z-10 relative mt-auto mb-32 px-4">
+            <h2 class="carousel-title shadow-text text-white">Grow your business</h2>
+            <p class="carousel-text shadow-text text-gray-200">Get powerful insights and watch your revenue climb month over month.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="carousel-footer">
+      <div class="dot-indicator">
+        <div class="dot active"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+      
+      <div class="w-full max-w-xs space-y-4 text-center mt-2">
+        <a href="signup.html" class="btn-pill-white block">Get Started</a>
+        <a href="login.html" class="login-link-sub inline-block mt-2">Already have an account? Log in</a>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const track = document.getElementById('track');
+    const dots = document.querySelectorAll('.dot');
+    const container = document.getElementById('track-container');
+    let currentIndex = 0;
+    let startX = 0;
+    let isDragging = false;
+
+    function updateCarousel() {
+      track.style.transform = `translateX(-${currentIndex * 33.3333}%)`;
+      dots.forEach((dot, index) => {
+        dot.classList.toggle('active', index === currentIndex);
+      });
+    }
+
+    container.addEventListener('mousedown', (e) => {
+      startX = e.clientX;
+      isDragging = true;
+      track.style.transition = 'none';
+    });
+
+    window.addEventListener('mouseup', (e) => {
+      if(!isDragging) return;
+      isDragging = false;
+      track.style.transition = 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1)';
+      const diff = e.clientX - startX;
+      if(diff < -50 && currentIndex < 2) currentIndex++;
+      else if(diff > 50 && currentIndex > 0) currentIndex--;
+      updateCarousel();
+    });
+
+    container.addEventListener('touchstart', (e) => {
+      startX = e.touches[0].clientX;
+      isDragging = true;
+      track.style.transition = 'none';
+    });
+
+    window.addEventListener('touchend', (e) => {
+      if(!isDragging) return;
+      isDragging = false;
+      track.style.transition = 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1)';
+      const diff = e.changedTouches[0].clientX - startX;
+      if(diff < -50 && currentIndex < 2) currentIndex++;
+      else if(diff > 50 && currentIndex > 0) currentIndex--;
+      updateCarousel();
+    });
+  </script>
+</body>
+</html>

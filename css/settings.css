@@ -47,6 +47,8 @@ body[data-page="settings"] {
     width: 18px;
     height: 18px;
     stroke-width: 2.2px;
+    display: block;
+    margin-top: 2px; /* Nudge down to optically align with the larger title font */
 }
 
 /* Page Title Settings */
@@ -185,18 +187,29 @@ body[data-page="settings"] {
 .settings-group-title {
     font-size: 11px;
     font-weight: 700;
-    color: var(--text-muted);
+    color: #475569;
     text-transform: uppercase;
-    letter-spacing: 0.6px;
+    letter-spacing: .04em;
     margin-bottom: 8px;
     padding-left: 6px;
 }
 
+[data-theme="dark"] .settings-group-title {
+    color: #94A3B8;
+}
+
 .settings-rows-list {
-    background-color: var(--surface);
+    background-color: #FFFFFF;
     border-radius: var(--radius-md);
-    border: 1px solid var(--border);
+    border: 1px solid #D9E1EA;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
     overflow: hidden;
+}
+
+[data-theme="dark"] .settings-rows-list {
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    box-shadow: none;
 }
 
 /* Clean transparent list style */
@@ -204,6 +217,7 @@ body[data-page="settings"] {
     background-color: transparent;
     border: none;
     border-radius: 0;
+    box-shadow: none;
     overflow: visible;
 }
 
@@ -211,8 +225,9 @@ body[data-page="settings"] {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: var(--settings-row-height);
-    padding: 8px 12px;
+    min-height: var(--settings-row-height);
+    height: auto;
+    padding: 10px 14px;
     cursor: pointer;
     background-color: var(--surface);
     border-bottom: 1px solid var(--settings-divider);
@@ -244,7 +259,7 @@ body[data-page="settings"] {
     height: 36px;
     border-radius: var(--radius-sm);
     background-color: var(--surface-sec);
-    color: var(--text-muted);
+    color: #64748B;
     flex-shrink: 0;
 }
 
@@ -276,20 +291,28 @@ body[data-page="settings"] {
 
 .settings-row-title {
     font-size: var(--settings-title-size);
-    font-weight: 600;
-    color: var(--text);
+    font-weight: 650;
+    color: #111827;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
+[data-theme="dark"] .settings-row-title {
+    color: #F8FAFC;
+}
+
 .settings-row-desc {
     font-size: var(--settings-desc-size);
-    color: var(--text-muted);
+    color: #64748B;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     margin-top: 1px;
+}
+
+[data-theme="dark"] .settings-row-desc {
+    color: #94A3B8;
 }
 
 .settings-row-right {
@@ -301,12 +324,16 @@ body[data-page="settings"] {
 
 .settings-row-value {
     font-size: 13.5px;
-    color: var(--text-light);
+    color: #475569;
     font-weight: 500;
 }
 
+[data-theme="dark"] .settings-row-value {
+    color: #94A3B8;
+}
+
 .settings-row-chevron {
-    color: var(--text-light);
+    color: #64748B;
     display: flex;
     align-items: center;
 }
@@ -393,6 +420,9 @@ body[data-page="settings"] {
     font-size: 17px;
     font-weight: 700;
     color: var(--text);
+    line-height: 1; /* Fix optical alignment with icon */
+    display: flex;
+    align-items: center;
 }
 
 .settings-subpage-content {
@@ -1862,8 +1892,8 @@ body[data-page="settings"] {
 }
 
 .wa-hero-card.disconnected {
-    border-color: rgba(239, 68, 68, 0.3);
-    background: linear-gradient(145deg, #1A1416 0%, #151113 100%);
+    border-color: rgba(148, 163, 184, 0.3);
+    background: linear-gradient(145deg, #1A1F26 0%, #15181C 100%);
 }
 
 .wa-hero-card.connected {
@@ -1873,8 +1903,9 @@ body[data-page="settings"] {
 
 .wa-hero-top {
     display: flex;
-    align-items: center;
+    align-items: flex-start; /* Changed from center to flex-start for wrapping text */
     justify-content: space-between;
+    gap: 12px; /* Added gap to prevent overlap */
     margin-bottom: 16px;
 }
 
@@ -1888,12 +1919,14 @@ body[data-page="settings"] {
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    white-space: nowrap; /* Prevent "NOT CONNECTED" from wrapping */
+    flex-shrink: 0; /* Prevent badge from shrinking */
 }
 
 .wa-hero-badge.disconnected {
-    background: rgba(239, 68, 68, 0.15);
-    color: #F87171;
-    border: 1px solid rgba(239, 68, 68, 0.25);
+    background: rgba(148, 163, 184, 0.15);
+    color: #94A3B8;
+    border: 1px solid rgba(148, 163, 184, 0.25);
 }
 
 .wa-hero-badge.connected {
@@ -1912,7 +1945,13 @@ body[data-page="settings"] {
 }
 
 .wa-hero-card.disconnected .status-dot {
-    animation: waPulseRed 2s infinite;
+    /* No pulsing red animation for disconnected anymore, it's just neutral */
+    box-shadow: none;
+}
+
+.wa-hero-card.connected .status-dot {
+    /* Optional: pulse for connected? Let's just keep it solid */
+    box-shadow: 0 0 8px currentColor;
 }
 
 @keyframes waPulseRed {
@@ -1924,6 +1963,8 @@ body[data-page="settings"] {
     font-size: 11.5px;
     font-weight: 600;
     color: var(--text-muted);
+    text-align: right;
+    line-height: 1.3;
 }
 
 .wa-hero-body {
@@ -1945,8 +1986,8 @@ body[data-page="settings"] {
 }
 
 .wa-hero-card.disconnected .wa-hero-icon-box {
-    background: rgba(239, 68, 68, 0.12);
-    color: #EF4444;
+    background: rgba(148, 163, 184, 0.12);
+    color: #94A3B8;
 }
 
 .wa-hero-card.connected .wa-hero-icon-box {
@@ -2001,13 +2042,13 @@ body[data-page="settings"] {
 }
 
 .wa-hero-card.disconnected .wa-connect-btn {
-    background: var(--primary);
+    background: var(--wa-green, #25D366);
     color: #FFFFFF;
-    box-shadow: 0 4px 14px rgba(47, 143, 255, 0.3);
+    box-shadow: 0 4px 14px rgba(37, 211, 102, 0.3);
 }
 
 .wa-hero-card.disconnected .wa-connect-btn:hover {
-    background: var(--primary-hover);
+    background: #1DA851;
     transform: translateY(-1px);
 }
 
@@ -2050,30 +2091,68 @@ body[data-page="settings"] {
     margin-right: 4px;
 }
 
-.wa-preset-chip {
+.wa-preset-segmented {
+    display: inline-flex;
     background: var(--surface-secondary);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 6px 12px;
-    font-family: var(--font);
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--text-primary);
-    cursor: pointer;
-    transition: all 0.2s ease;
+    border-radius: 10px;
+    padding: 4px;
+    gap: 4px;
 }
 
-.wa-preset-chip:hover {
-    background: var(--primary-tint);
-    border-color: var(--primary);
+.wa-preset-segment {
+    background: transparent;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s;
+}
+
+.wa-preset-segment.active {
+    background: var(--surface);
+    color: var(--text-primary);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.wa-preset-check {
+    width: 14px;
+    height: 14px;
+    display: none;
+}
+
+.wa-preset-segment.active .wa-preset-check {
+    display: inline-block;
     color: var(--primary);
+}
+
+.wa-preset-link {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+
+.wa-preset-link:hover {
+    background: var(--surface-secondary);
+    color: var(--text-primary);
 }
 
 .wa-timing-box {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding-top: 10px;
+    padding-top: 16px; /* Increased padding */
     border-top: 1px solid var(--border);
 }
 
@@ -2146,10 +2225,9 @@ body[data-page="settings"] {
 }
 
 .wa-rules-wrapper.locked .wa-timeline {
-    opacity: 0.35;
+    opacity: 0.6;
     pointer-events: none;
     user-select: none;
-    filter: blur(1px);
 }
 
 .wa-lock-overlay {
@@ -2163,8 +2241,8 @@ body[data-page="settings"] {
     align-items: center;
     justify-content: center;
     padding: 16px;
-    background: rgba(15, 17, 20, 0.65);
-    backdrop-filter: blur(3px);
+    background: rgba(15, 17, 20, 0.4);
+    backdrop-filter: blur(1px);
     border-radius: var(--radius-lg);
     opacity: 0;
     pointer-events: none;
@@ -2193,8 +2271,8 @@ body[data-page="settings"] {
     width: 44px;
     height: 44px;
     border-radius: 50%;
-    background: rgba(239, 68, 68, 0.12);
-    color: #EF4444;
+    background: rgba(148, 163, 184, 0.12); /* Neutral gray */
+    color: #94A3B8;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -2224,7 +2302,7 @@ body[data-page="settings"] {
 .wa-overlay-connect-btn {
     width: 100%;
     height: 38px;
-    background: var(--primary);
+    background: var(--wa-green, #25D366); /* WhatsApp green */
     color: #FFFFFF;
     border: none;
     border-radius: 10px;
@@ -2240,7 +2318,7 @@ body[data-page="settings"] {
 }
 
 .wa-overlay-connect-btn:hover {
-    background: var(--primary-hover);
+    background: #1DA851;
 }
 
 /* 5. SEQUENCED TIMELINE LAYOUT */
@@ -2254,6 +2332,12 @@ body[data-page="settings"] {
     display: flex;
     gap: 14px;
     position: relative;
+    transition: opacity 0.3s ease, filter 0.3s ease;
+}
+
+.wa-timeline-item.disabled {
+    opacity: 0.45;
+    filter: grayscale(80%);
 }
 
 .wa-timeline-node {
@@ -2680,3 +2764,158 @@ body[data-page="settings"] {
 
 
 
+
+.card-checkmark {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    color: var(--primary);
+    display: none;
+}
+.format-chip.active .card-checkmark {
+    display: block;
+}
+.format-chip {
+    transition: all 0.2s ease;
+}
+
+@keyframes pulse-save {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.1); opacity: 0.8; background-color: var(--success); color: white; border-radius: 4px; padding: 0 4px; }
+    100% { transform: scale(1); opacity: 1; }
+}
+.pulse-save-anim {
+    animation: pulse-save 0.5s ease-in-out;
+}
+
+.invoice-logo-preview-box.dropzone {
+    border: 2px dashed var(--border);
+    transition: all 0.2s ease;
+}
+.invoice-logo-preview-box.dropzone.dragover {
+    border-color: var(--primary);
+    background-color: var(--primary-alpha);
+}
+
+
+.menu-input {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text);
+    font-size: 15px;
+    font-family: var(--font);
+    text-align: right;
+    width: 100%;
+}
+.menu-input::placeholder {
+    color: var(--text-muted);
+}
+.menu-textarea {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text);
+    font-size: 15px;
+    font-family: var(--font);
+    width: 100%;
+    resize: none;
+}
+.menu-textarea::placeholder {
+    color: var(--text-muted);
+}
+
+
+/* ===== BILL SETTINGS MENU-STYLE INPUTS ===== */
+.bill-menu-input {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text);
+    font-size: 15px;
+    font-family: var(--font);
+}
+.bill-menu-input::placeholder {
+    color: var(--text-muted);
+}
+
+/* Allow rows to be flex column for print/footer sections */
+.settings-row[style*='flex-direction: column'] {
+    flex-direction: column;
+}
+
+
+/* Ensure invoice preview card header is always tappable */
+.preview-card-header {
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    pointer-events: auto !important;
+}
+.invoice-preview-card * {
+    pointer-events: auto;
+}
+
+
+/* ===== STANDALONE SUBPAGE STYLING (FOLDER-BASED PAGES) ===== */
+.settings-subpage-standalone {
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 0 100px 0;
+    box-sizing: border-box;
+}
+
+.standalone-subpage-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+}
+
+/* Ensure back navigation is clearly styled as a header link */
+.settings-subpage-standalone .back-nav-settings {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--primary);
+    text-decoration: none;
+    cursor: pointer;
+}
+.settings-subpage-standalone .back-nav-settings:hover {
+    opacity: 0.85;
+}
+
+
+/* Reset overlay behavior for standalone subpages inside subfolders */
+.settings-subpage-standalone .settings-subpage {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    transform: none !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    background: transparent !important;
+    z-index: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    box-shadow: none !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 100vh;
+}
+
+.settings-subpage-standalone .settings-subpage-header {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.settings-subpage-standalone .settings-subpage-content {
+    padding: 16px 16px 100px 16px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}

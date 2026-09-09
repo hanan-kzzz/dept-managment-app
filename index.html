@@ -14,7 +14,7 @@
           } catch(e) {}
         }
         if (!t || t === 'system') {
-          t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'dark';
+          t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
         }
         document.documentElement.setAttribute('data-theme', t);
         if (t === 'dark') document.documentElement.classList.add('dark');
@@ -23,6 +23,12 @@
     </script>
     <!-- Plus Jakarta Sans Font & Lucide Icons -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: ['class', '[data-theme="dark"]']
+      };
+    </script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <!-- Base Styles -->
     <link rel="stylesheet" href="css/style.css">
@@ -31,6 +37,33 @@
     <meta name="theme-color" content="#F4F6F8">
 </head>
 <body data-page="home">
+
+    <!-- Splash Screen (Advanced Intersecting Spreading) -->
+    <div id="app-splash-screen">
+        <div class="splash-spread-bg"></div>
+        <div class="splash-logo-container">
+            <div class="intersecting-wrapper">
+                <div class="circle circle-left"></div>
+                <div class="circle circle-right"></div>
+                <div class="splash-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/></svg>
+                </div>
+            </div>
+            <div class="splash-title">Cashly</div>
+        </div>
+    </div>
+    <script>
+        window.addEventListener('load', () => {
+            const splash = document.getElementById('app-splash-screen');
+            if (splash) {
+                // The animation takes about 2.2s total (1.5s spread + delays)
+                setTimeout(() => {
+                    splash.classList.add('hidden');
+                    setTimeout(() => splash.remove(), 800);
+                }, 2200);
+            }
+        });
+    </script>
 
     <!-- 1. Minimal Header (Injected dynamically) -->
     <div id="app-header"></div>

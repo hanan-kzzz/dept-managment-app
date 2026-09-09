@@ -479,21 +479,29 @@ body[data-page="stock"] {
 
 .product-row-title {
     font-size: 14.5px;
-    font-weight: 600;
-    color: var(--text);
+    font-weight: 650;
+    color: #111827;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     line-height: 1.25;
 }
 
+[data-theme="dark"] .product-row-title {
+    color: #F8FAFC;
+}
+
 .product-row-desc {
     font-size: 12.5px;
-    color: var(--text-muted);
+    color: #64748B;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     margin-top: 2px;
+}
+
+[data-theme="dark"] .product-row-desc {
+    color: #94A3B8;
 }
 
 .product-row-right {
@@ -513,8 +521,23 @@ body[data-page="stock"] {
 .product-row-qty {
     font-size: 14px;
     font-weight: 700;
-    color: var(--text);
+    color: #111827;
     line-height: 1.2;
+}
+
+[data-theme="dark"] .product-row-qty {
+    color: #F8FAFC;
+}
+
+.product-row-price {
+    font-size: 14px;
+    font-weight: 700;
+    color: #087FF5;
+    line-height: 1.2;
+}
+
+[data-theme="dark"] .product-row-price {
+    color: #2F8FFF;
 }
 
 /* Compact Status Badges */
@@ -527,15 +550,27 @@ body[data-page="stock"] {
 }
 
 .stock-status-tag.in-stock {
-    color: var(--success);
+    color: #15803D;
 }
 
 .stock-status-tag.low-stock {
-    color: var(--warning);
+    color: #B45309;
 }
 
 .stock-status-tag.out-of-stock {
-    color: var(--danger);
+    color: #B91C1C;
+}
+
+[data-theme="dark"] .stock-status-tag.in-stock {
+    color: #34D399;
+}
+
+[data-theme="dark"] .stock-status-tag.low-stock {
+    color: #FBBF24;
+}
+
+[data-theme="dark"] .stock-status-tag.out-of-stock {
+    color: #F87171;
 }
 
 /* Selected Product Box inside Modals */

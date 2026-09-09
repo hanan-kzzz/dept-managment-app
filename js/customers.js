@@ -311,7 +311,7 @@ function renderCustomersList() {
     listFeed.querySelectorAll('.customer-modern-card').forEach(card => {
         card.addEventListener('click', () => {
             const id = card.dataset.id;
-            window.location.href = `customer-details.html?id=${id}`;
+            window.location.href = (window.BASE_PATH || '') + `pages/customers/customer-details.html?id=${id}`;
         });
     });
 
@@ -359,7 +359,7 @@ function handleCustomerFormSubmit(e) {
             const viewBtn = document.getElementById('btn-view-duplicate-customer');
             if (viewBtn) {
                 viewBtn.onclick = () => {
-                    window.location.href = `customer-details.html?id=${existing.id}`;
+                    window.location.href = (window.BASE_PATH || '') + `pages/customers/customer-details.html?id=${existing.id}`;
                 };
             }
         }
@@ -400,7 +400,7 @@ function handleCustomerFormSubmit(e) {
         // If on New Sale page, preselect this customer
         const params = new URLSearchParams(window.location.search);
         if (params.get('returnToSale') === 'true') {
-            window.location.href = `sales.html?customerId=${saved.id}`;
+            window.location.href = (window.BASE_PATH || '') + `pages/sales/sales.html?customerId=${saved.id}`;
             return;
         }
     }
@@ -426,7 +426,7 @@ function initCustomerDetailsPage() {
     activeCustomerId = params.get('id');
 
     if (!activeCustomerId) {
-        window.location.href = 'customers.html';
+        window.location.href = (window.BASE_PATH || '') + `pages/customers/customers.html`;
         return;
     }
 
@@ -440,7 +440,7 @@ function loadCustomerProfileDetails() {
     const customer = Storage.getCustomer(activeCustomerId);
     if (!customer) {
         Utils.showToast("Customer profile not found", "error");
-        setTimeout(() => { window.location.href = 'customers.html'; }, 1500);
+        setTimeout(() => { window.location.href = (window.BASE_PATH || '') + `pages/customers/customers.html`; }, 1500);
         return;
     }
 
@@ -784,7 +784,7 @@ function setupDetailsEventListeners() {
             () => {
                 Storage.deleteCustomer(activeCustomerId);
                 Utils.showToast("Customer profile deleted successfully", "success");
-                setTimeout(() => { window.location.href = 'customers.html'; }, 1000);
+                setTimeout(() => { window.location.href = (window.BASE_PATH || '') + `pages/customers/customers.html`; }, 1000);
             }
         );
     });

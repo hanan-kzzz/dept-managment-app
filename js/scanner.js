@@ -273,7 +273,7 @@ class BarcodeScannerModal {
                 openAddProductModal(null, barcode);
             }
         } else {
-            window.location.href = `stock.html?openAddProduct=true&barcode=${encodeURIComponent(barcode)}`;
+            window.location.href = (window.BASE_PATH || '') + `pages/inventory/stock.html?openAddProduct=true&barcode=${encodeURIComponent(barcode)}`;
         }
     }
 
@@ -625,7 +625,7 @@ class BarcodeScannerModal {
         if (viewBtn) {
             viewBtn.onclick = () => {
                 this.close();
-                window.location.href = `product-details.html?id=${product.id}`;
+                window.location.href = (window.BASE_PATH || '') + `pages/inventory/product-details.html?id=${product.id}`;
             };
         }
 

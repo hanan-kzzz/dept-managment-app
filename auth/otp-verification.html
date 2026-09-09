@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>window.BASE_PATH = '../';</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>OTP Verification - Cashly</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="../css/auth.css">
+</head>
+<body>
+
+  <!-- Hero Section -->
+  <div class="hero-bg short">
+    <div class="floating-shape shape-1"></div>
+    <div class="floating-shape shape-2"></div>
+    <div class="floating-shape shape-3"></div>
+    
+    <div class="hero-content max-w-md mx-auto w-full">
+      <a href="#" onclick="goBackFromOTP()" class="back-btn">
+        <i data-lucide="chevron-left" class="w-5 h-5"></i>
+      </a>
+      <div class="hero-content-flex mt-6">
+        <h1 class="hero-title shadow-text">Verify<br>Email</h1>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content Container -->
+  <div class="auth-container short-hero-margin max-w-md mx-auto w-full">
+    
+    <!-- Straddle Icon Badge -->
+    <div class="straddle-badge">
+      <div class="icon-wrapper">
+        <i data-lucide="shield-check" class="w-8 h-8"></i>
+      </div>
+    </div>
+    
+    <div class="wave-divider">
+      <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+          <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V95.8C84.34,74.96,162.77,65.34,321.39,56.44Z" class="shape-fill"></path>
+      </svg>
+    </div>
+
+    <div class="mb-4 mt-8 text-center">
+      <p class="text-slate-500 font-medium">Enter the 6-digit code sent to:</p>
+      <div class="email-chip mt-2">
+        <span id="display-email">user@example.com</span>
+        <a href="#" onclick="goBackFromOTP()">Edit</a>
+      </div>
+    </div>
+
+    <form onsubmit="handleVerify(event)" class="flex flex-col mt-4">
+      
+      <div class="otp-container" id="otp-inputs">
+        <input type="text" maxlength="1" class="otp-box" required>
+        <input type="text" maxlength="1" class="otp-box" required>
+        <input type="text" maxlength="1" class="otp-box" required>
+        <input type="text" maxlength="1" class="otp-box" required>
+        <input type="text" maxlength="1" class="otp-box" required>
+        <input type="text" maxlength="1" class="otp-box" required>
+      </div>
+
+      <div class="text-center text-sm font-medium text-slate-500 mb-8 h-6 relative flex items-center justify-center">
+        <span id="resend-text">Didn't receive the code?</span>
+        <span id="resend-timer" class="font-bold ml-1.5 tabular-nums text-slate-700">Resend in 00:28</span>
+        <a href="#" id="resend-link" class="link absolute right-0 left-0 text-center opacity-0 pointer-events-none transition-all duration-300" onclick="startTimer(28)">Resend Code</a>
+      </div>
+
+      <div class="mt-4 pb-4">
+        <button type="submit" class="btn-primary" id="btn-verify">
+          <span class="btn-text">Verify</span>
+          <i data-lucide="loader-2" class="loader-icon w-5 h-5"></i>
+          <i data-lucide="check" class="check-icon w-5 h-5"></i>
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    lucide.createIcons();
+    
+    const context = localStorage.getItem('otpContext');
+    const email = localStorage.getItem('otpEmail');
+    if (email) {
+      document.getElementById('display-email').textContent = email;
+    }
+
+    function goBackFromOTP() {
+      if(context === 'signup') window.location.href = '../auth/signup.html';
+      else window.location.href = '../auth/forgot-password.html';
+    }
+
+    function handleVerify(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btn-verify');
+      
+      btn.classList.add('btn-loading');
+      btn.disabled = true;
+
+      setTimeout(() => {
+        btn.classList.remove('btn-loading');
+        btn.classList.add('btn-success');
+        
+        setTimeout(() => {
+          if (context === 'forgot') {
+            window.location.href = '../auth/reset-password.html';
+          } else {
+            window.location.href = '../auth/login.html';
+          }
+        }, 800);
+      }, 1000);
+    }
+
+    // OTP Input logic
+    const otpInputs = document.querySelectorAll('.otp-box');
+    otpInputs.forEach((input, index) => {
+      input.addEventListener('input', (e) => {
+        e.target.value = e.target.value.replace(/[^0-9]/g, '');
+        if (e.target.value && index < otpInputs.length - 1) {
+          otpInputs[index + 1].focus();
+        }
+      });
+      
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Backspace' && !e.target.value && index > 0) {
+          otpInputs[index - 1].focus();
+        }
+      });
+      
+      input.addEventListener('paste', (e) => {
+        e.preventDefault();
+        const pastedData = e.clipboardData.getData('text').replace(/[^0-9]/g, '').slice(0, otpInputs.length);
+        if (pastedData) {
+          pastedData.split('').forEach((char, i) => {
+            if (index + i < otpInputs.length) {
+              otpInputs[index + i].value = char;
+            }
+          });
+          const focusIndex = Math.min(index + pastedData.length, otpInputs.length - 1);
+          otpInputs[focusIndex].focus();
+        }
+      });
+    });
+
+    let timerInterval;
+    function startTimer(seconds) {
+      clearInterval(timerInterval);
+      const timerEl = document.getElementById('resend-timer');
+      const textEl = document.getElementById('resend-text');
+      const linkEl = document.getElementById('resend-link');
+      
+      timerEl.style.opacity = '1';
+      textEl.style.opacity = '1';
+      linkEl.style.opacity = '0';
+      linkEl.style.pointerEvents = 'none';
+      
+      let timeLeft = seconds;
+      timerEl.textContent = `Resend in 00:${timeLeft.toString().padStart(2, '0')}`;
+      
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        if(timeLeft <= 0) {
+          clearInterval(timerInterval);
+          timerEl.style.opacity = '0';
+          textEl.style.opacity = '0';
+          
+          setTimeout(() => {
+            linkEl.style.opacity = '1';
+            linkEl.style.pointerEvents = 'auto';
+          }, 300);
+        } else {
+          timerEl.textContent = `Resend in 00:${timeLeft.toString().padStart(2, '0')}`;
+        }
+      }, 1000);
+    }
+    
+    startTimer(28);
+    setTimeout(() => {
+      if(otpInputs[0]) otpInputs[0].focus();
+    }, 300);
+  </script>
+</body>
+</html>
