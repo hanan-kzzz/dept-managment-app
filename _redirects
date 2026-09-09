@@ -1,0 +1,24 @@
+# Netlify Redirects for Clean URLs (Remove .html extension)
+/index.html                     /                           301!
+
+/auth/login.html                /auth/login                 301!
+/auth/signup.html               /auth/signup                301!
+/auth/forgot-password.html      /auth/forgot-password       301!
+/auth/reset-password.html       /auth/reset-password        301!
+/auth/otp-verification.html     /auth/otp-verification      301!
+/auth/welcome.html              /auth/welcome               301!
+
+/pages/sales/sales.html         /pages/sales/sales          301!
+/pages/sales/new-sale.html      /pages/sales/new-sale       301!
+/pages/sales/dues.html          /pages/sales/dues           301!
+
+/pages/inventory/stock.html     /pages/inventory/stock      301!
+/pages/inventory/product-details.html /pages/inventory/product-details 301!
+/pages/inventory/barcode-management.html /pages/inventory/barcode-management 301!
+/pages/inventory/market-prices.html /pages/inventory/market-prices 301!
+
+/pages/customers/customers.html /pages/customers/customers  301!
+/pages/customers/customer-details.html /pages/customers/customer-details 301!
+
+/pages/settings/settings.html  /pages/settings/settings   301!
+/pages/settings/notifications.html /pages/settings/notifications 301!

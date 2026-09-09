@@ -3,6 +3,18 @@
  */
 
 (function() {
+    // Immediately clean .html and /index.html from browser URL address bar
+    try {
+        const p = window.location.pathname;
+        if (p.endsWith('/index.html')) {
+            const clean = p.slice(0, -10) || '/';
+            window.history.replaceState(null, '', clean + window.location.search + window.location.hash);
+        } else if (p.endsWith('.html')) {
+            const clean = p.slice(0, -5);
+            window.history.replaceState(null, '', clean + window.location.search + window.location.hash);
+        }
+    } catch (e) {}
+
     const LOADER_ID = 'page-preloader';
     const MIN_LOADER_TIME = 250; // Minimum time in ms to display loader
     const startTime = Date.now();

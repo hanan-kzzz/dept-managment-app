@@ -1,0 +1,44 @@
+[build]
+  publish = "."
+
+[processing]
+  skip_processing = false
+
+[processing.html]
+  pretty_urls = true
+
+[[redirects]]
+  from = "/index.html"
+  to = "/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/auth/*.html"
+  to = "/auth/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/pages/sales/*.html"
+  to = "/pages/sales/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/pages/inventory/*.html"
+  to = "/pages/inventory/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/pages/customers/*.html"
+  to = "/pages/customers/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/pages/settings/*.html"
+  to = "/pages/settings/:splat"
+  status = 301
+  force = true

@@ -38,15 +38,30 @@ window.getAppLink = function(targetFile) {
         return targetFile;
     }
     const basePath = window.computeBasePath();
+    const isHttp = window.location.protocol.startsWith('http');
     
     if (targetFile.startsWith('pages/') || targetFile.startsWith('auth/')) {
-        return basePath + targetFile;
+        let path = targetFile;
+        if (isHttp && path.endsWith('.html')) {
+            path = path.slice(0, -5);
+        }
+        return basePath + path;
     }
     
     const parts = targetFile.split('?');
-    const baseFile = parts[0];
+    let baseFile = parts[0];
     const query = parts.length > 1 ? '?' + parts[1] : '';
     const folder = window.routeMap[baseFile] !== undefined ? window.routeMap[baseFile] : '';
+    
+    if (isHttp) {
+        if (baseFile === 'index.html') {
+            return basePath + query;
+        }
+        if (baseFile.endsWith('.html')) {
+            baseFile = baseFile.slice(0, -5);
+        }
+    }
+    
     return basePath + folder + baseFile + query;
 };
 /**
