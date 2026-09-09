@@ -1,11 +1,52 @@
 
 window.routeMap = {"index.html":"","sales.html":"pages/sales/","new-sale.html":"pages/sales/","dues.html":"pages/sales/","stock.html":"pages/inventory/","product-details.html":"pages/inventory/","barcode-management.html":"pages/inventory/","market-prices.html":"pages/inventory/","customers.html":"pages/customers/","customer-details.html":"pages/customers/","settings.html":"pages/settings/","notifications.html":"pages/settings/","login.html":"auth/","signup.html":"auth/","forgot-password.html":"auth/","reset-password.html":"auth/","otp-verification.html":"auth/"};
+
+window.computeBasePath = function() {
+    if (typeof window.BASE_PATH === 'string' && window.BASE_PATH !== '') {
+        return window.BASE_PATH;
+    }
+    const path = (window.location.pathname || '').replace(/\\/g, '/').toLowerCase();
+    
+    // 3 levels deep: e.g. pages/settings/backup/index.html or pages/settings/*/index.html
+    if (path.includes('/pages/settings/') && 
+        !path.endsWith('/pages/settings/settings.html') && 
+        !path.endsWith('/pages/settings/notifications.html') &&
+        !path.endsWith('/pages/settings/settings') && 
+        !path.endsWith('/pages/settings/notifications')) {
+        return '../../../';
+    }
+    
+    // 2 levels deep: pages/customers/*, pages/inventory/*, pages/sales/*, pages/settings/*
+    if (path.includes('/pages/customers/') || 
+        path.includes('/pages/inventory/') || 
+        path.includes('/pages/sales/') || 
+        path.includes('/pages/settings/')) {
+        return '../../';
+    }
+    
+    // 1 level deep: auth/*
+    if (path.includes('/auth/')) {
+        return '../';
+    }
+    
+    return '';
+};
+
 window.getAppLink = function(targetFile) {
-    const basePath = window.BASE_PATH || '';
+    if (!targetFile) return '#';
+    if (targetFile.startsWith('http://') || targetFile.startsWith('https://') || targetFile.startsWith('#') || targetFile.startsWith('javascript:')) {
+        return targetFile;
+    }
+    const basePath = window.computeBasePath();
+    
+    if (targetFile.startsWith('pages/') || targetFile.startsWith('auth/')) {
+        return basePath + targetFile;
+    }
+    
     const parts = targetFile.split('?');
     const baseFile = parts[0];
     const query = parts.length > 1 ? '?' + parts[1] : '';
-    const folder = window.routeMap[baseFile] || '';
+    const folder = window.routeMap[baseFile] !== undefined ? window.routeMap[baseFile] : '';
     return basePath + folder + baseFile + query;
 };
 /**
