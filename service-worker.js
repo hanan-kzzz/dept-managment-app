@@ -1,4 +1,4 @@
-const CACHE_NAME = 'grocery-management-v6';
+const CACHE_NAME = 'grocery-management-v7';
 const ASSETS_TO_CACHE = [
   './',
   'index.html',
@@ -27,7 +27,13 @@ const ASSETS_TO_CACHE = [
   'js/dues.js',
   'js/settings.js',
   
-  'manifest.json'
+  'manifest.json',
+  'favicon.ico',
+  'favicon.png',
+  'images/favicon.png',
+  'images/apple-touch-icon.png',
+  'assets/icons/icon-192.png',
+  'assets/icons/icon-512.png'
 ];
 
 // Install Service Worker and cache resources

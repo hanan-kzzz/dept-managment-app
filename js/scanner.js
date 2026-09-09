@@ -290,7 +290,9 @@ class BarcodeScannerModal {
         this.lastScanTime = 0;
 
         const overlay = document.getElementById('pos-camera-scanner-overlay');
-        if (overlay) {
+        if (overlay && typeof Utils !== 'undefined') {
+            Utils.openModal(overlay);
+        } else if (overlay) {
             overlay.style.display = 'flex';
             document.body.style.overflow = 'hidden';
         }
@@ -313,7 +315,9 @@ class BarcodeScannerModal {
         this.isHandlingResult = false;
 
         const overlay = document.getElementById('pos-camera-scanner-overlay');
-        if (overlay) {
+        if (overlay && typeof Utils !== 'undefined') {
+            Utils.closeModal(overlay);
+        } else if (overlay) {
             overlay.style.display = 'none';
             document.body.style.overflow = '';
         }

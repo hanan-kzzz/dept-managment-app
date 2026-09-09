@@ -389,29 +389,10 @@ function triggerDueReminderModal(id) {
 // Modal actions - Lock background scroll & movement
 function openModal(modal) {
     if (!modal) return;
-    modal.classList.add('active');
-    document.documentElement.classList.add('modal-open');
-    document.body.classList.add('modal-open');
-    document.body.style.overflow = 'hidden';
-    modal.addEventListener('touchmove', handleModalTouchMove, { passive: false });
+    Utils.openModal(modal);
 }
 
 function closeModal(modal) {
     if (!modal) return;
-    modal.classList.remove('active');
-    modal.removeEventListener('touchmove', handleModalTouchMove);
-    const activeModals = document.querySelectorAll('.modal-overlay.active');
-    if (activeModals.length === 0) {
-        document.documentElement.classList.remove('modal-open');
-        document.body.classList.remove('modal-open');
-        document.body.style.overflow = '';
-    }
-}
-
-function handleModalTouchMove(e) {
-    if (e.target.closest('.modal-container')) {
-        e.stopPropagation();
-    } else {
-        e.preventDefault();
-    }
+    Utils.closeModal(modal);
 }

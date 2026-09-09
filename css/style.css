@@ -983,6 +983,8 @@ body.modal-open {
     height: 100vh !important;
     touch-action: none !important;
     overscroll-behavior: contain !important;
+    user-select: none !important;
+    -webkit-user-select: none !important;
 }
 
 /* Modals Slide-up sheet drawers */
@@ -5450,6 +5452,173 @@ html.dark .btn-bill-action-secondary:hover {
         color: #000000 !important;
     }
 }
+
+/* ==========================================
+   Universal Page Preloader & Loading Animations
+   ========================================== */
+.page-preloader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--page-bg, #090d16);
+    z-index: 999999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: auto;
+}
+
+[data-theme="light"] .page-preloader {
+    background-color: var(--page-bg, #f4f6f8);
+}
+
+.page-preloader.fade-out {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.preloader-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+}
+
+.preloader-logo-ring {
+    position: relative;
+    width: 72px;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.preloader-spinner-outer {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 3px solid rgba(37, 99, 235, 0.12);
+    border-top-color: var(--primary, #2563eb);
+    border-right-color: #06b6d4;
+    animation: preloaderSpin 0.9s linear infinite;
+}
+
+.preloader-spinner-inner {
+    position: absolute;
+    inset: 7px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    border-bottom-color: var(--primary, #2563eb);
+    animation: preloaderSpinReverse 1.3s linear infinite;
+}
+
+.preloader-icon {
+    width: 28px;
+    height: 28px;
+    color: var(--primary, #2563eb);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: preloaderPulse 1.4s ease-in-out infinite alternate;
+}
+
+.preloader-icon svg {
+    width: 26px;
+    height: 26px;
+}
+
+.preloader-brand {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--text-primary, #0f172a);
+    letter-spacing: -0.4px;
+}
+
+[data-theme="dark"] .preloader-brand {
+    color: #f8fafc;
+}
+
+.preloader-dots {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.preloader-dots .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: var(--primary, #2563eb);
+    opacity: 0.3;
+    animation: dotPulse 1.2s infinite ease-in-out;
+}
+
+.preloader-dots .dot:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.preloader-dots .dot:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes preloaderSpin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes preloaderSpinReverse {
+    0% { transform: rotate(360deg); }
+    100% { transform: rotate(0deg); }
+}
+
+@keyframes preloaderPulse {
+    0% { transform: scale(0.92); opacity: 0.75; }
+    100% { transform: scale(1.08); opacity: 1; }
+}
+
+@keyframes dotPulse {
+    0%, 100% { opacity: 0.3; transform: scale(0.8); }
+    50% { opacity: 1; transform: scale(1.25); }
+}
+
+/* Button & Action Spinner */
+.btn-spinner {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: preloaderSpin 0.75s linear infinite;
+    vertical-align: middle;
+    margin-right: 6px;
+}
+
+/* Skeleton Loading Shimmers */
+.skeleton-loader {
+    background: linear-gradient(90deg, rgba(255,255,255,0.06) 25%, rgba(255,255,255,0.15) 37%, rgba(255,255,255,0.06) 63%);
+    background-size: 400% 100%;
+    animation: skeletonShimmer 1.4s ease infinite;
+    border-radius: 6px;
+}
+
+[data-theme="light"] .skeleton-loader {
+    background: linear-gradient(90deg, rgba(0,0,0,0.04) 25%, rgba(0,0,0,0.09) 37%, rgba(0,0,0,0.04) 63%);
+    background-size: 400% 100%;
+}
+
+@keyframes skeletonShimmer {
+    0% { background-position: 100% 50%; }
+    100% { background-position: 0 50%; }
+}
+
 
 
 

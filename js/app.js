@@ -63,7 +63,11 @@ function initDashboard() {
         greetingStr.textContent = ownerName;
         
         if (avatarContainer) {
-            avatarContainer.textContent = getInitials(ownerName);
+            if (settings.shopLogo) {
+                avatarContainer.innerHTML = `<img src="${settings.shopLogo}" alt="Shop Logo" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;" />`;
+            } else {
+                avatarContainer.textContent = getInitials(ownerName);
+            }
         }
     }
 
@@ -661,17 +665,12 @@ function setupEventListeners() {
 
 function openModal(modal) {
     if (!modal) return;
-    modal.classList.add('active');
+    Utils.openModal(modal);
 }
 
 function closeModal(modal) {
     if (!modal) return;
-    modal.classList.remove('active');
-    const form = modal.querySelector('form');
-    if (form) {
-        form.reset();
-        Array.from(form.elements).forEach(el => el.classList.remove('is-invalid'));
-    }
+    Utils.closeModal(modal);
 }
 
 // Add Customer Handler

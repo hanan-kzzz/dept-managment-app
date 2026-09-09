@@ -463,8 +463,33 @@
     }
   </style>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232563EB' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><path d='M21 12V7H5a2 2 0 0 1 0-4h14v4'/><path d='M3 5v14a2 2 0 0 0 2 2h16v-5'/><path d='M18 12a2 2 0 0 0 0 4h4v-4Z'/></svg>">
+    <script src="../../js/loader.js"></script>
+    <!-- Favicon & PWA App Icons -->
+    <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="../../favicon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../../images/apple-touch-icon.png">
+    <link rel="manifest" href="../../manifest.json">
 </head>
 <body class="min-h-screen flex flex-col justify-between max-w-lg mx-auto bg-[#F7F8FA] relative shadow-xl border-x border-slate-200">
+
+    <!-- Page Preloader -->
+    <div id="page-preloader" class="page-preloader">
+        <div class="preloader-content">
+            <div class="preloader-logo-ring">
+                <div class="preloader-spinner-outer"></div>
+                <div class="preloader-spinner-inner"></div>
+                <div class="preloader-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/></svg>
+                </div>
+            </div>
+            <div class="preloader-brand">Cashly</div>
+            <div class="preloader-dots">
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+            </div>
+        </div>
+    </div>
 
   <!-- SCREEN 1: PRODUCT SELECTION (Step 1 of 3) -->
   <div id="screenStep1" class="flex-1 flex flex-col min-h-0 bg-[#F7F8FA]">
@@ -918,31 +943,19 @@
         <div class="flex items-center gap-2.5 min-w-0">
           <div class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-700 border border-emerald-200 flex items-center justify-center font-bold text-sm shrink-0">✓</div>
           <div class="min-w-0">
-            <div class="font-extrabold text-slate-900 text-xs truncate" id="scannedProdName">Chocolate Chip Cookies</div>
-            <div class="text-[10px] text-slate-500 font-mono" id="scannedProdMeta">+1 Pack added • ₹60.00</div>
+            <div class="font-extrabold text-slate-900 text-xs truncate" id="scannedProdName">Item Scanned</div>
+            <div class="text-[10px] text-slate-500 font-mono" id="scannedProdMeta">+1 added</div>
           </div>
         </div>
         <span class="text-xs font-black text-emerald-800 bg-emerald-100 px-2 py-1 rounded-lg shrink-0">Added ✓</span>
       </div>
 
-      <!-- CAN'T SCAN? QUICK ADD / MANUAL FALLBACK CHIPS -->
-      <div class="w-full max-w-xs space-y-2 pt-1">
-        <div class="flex items-center justify-between px-1">
-          <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-500 font-mono">CAN'T SCAN? QUICK ADD</span>
-          <button type="button" onclick="promptManualBarcodeEntry()" class="text-[10px] font-bold text-blue-600 hover:underline">Manual Code</button>
-        </div>
-
-        <div class="flex flex-wrap justify-center gap-2">
-          <button type="button" onclick="simulateBarcodeScan('p_cookie')" class="px-3 py-1.5 bg-white hover:bg-slate-50 border border-slate-200 rounded-xl text-slate-800 text-xs font-bold transition-all shadow-2xs btn-press flex items-center gap-1">
-            <span>Cookies</span> <span class="text-[10px] text-slate-500 font-mono">₹60</span>
-          </button>
-          <button type="button" onclick="simulateBarcodeScan('p_handwash')" class="px-3 py-1.5 bg-white hover:bg-slate-50 border border-slate-200 rounded-xl text-slate-800 text-xs font-bold transition-all shadow-2xs btn-press flex items-center gap-1">
-            <span>Handwash</span> <span class="text-[10px] text-slate-500 font-mono">₹99</span>
-          </button>
-          <button type="button" onclick="simulateBarcodeScan('p_tea')" class="px-3 py-1.5 bg-white hover:bg-slate-50 border border-slate-200 rounded-xl text-slate-800 text-xs font-bold transition-all shadow-2xs btn-press flex items-center gap-1">
-            <span>Green Tea</span> <span class="text-[10px] text-slate-500 font-mono">₹180</span>
-          </button>
-        </div>
+      <!-- Manual Barcode Entry Fallback Button -->
+      <div class="pt-1 text-center">
+        <button type="button" onclick="promptManualBarcodeEntry()" class="px-4 py-2 bg-white hover:bg-slate-50 active:scale-95 text-blue-600 border border-slate-200 rounded-xl text-xs font-bold transition-all shadow-2xs btn-press inline-flex items-center gap-1.5">
+          <i data-lucide="keyboard" class="w-3.5 h-3.5"></i>
+          <span>Enter Barcode Manually</span>
+        </button>
       </div>
     </div>
 
@@ -979,6 +992,48 @@
         <span>Done Scanning</span>
       </button>
     </footer>
+  </div>
+
+  <!-- OVERLAY: CUSTOM STYLED MANUAL BARCODE ENTRY MODAL -->
+  <div id="manualBarcodeModal" class="fixed inset-0 bg-slate-950/75 backdrop-blur-xs z-[60] flex items-center justify-center p-4 hidden" style="display: none;" onclick="if(event.target === this) closeManualBarcodeModal();">
+    <div class="bg-white rounded-3xl p-6 w-full max-w-sm space-y-4 shadow-2xl relative border border-slate-100 animate-slide-up">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center font-bold shrink-0">
+            <i data-lucide="barcode" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <h3 class="text-sm font-black text-slate-900 leading-snug">Manual Code Entry</h3>
+            <p class="text-[10px] text-slate-500 font-semibold">Enter Barcode, SKU, or Product Name</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeManualBarcodeModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 font-bold flex items-center justify-center transition-all">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <form onsubmit="handleManualBarcodeSubmit(event);" class="space-y-4">
+        <div class="space-y-1.5">
+          <label for="manualBarcodeInput" class="text-[10px] font-extrabold uppercase tracking-wider text-slate-500 font-mono block">Product Code / Name</label>
+          <div class="relative">
+            <input type="text" id="manualBarcodeInput" oninput="handleManualBarcodeInputChange()" placeholder="e.g. 8901234567890 or Cookies" autocomplete="off" class="w-full pl-10 pr-4 py-3 bg-slate-50 border-2 border-slate-200 rounded-2xl text-xs font-extrabold text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white focus:ring-4 focus:ring-blue-500/15 transition-all">
+            <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+            
+            <!-- Live Suggestions Dropdown Menu -->
+            <div id="manualBarcodeSuggestions" class="hidden absolute top-full left-0 right-0 mt-1.5 bg-white border border-slate-200/90 rounded-2xl shadow-xl z-30 max-h-52 overflow-y-auto divide-y divide-slate-100 no-scrollbar">
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 pt-1">
+          <button type="button" onclick="closeManualBarcodeModal()" class="w-1/3 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold text-xs rounded-xl transition-all">Cancel</button>
+          <button type="submit" class="flex-1 py-3 bg-blue-600 hover:bg-blue-700 active:scale-[0.99] text-white font-extrabold text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-1.5 btn-press">
+            <i data-lucide="plus-circle" class="w-4 h-4"></i>
+            <span>Find & Add Item</span>
+          </button>
+        </div>
+      </form>
+    </div>
   </div>
 
   <!-- OVERLAY: SUCCESS CONFIRMATION MODAL -->
@@ -1138,11 +1193,14 @@
           price: parseFloat(p.sellingRate) || 0,
           type: isLoose ? 'weight' : 'unit',
           unit: p.unit || (isLoose ? 'kg' : 'pack'),
-          quantity: parseFloat(p.currentQuantity) || 0
+          quantity: parseFloat(p.currentQuantity) || 0,
+          barcode: p.barcode || '',
+          sku: p.sku || ''
         };
       });
 
       renderCatalogList();
+      renderQuickAddChips();
     }
 
     let activeCategoryFilter = 'All';
@@ -1279,7 +1337,93 @@
       }
     });
 
+    // Audio Sound Effects via Web Audio API (100% Offline & Native Browser Synthesis)
+    let posAudioContext = null;
+
+    function getAudioContext() {
+      if (!posAudioContext) {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (AudioCtx) posAudioContext = new AudioCtx();
+      }
+      if (posAudioContext && posAudioContext.state === 'suspended') {
+        posAudioContext.resume();
+      }
+      return posAudioContext;
+    }
+
+    // 1. Crisp POS Cashier Barcode Scanner Beep Sound
+    function playScanBeepSound() {
+      try {
+        const ctx = getAudioContext();
+        if (!ctx) return;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(1800, ctx.currentTime); // High-pitched cashier scan beep
+        gain.gain.setValueAtTime(0.25, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.12);
+        
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.12);
+      } catch (e) {
+        console.debug("Audio beep sound error:", e);
+      }
+    }
+
+    // 2. Uplifting Victory Chime for Successful Sale Completion
+    function playSaleSuccessSound() {
+      try {
+        const ctx = getAudioContext();
+        if (!ctx) return;
+
+        // Arpeggiated 4-note victory chime (C5 -> E5 -> G5 -> C6)
+        const notes = [523.25, 659.25, 783.99, 1046.50];
+        const now = ctx.currentTime;
+
+        notes.forEach((freq, idx) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          const noteStart = now + (idx * 0.08);
+
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, noteStart);
+
+          gain.gain.setValueAtTime(0.3, noteStart);
+          gain.gain.exponentialRampToValueAtTime(0.001, noteStart + 0.28);
+
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+
+          osc.start(noteStart);
+          osc.stop(noteStart + 0.28);
+        });
+      } catch (e) {
+        console.debug("Sale success sound error:", e);
+      }
+    }
+
     let scannerMediaStream = null;
+
+    function renderQuickAddChips() {
+      const container = document.getElementById('quickAddChipsContainer');
+      if (!container) return;
+
+      const products = Object.values(itemsDb);
+      if (!products || products.length === 0) {
+        container.innerHTML = `<span class="text-xs text-slate-400">No products available</span>`;
+        return;
+      }
+
+      container.innerHTML = products.slice(0, 6).map(p => `
+        <button type="button" onclick="simulateBarcodeScan('${p.id}')" class="px-3 py-1.5 bg-white hover:bg-slate-50 border border-slate-200 rounded-xl text-slate-800 text-xs font-bold transition-all shadow-2xs btn-press flex items-center gap-1">
+          <span>${p.name}</span> <span class="text-[10px] text-slate-500 font-mono">₹${p.price}</span>
+        </button>
+      `).join('');
+    }
 
     function openCameraOverlay() {
       const modal = document.getElementById('cameraScanModal');
@@ -1289,6 +1433,7 @@
       if (modal) {
         modal.classList.remove('hidden');
         modal.style.display = 'flex';
+        renderQuickAddChips();
         renderScannedItemsDrawer();
       }
 
@@ -1304,152 +1449,106 @@
             if (fallback) fallback.classList.add('hidden');
           })
           .catch(err => {
-            console.log('Camera permission or device fallback active:', err);
-            if (fallback) fallback.classList.remove('hidden');
-          });
-      } else {
-        if (fallback) fallback.classList.remove('hidden');
       }
+      if (input) {
+        input.value = '';
+        setTimeout(() => input.focus(), 100);
+      }
+      if (typeof lucide !== 'undefined') lucide.createIcons();
     }
 
-    function closeCameraOverlay() {
-      const modal = document.getElementById('cameraScanModal');
-      const video = document.getElementById('scannerVideoFeed');
-
-      if (scannerMediaStream) {
-        scannerMediaStream.getTracks().forEach(track => track.stop());
-        scannerMediaStream = null;
-      }
-      if (video) {
-        video.srcObject = null;
-      }
-
+    function closeManualBarcodeModal() {
+      const modal = document.getElementById('manualBarcodeModal');
+      const dropdown = document.getElementById('manualBarcodeSuggestions');
       if (modal) {
         modal.classList.add('hidden');
         modal.style.display = 'none';
       }
-      renderCatalogList();
-      updateCartSummary();
-    }
-
-    function toggleScannerTorch() {
-      isScannerTorchOn = !isScannerTorchOn;
-      const btn = document.getElementById('btnScannerTorch');
-      const icon = document.getElementById('torchIcon');
-      if (btn && icon) {
-        if (isScannerTorchOn) {
-          btn.className = 'w-9 h-9 rounded-full bg-amber-400 text-slate-950 flex items-center justify-center transition-all shadow-[0_0_15px_rgba(251,191,36,0.8)] border border-amber-300';
-          icon.setAttribute('data-lucide', 'zap');
-          showToast("Flashlight Turned ON 💡");
-        } else {
-          btn.className = 'w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 active:scale-95 text-slate-300 flex items-center justify-center transition-all border border-white/10';
-          icon.setAttribute('data-lucide', 'zap-off');
-          showToast("Flashlight OFF");
-        }
-        if (typeof lucide !== 'undefined') lucide.createIcons();
+      if (dropdown) {
+        dropdown.classList.add('hidden');
+        dropdown.innerHTML = '';
       }
     }
 
-    function toggleScannedDrawer() {
-      const pane = document.getElementById('scannedDrawerPane');
-      const chevron = document.getElementById('drawerChevron');
-      const hint = document.getElementById('drawerToggleHintText');
-      if (pane) {
-        const isHidden = pane.classList.contains('hidden');
-        if (isHidden) {
-          pane.classList.remove('hidden');
-          if (chevron) chevron.classList.add('rotate-180');
-          if (hint) hint.textContent = "Tap to collapse";
-        } else {
-          pane.classList.add('hidden');
-          if (chevron) chevron.classList.remove('rotate-180');
-          if (hint) hint.textContent = "Tap to review";
-        }
-      }
-    }
+    function handleManualBarcodeInputChange() {
+      const input = document.getElementById('manualBarcodeInput');
+      const dropdown = document.getElementById('manualBarcodeSuggestions');
+      if (!input || !dropdown) return;
 
-    function simulateBarcodeScan(prodId) {
-      const frame = document.getElementById('scannerViewportFrame');
-      const popCard = document.getElementById('scanProductFoundCard');
-      const nameEl = document.getElementById('scannedProdName');
-      const metaEl = document.getElementById('scannedProdMeta');
-
-      if (!itemsDb[prodId]) return;
-      const item = itemsDb[prodId];
-
-      // 1. Detected State Frame Catch Jolt (Frame flashes green with bounce animation)
-      if (frame) {
-        frame.classList.add('frame-catch-anim');
-        setTimeout(() => frame.classList.remove('frame-catch-anim'), 350);
-      }
-
-      // Haptic Vibration Feedback if supported
-      if (navigator.vibrate) {
-        navigator.vibrate([40, 30, 40]);
-      }
-
-      // 2. Add / Increment Item in Cart
-      if (item.type === 'weight') {
-        openWeightSheet(prodId);
+      const query = (input.value || '').trim().toLowerCase();
+      if (!query) {
+        dropdown.classList.add('hidden');
+        dropdown.innerHTML = '';
         return;
-      } else {
-        changeUnitQty(prodId, 1);
       }
 
-      // 3. Product-Found Confirmation Card Popup
-      if (nameEl) nameEl.textContent = item.name;
-      if (metaEl) metaEl.textContent = `+1 ${item.unit} added • ₹${item.price.toFixed(2)}`;
-      
-      if (popCard) {
-        popCard.classList.remove('hidden');
-        setTimeout(() => popCard.classList.add('hidden'), 1600);
-      }
-
-      // 4. Update Persistent Scanned Items Drawer
-      renderScannedItemsDrawer();
-    }
-
-    function renderScannedItemsDrawer() {
-      const drawerList = document.getElementById('scannedDrawerList');
-      const countLabel = document.getElementById('scannerCartSummaryLabel');
-      const totalLabel = document.getElementById('scannerCartTotalLabel');
-
-      let count = 0;
-      let total = 0;
-      let rowsHtml = '';
-
-      Object.keys(cart).forEach(id => {
-        const item = itemsDb[id];
-        const c = cart[id];
-        count += 1;
-        total += c.total;
-
-        const qStr = c.displayUnit ? `${c.qty} ${c.displayUnit}` : `${c.qty} ${item.unit}`;
-        rowsHtml += `
-          <div class="flex items-center justify-between py-1.5 px-2 bg-slate-950/60 rounded-xl border border-slate-800/80">
-            <div class="min-w-0 pr-2">
-              <div class="font-bold text-slate-100 truncate">${item.name}</div>
-              <div class="text-[10px] text-slate-400 font-mono">${qStr} @ ₹${item.price}/${item.unit}</div>
-            </div>
-            <div class="flex items-center gap-2 shrink-0">
-              <span class="font-black text-emerald-400 font-mono">₹${c.total.toFixed(2)}</span>
-              <button type="button" onclick="changeUnitQty('${id}', -1); renderScannedItemsDrawer();" class="w-6 h-6 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center font-bold text-xs">-</button>
-            </div>
-          </div>
-        `;
+      const matches = Object.values(itemsDb).filter(p => {
+        const barcodeMatch = p.barcode && String(p.barcode).toLowerCase().includes(query);
+        const skuMatch = p.sku && String(p.sku).toLowerCase().includes(query);
+        const nameMatch = p.name && p.name.toLowerCase().includes(query);
+        const idMatch = p.id && p.id.toLowerCase().includes(query);
+        return barcodeMatch || skuMatch || nameMatch || idMatch;
       });
 
-      if (drawerList) {
-        drawerList.innerHTML = rowsHtml || '<div class="text-slate-500 text-center py-3">No items scanned yet in this session</div>';
+      if (matches.length === 0) {
+        dropdown.innerHTML = `
+          <div class="p-3 text-center text-xs text-slate-400 font-semibold">
+            No matching products found
+          </div>
+        `;
+        dropdown.classList.remove('hidden');
+        return;
       }
-      if (countLabel) countLabel.textContent = `${count} item${count === 1 ? '' : 's'} scanned`;
-      if (totalLabel) totalLabel.textContent = `₹${total.toFixed(2)}`;
+
+      dropdown.innerHTML = matches.map(p => `
+        <button type="button" onclick="selectManualBarcodeSuggestion('${p.id}')" class="w-full text-left p-2.5 hover:bg-blue-50/70 transition-colors flex items-center justify-between gap-2 btn-press">
+          <div class="min-w-0 flex-1">
+            <div class="text-xs font-extrabold text-slate-900 truncate">${p.name}</div>
+            <div class="text-[10px] text-slate-500 font-mono font-medium">₹${p.price}/${p.unit} ${p.barcode ? `• Code: ${p.barcode}` : ''}</div>
+          </div>
+          <span class="px-2.5 py-1 bg-blue-600 text-white rounded-lg text-[10px] font-extrabold shrink-0 shadow-2xs">+ Add</span>
+        </button>
+      `).join('');
+
+      dropdown.classList.remove('hidden');
     }
 
-    function promptManualBarcodeEntry() {
-      const code = prompt("Enter 8-digit or 13-digit Product Barcode Number:");
-      if (code) {
-        simulateBarcodeScan('p_cookie');
+    function selectManualBarcodeSuggestion(prodId) {
+      closeManualBarcodeModal();
+      simulateBarcodeScan(prodId);
+    }
+
+    function handleManualBarcodeSubmit(e) {
+      if (e) e.preventDefault();
+      const input = document.getElementById('manualBarcodeInput');
+      const code = input?.value || '';
+      if (!code.trim()) return;
+
+      closeManualBarcodeModal();
+      
+      const cleanCode = code.trim().toLowerCase();
+      
+      let matched = Object.values(itemsDb).find(p => 
+        (p.barcode && String(p.barcode).trim().toLowerCase() === cleanCode) ||
+        (p.sku && String(p.sku).trim().toLowerCase() === cleanCode) ||
+        (p.id && String(p.id).trim().toLowerCase() === cleanCode) ||
+        (p.name && String(p.name).trim().toLowerCase() === cleanCode)
+      );
+
+      if (!matched) {
+        matched = Object.values(itemsDb).find(p => 
+          p.name && p.name.toLowerCase().includes(cleanCode)
+        );
+      }
+
+      if (matched) {
+        simulateBarcodeScan(matched.id);
+      } else {
+        if (typeof showToast === 'function') {
+          showToast(`No product found for "${code}"`);
+        } else {
+          alert(`No product found for "${code}"`);
+        }
       }
     }
 
@@ -1695,6 +1794,7 @@
         closeWeightSheet();
         renderCatalogList();
         updateCartSummary();
+        renderScannedItemsDrawer();
       }, 250);
     }
 
@@ -1705,6 +1805,7 @@
       closeWeightSheet();
       renderCatalogList();
       updateCartSummary();
+      renderScannedItemsDrawer();
     }
 
     function addLooseItem(id) {
@@ -2105,6 +2206,9 @@
         Storage.saveSale(newSaleObj);
       }
 
+      // Play Victory Audio Chime Sound Effect for Sale Completion
+      playSaleSuccessSound();
+
       // Instantly render generated invoice and navigate directly to Step 4 (super.money digital receipt UI)
       renderGeneratedInvoice();
       goToStep(4);
@@ -2297,7 +2401,6 @@
   </script>
 </body>
 </html>
-
 
 
 

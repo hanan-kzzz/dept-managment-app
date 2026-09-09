@@ -473,11 +473,11 @@ function printBatchBarcodes(products) {
 }
 
 function openModal(modal) {
-    modal.classList.add('active');
-    document.body.style.overflow = 'hidden';
+    if (!modal) return;
+    Utils.openModal(modal);
 }
 
 function closeModal(modal) {
-    modal.classList.remove('active');
-    document.body.style.overflow = '';
+    if (!modal) return;
+    Utils.closeModal(modal);
 }

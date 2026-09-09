@@ -179,19 +179,10 @@ const Utils = {
         cancelBtn.textContent = cancelText || 'Cancel';
         confirmBtn.textContent = confirmText || 'Delete';
 
-        overlay.classList.add('active');
-        document.body.style.overflow = 'hidden'; // Block background scroll
-        
-        if (typeof lucide !== 'undefined') {
-            lucide.createIcons();
-        }
+        this.openModal(overlay);
 
         const cleanUp = () => {
-            overlay.classList.remove('active');
-            const activeModals = document.querySelectorAll('.modal-overlay.active, .dialog-overlay.active');
-            if (activeModals.length === 0) {
-                document.body.style.overflow = ''; // Restore background scroll
-            }
+            this.closeModal(overlay);
             const newCancel = cancelBtn.cloneNode(true);
             const newConfirm = confirmBtn.cloneNode(true);
             cancelBtn.parentNode.replaceChild(newCancel, cancelBtn);
@@ -206,6 +197,62 @@ const Utils = {
             cleanUp();
             if (typeof onConfirm === 'function') onConfirm();
         });
+    },
+
+    // --- GLOBAL MODAL CONTROLLER (LOCKS BACKGROUND SCROLL & TOUCH MOVEMENT) ---
+    openModal(modal) {
+        if (typeof modal === 'string') modal = document.getElementById(modal);
+        if (!modal) return;
+
+        modal.classList.add('active');
+        if (modal.style.display === 'none') {
+            modal.style.display = 'flex';
+        }
+
+        document.documentElement.classList.add('modal-open');
+        document.body.classList.add('modal-open');
+        document.body.style.overflow = 'hidden';
+
+        if (!modal._hasTouchMoveBound) {
+            modal.addEventListener('touchmove', this._handleModalTouchMove, { passive: false });
+            modal._hasTouchMoveBound = true;
+        }
+
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
+    },
+
+    closeModal(modal) {
+        if (typeof modal === 'string') modal = document.getElementById(modal);
+        if (!modal) return;
+
+        modal.classList.remove('active');
+        if (modal.id === 'pos-camera-scanner-overlay' || modal.classList.contains('scanner-subdialog-overlay')) {
+            modal.style.display = 'none';
+        }
+
+        const form = modal.querySelector('form');
+        if (form) {
+            form.reset();
+            Array.from(form.elements).forEach(el => el.classList.remove('is-invalid'));
+        }
+
+        const activeModals = document.querySelectorAll('.modal-overlay.active, .dialog-overlay.active, .scanner-modal-overlay.active, .bill-modal-wrapper.active, .scanner-subdialog-overlay[style*="display: block"]');
+        if (activeModals.length === 0) {
+            document.documentElement.classList.remove('modal-open');
+            document.body.classList.remove('modal-open');
+            document.body.style.overflow = '';
+        }
+    },
+
+    _handleModalTouchMove(e) {
+        const isScrollableContent = e.target.closest('.modal-container, .scanner-modal-card, .bill-modal-sheet, .dialog-box, .modal-body, .bill-modal-body, .rem-textarea, .form-control-textarea, .modal-custom-picker-content');
+        if (isScrollableContent) {
+            e.stopPropagation();
+        } else {
+            e.preventDefault();
+        }
     },
 
     // --- APP SHELL INJECTION ---
@@ -619,14 +666,6 @@ const Utils = {
                                 <div class="action-grid-title">Add Product</div>
                             </div>
                         </a>
-                        <a href="${window.getAppLink('dues.html?openRecordPayment=true')}" class="action-grid-card">
-                            <div class="action-grid-icon-wrap" style="background-color: var(--danger-tint); color: var(--danger);">
-                                <i data-lucide="circle-dollar-sign"></i>
-                            </div>
-                            <div>
-                                <div class="action-grid-title">Record Payment</div>
-                            </div>
-                        </a>
                         <a href="${window.getAppLink('market-prices.html')}" class="action-grid-card">
                             <div class="action-grid-icon-wrap" style="background-color: var(--accent-tint); color: var(--accent);">
                                 <i data-lucide="scale"></i>
@@ -642,22 +681,22 @@ const Utils = {
 
             // Bind click controllers
             fabBtn.addEventListener('click', () => {
-                actionsSheet.classList.add('active');
+                Utils.openModal(actionsSheet);
             });
 
             document.getElementById('actions-sheet-close').addEventListener('click', () => {
-                actionsSheet.classList.remove('active');
+                Utils.closeModal(actionsSheet);
             });
 
             actionsSheet.addEventListener('click', (e) => {
                 if (e.target === actionsSheet) {
-                    actionsSheet.classList.remove('active');
+                    Utils.closeModal(actionsSheet);
                 }
             });
 
             actionsSheet.querySelectorAll('.action-grid-card').forEach(card => {
                 card.addEventListener('click', () => {
-                    actionsSheet.classList.remove('active');
+                    Utils.closeModal(actionsSheet);
                 });
             });
         }
@@ -715,15 +754,15 @@ const Utils = {
             document.body.appendChild(moreMenu);
 
             document.getElementById('more-menu-close').addEventListener('click', () => {
-                moreMenu.classList.remove('active');
+                Utils.closeModal(moreMenu);
             });
             moreMenu.addEventListener('click', (e) => {
                 if (e.target === moreMenu) {
-                    moreMenu.classList.remove('active');
+                    Utils.closeModal(moreMenu);
                 }
             });
         }
-        moreMenu.classList.add('active');
+        Utils.openModal(moreMenu);
         if (typeof lucide !== 'undefined') {
             lucide.createIcons();
         }
@@ -1525,9 +1564,7 @@ const Utils = {
         modal._activeSale = sale;
 
         const closeModal = () => {
-            modal.classList.remove('active');
-            document.body.classList.remove('modal-open');
-            document.body.style.overflow = '';
+            this.closeModal(modal);
             document.removeEventListener('keydown', handleEsc);
         };
 
@@ -1557,9 +1594,7 @@ const Utils = {
 
         // Activate modal sheet animation
         requestAnimationFrame(() => {
-            modal.classList.add('active');
-            document.body.classList.add('modal-open');
-            document.body.style.overflow = 'hidden';
+            this.openModal(modal);
         });
     },
 
