@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=10b981&height=250&section=header&text=GroceryApp%20%7C%20Debt%20Management&fontSize=42&animation=fadeIn&fontAlignY=35&desc=The%20Ultimate%20Offline-First%20PWA%20%26%20Digital%20Ledger%20for%20Retailers&descAlignY=55&descAlign=50" width="100%" />
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=10b981&height=250&section=header&text=GroceryApp%20-%20Debt%20Management&fontSize=42&animation=fadeIn&fontAlignY=35&desc=The%20Ultimate%20Offline-First%20PWA%20and%20Digital%20Ledger%20for%20Retailers&descAlignY=55&descAlign=50" width="100%" />
 
   <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=600&size=22&pause=1000&color=10b981&center=true&vCenter=true&width=650&lines=Digitize+Your+Khata+Book+%26+Customer+Debts;POS+Billing+%2B+Thermal+Receipt+Printing;Automated+WhatsApp+%26+Telegram+Reminders;Real-Time+Barcode+Scanning+%26+Inventory;Works+100%25+Offline+via+PWA!" alt="Typing SVG" />
   
