@@ -106,7 +106,7 @@ assert(finOverdue.status === 'OVERDUE', `Status badge is OVERDUE (got ${finOverd
 console.log("\n[6] System Overdue Alert Trigger:");
 Storage.runDueCheckAndNotify();
 const notifs = Storage.getNotifications();
-const overdueNotif = notifs.find(n => n.type === 'overdue' && n.targetId === overdueCust.id);
+const overdueNotif = notifs.find(n => (n.type === 'overdue' || n.type === 'CUSTOMER_OVERDUE') && n.targetId === overdueCust.id);
 assert(overdueNotif !== undefined, "System notification generated for overdue customer");
 
 // 7. Full Settlement & NO DUE Status

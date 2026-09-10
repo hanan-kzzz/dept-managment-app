@@ -258,6 +258,9 @@ const Utils = {
 
     // --- APP SHELL INJECTION ---
     initAppLayout(activePage = 'home') {
+        if (typeof PWA !== 'undefined' && PWA.init) {
+            PWA.init();
+        }
         const settings = Storage.getSettings();
         const unreadCount = Storage.getNotifications().filter(n => !n.read).length;
 

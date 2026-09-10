@@ -1,22 +1,27 @@
 {
-  "name": "Cashly",
+  "id": "cashly-pwa",
+  "name": "Cashly - Sales & Debt Management",
   "short_name": "Cashly",
-  "description": "Sales, simplified.",
+  "description": "Smart mobile point-of-sale, stock, customer debt, and sales management app.",
   "start_url": "index.html",
+  "scope": "./",
   "display": "standalone",
-  "background_color": "#2563EB",
-  "theme_color": "#2563EB",
-  "orientation": "portrait-primary",
+  "background_color": "#087FF5",
+  "theme_color": "#087FF5",
+  "orientation": "any",
+  "categories": ["business", "finance", "productivity"],
   "icons": [
     {
       "src": "assets/icons/icon-192.png",
       "type": "image/png",
-      "sizes": "192x192"
+      "sizes": "192x192",
+      "purpose": "any maskable"
     },
     {
       "src": "assets/icons/icon-512.png",
       "type": "image/png",
-      "sizes": "512x512"
+      "sizes": "512x512",
+      "purpose": "any maskable"
     }
   ]
 }

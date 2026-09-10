@@ -526,8 +526,8 @@ const Storage = {
 
     // --- SALES / TRANSACTIONS ---
     getSales() {
-        let sales = this._get(KEYS.SALES, []);
-        if (!sales || sales.length === 0) {
+        let sales = this._get(KEYS.SALES, null);
+        if (sales === null) {
             this.loadDemoData();
             sales = this._get(KEYS.SALES, []);
         }
@@ -817,6 +817,10 @@ const Storage = {
     // --- DEMO DATA LOAD / REMOVE ---
     loadDemoData() {
         this.clearAllData();
+        localStorage.setItem(KEYS.CUSTOMERS, JSON.stringify([]));
+        localStorage.setItem(KEYS.PRODUCTS, JSON.stringify([]));
+        localStorage.setItem(KEYS.SALES, JSON.stringify([]));
+        localStorage.setItem(KEYS.PAYMENTS, JSON.stringify([]));
 
         const demoCustomers = [
             {
@@ -1022,6 +1026,7 @@ const Storage = {
 
         // Reset invoice sequence
         localStorage.setItem(KEYS.INVOICE_SEQ, '1');
+        localStorage.setItem(KEYS.SALES, JSON.stringify([]));
 
         if (arun && rice && sugar) {
             // Sale 1: Arun bought rice and sugar on credit

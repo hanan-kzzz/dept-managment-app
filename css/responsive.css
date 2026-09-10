@@ -311,3 +311,179 @@
         opacity: 1;
     }
 }
+
+/* ==========================================================================
+   PWA & MOBILE OFFLINE ENGINE STYLES
+   ========================================================================== */
+
+/* Network Status Banner (Offline / Online Toast) */
+.pwa-network-banner {
+    position: fixed;
+    top: 12px;
+    left: 50%;
+    transform: translate(-50%, -150%);
+    z-index: 10000;
+    background: var(--surface, #ffffff);
+    color: var(--text-primary, #1e293b);
+    padding: 8px 16px;
+    border-radius: 999px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18), 0 0 0 1px var(--border, rgba(0,0,0,0.08));
+    font-size: 0.82rem;
+    font-weight: 600;
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+    opacity: 0;
+    pointer-events: none;
+    max-width: 90vw;
+}
+
+.pwa-network-banner.show {
+    transform: translate(-50%, 0);
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.pwa-banner-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+.pwa-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+.pwa-dot.orange {
+    background-color: #f59e0b;
+    box-shadow: 0 0 8px rgba(245, 158, 11, 0.6);
+}
+
+.pwa-dot.green {
+    background-color: #10b981;
+    box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+}
+
+/* PWA Mobile Install Banner Prompt */
+.pwa-install-banner {
+    position: fixed;
+    bottom: max(24px, calc(env(safe-area-inset-bottom, 0px) + 24px));
+    left: 50%;
+    transform: translate(-50%, 150%);
+    z-index: 9999;
+    width: calc(100% - 32px);
+    max-width: 400px;
+    background: var(--surface, #ffffff);
+    border: 1px solid var(--border, #e2e8f0);
+    border-radius: 18px;
+    padding: 12px 14px;
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.pwa-install-banner.show {
+    transform: translate(-50%, 0);
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.pwa-install-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: var(--primary-tint, #EAF3FF);
+    color: var(--primary, #087FF5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.pwa-install-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.pwa-install-title {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--text-primary, #0f172a);
+    margin-bottom: 2px;
+}
+
+.pwa-install-desc {
+    font-size: 0.74rem;
+    color: var(--text-secondary, #64748b);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.pwa-install-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-pwa-install {
+    background: var(--primary, #087FF5);
+    color: #ffffff;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    min-height: 36px;
+}
+
+.btn-pwa-install:active {
+    background: var(--primary-hover, #066FD6);
+}
+
+.btn-pwa-dismiss {
+    background: transparent;
+    border: none;
+    color: var(--text-muted, #94a3b8);
+    font-size: 1.4rem;
+    cursor: pointer;
+    line-height: 1;
+    padding: 4px;
+}
+
+/* Mobile Safe Areas & Touch Target Enhancements (<768px) */
+@media (max-width: 767px) {
+    body {
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+    
+    .bottom-nav {
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    /* Scrollable tables on mobile */
+    .table-responsive {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        border-radius: var(--radius-md, 12px);
+    }
+
+    /* Ensure touch targets are at least 44px */
+    .btn,
+    .icon-btn,
+    .form-control,
+    .bottom-nav-item {
+        min-height: 44px;
+    }
+}
+
