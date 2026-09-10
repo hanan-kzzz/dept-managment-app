@@ -38,29 +38,15 @@ window.getAppLink = function(targetFile) {
         return targetFile;
     }
     const basePath = window.computeBasePath();
-    const isHttp = window.location.protocol.startsWith('http');
     
     if (targetFile.startsWith('pages/') || targetFile.startsWith('auth/')) {
-        let path = targetFile;
-        if (isHttp && path.endsWith('.html')) {
-            path = path.slice(0, -5);
-        }
-        return basePath + path;
+        return basePath + targetFile;
     }
     
     const parts = targetFile.split('?');
     let baseFile = parts[0];
     const query = parts.length > 1 ? '?' + parts[1] : '';
     const folder = window.routeMap[baseFile] !== undefined ? window.routeMap[baseFile] : '';
-    
-    if (isHttp) {
-        if (baseFile === 'index.html') {
-            return basePath + query;
-        }
-        if (baseFile.endsWith('.html')) {
-            baseFile = baseFile.slice(0, -5);
-        }
-    }
     
     return basePath + folder + baseFile + query;
 };
@@ -295,6 +281,9 @@ const Utils = {
         else if (hour < 17) timeGreeting = 'Good afternoon';
         else timeGreeting = 'Good evening';
 
+        // 0. Inject Phone Mockup Status Bar & Home Indicator
+        this._injectPhoneMockupElements();
+
         // 1. Inject Header (No emojis)
         const headerContainer = document.getElementById('app-header');
         if (headerContainer) {
@@ -403,6 +392,50 @@ const Utils = {
 
         // Initialize Custom Premium Dropdowns globally
         this.initializeCustomDropdowns();
+    },
+
+    _injectPhoneMockupElements() {
+        if (!document.getElementById('phone-mockup-status-bar')) {
+            const statusBar = document.createElement('div');
+            statusBar.id = 'phone-mockup-status-bar';
+            statusBar.className = 'phone-mockup-status-bar';
+            
+            const updateClock = () => {
+                const now = new Date();
+                let hours = now.getHours();
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                const ampm = hours >= 12 ? 'PM' : 'AM';
+                hours = hours % 12 || 12;
+                const timeStr = `${hours}:${minutes} ${ampm}`;
+                const timeEl = document.getElementById('phone-status-time');
+                if (timeEl) timeEl.textContent = timeStr;
+            };
+
+            statusBar.innerHTML = `
+                <div class="phone-status-time" id="phone-status-time">10:15 PM</div>
+                <div class="phone-dynamic-island">
+                    <div class="dynamic-island-camera"></div>
+                    <div class="dynamic-island-sensor"></div>
+                </div>
+                <div class="phone-status-icons">
+                    <svg class="phone-icon-signal" viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M12 3L2 21h20L12 3z"/></svg>
+                    <svg class="phone-icon-wifi" viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M12 3C7.03 3 2.64 5.02.04 8.27l1.77 1.77C4.1 7.37 7.79 5.5 12 5.5s7.9 1.87 10.19 4.54l1.77-1.77C21.36 5.02 16.97 3 12 3zm0 5c-3.5 0-6.6 1.4-8.8 3.7l1.77 1.77C6.67 11.8 9.17 10.5 12 10.5s5.33 1.3 7.03 3.03l1.77-1.77C18.6 9.4 15.5 8 12 8zm0 5c-2.07 0-3.9.83-5.23 2.17l1.77 1.77C9.47 16.07 10.64 15.5 12 15.5s2.53.57 3.46 1.44l1.77-1.77C15.9 13.83 14.07 13 12 13zm0 5a2 2 0 100 4 2 2 0 000-4z"/></svg>
+                    <div class="phone-icon-battery">
+                        <div class="phone-battery-level"></div>
+                    </div>
+                </div>
+            `;
+            document.body.prepend(statusBar);
+            updateClock();
+            setInterval(updateClock, 30000);
+        }
+
+        if (!document.getElementById('phone-mockup-home-indicator')) {
+            const homeIndicator = document.createElement('div');
+            homeIndicator.id = 'phone-mockup-home-indicator';
+            homeIndicator.className = 'phone-mockup-home-indicator';
+            document.body.appendChild(homeIndicator);
+        }
     },
 
     // Reusable custom accessible dropdown component compiler

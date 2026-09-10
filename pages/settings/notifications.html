@@ -34,7 +34,11 @@
             display: flex;
             gap: 6px;
             overflow-x: auto;
-            padding-bottom: 4px;
+            -webkit-overflow-scrolling: touch;
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+            padding-bottom: 6px;
             margin-bottom: 14px;
             scrollbar-width: none;
         }
@@ -42,8 +46,8 @@
             display: none;
         }
         .notif-filter-pill {
-            padding: 6px 14px;
-            font-size: 0.78rem;
+            padding: 6px 12px;
+            font-size: 0.75rem;
             font-weight: 700;
             border-radius: 20px;
             border: 1px solid var(--border);
@@ -51,7 +55,10 @@
             color: var(--text-muted);
             cursor: pointer;
             white-space: nowrap;
+            flex-shrink: 0;
             transition: all 0.15s ease;
+            display: inline-flex;
+            align-items: center;
         }
         .notif-filter-pill:active, .notif-filter-pill.active {
             background: var(--primary);
@@ -346,7 +353,6 @@
         }
 
     </style>
-    <script src="../../js/loader.js"></script>
     <!-- Favicon & PWA App Icons -->
     <link rel="icon" type="image/x-icon" href="../../favicon.ico">
     <link rel="icon" type="image/png" sizes="32x32" href="../../favicon.png">
@@ -355,46 +361,28 @@
 </head>
 <body data-page="notifications">
 
-    <!-- Page Preloader -->
-    <div id="page-preloader" class="page-preloader" style="display: none !important;">
-        <div class="preloader-content">
-            <div class="preloader-logo-ring">
-                <div class="preloader-spinner-outer"></div>
-                <div class="preloader-spinner-inner"></div>
-                <div class="preloader-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" style="width:26px !important;height:26px !important;max-width:26px !important;max-height:26px !important;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/></svg>
-                </div>
-            </div>
-            <div class="preloader-brand">Cashly</div>
-            <div class="preloader-dots">
-                <span class="dot"></span>
-                <span class="dot"></span>
-                <span class="dot"></span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Injected Global Header -->
     <div id="app-header"></div>
 
-    <main class="container" style="padding-bottom: 80px;">
+    <main class="container" style="padding-bottom: calc(115px + env(safe-area-inset-bottom, 0px));">
         <!-- Standard Page Header -->
-        <div class="page-header" style="margin-bottom: 12px;">
-            <a href="../../index.html" class="back-nav">
+        <div class="page-header" style="margin-bottom: 12px; width: 100%;">
+            <a href="../../index.html" class="back-nav" style="display: inline-flex; align-items: center; gap: 4px; margin-bottom: 8px;">
                 <i data-lucide="arrow-left" style="width: 14px; height: 14px; stroke-width: 2.5px;"></i> Dashboard
             </a>
-            <div class="page-title-container" style="display: flex; justify-content: space-between; align-items: flex-end; width: 100%;">
-                <div>
-                    <h1 class="page-title">Notifications</h1>
-                    <div class="page-title-accent"></div>
-                    <p class="page-subtitle">Stay updated on inventory, customer dues, and sales</p>
+            <div class="page-title-container" style="width: 100%;">
+                <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px; width: 100%; flex-wrap: wrap;">
+                    <h1 class="page-title" style="margin: 0; line-height: 1.2;">Notifications</h1>
+                    <div style="display: flex; gap: 6px; flex-shrink: 0; align-items: center;">
+                        <button class="btn btn-outline btn-sm" id="btn-notif-read-all" style="min-height: 30px; height: 30px; padding: 0 10px; font-size: 0.72rem; font-weight: 700; color: var(--text-muted); border-color: var(--border); white-space: nowrap; flex-shrink: 0; display: inline-flex; align-items: center; gap: 4px;">
+                            <i data-lucide="check" style="width: 13px; height: 13px; flex-shrink: 0;"></i> <span>Mark all as read</span>
+                        </button>
+                        <button class="btn btn-outline btn-sm" id="btn-notif-clear" style="min-height: 30px; height: 30px; padding: 0 10px; font-size: 0.72rem; font-weight: 700; color: var(--danger); border-color: var(--border); white-space: nowrap; flex-shrink: 0; display: inline-flex; align-items: center; gap: 4px;">
+                            <i data-lucide="trash-2" style="width: 13px; height: 13px; flex-shrink: 0;"></i> <span>Clear All</span>
+                        </button>
+                    </div>
                 </div>
-                <div style="display: flex; gap: 6px;">
-                    <button class="btn btn-outline btn-sm" id="btn-notif-read-all" style="min-height: 32px; padding: 4px 10px; font-size: 0.72rem; font-weight: 700; color: var(--text-muted); border-color: var(--border);"><i data-lucide="check" style="width: 13px; height: 13px;"></i> Mark all as read</button>
-                    <button class="btn btn-outline btn-sm" id="btn-notif-clear" style="min-height: 32px; padding: 4px 10px; font-size: 0.72rem; font-weight: 700; color: var(--danger); border-color: var(--border);">
-                        <i data-lucide="trash-2" style="width: 13px; height: 13px;"></i> Clear All
-                    </button>
-                </div>
+                <div class="page-title-accent" style="margin: 4px 0 4px 0;"></div>
+                <p class="page-subtitle" style="margin: 0; line-height: 1.35;">Stay updated on inventory, customer dues, and sales</p>
             </div>
         </div>
 

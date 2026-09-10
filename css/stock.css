@@ -1316,96 +1316,65 @@ body[data-page="stock"] {
 }
 
 /* ==========================================================================
-   RESPONSIVE DESIGN (TABLET & DESKTOP 768px+)
+   RESPONSIVE DESIGN (MOBILE VIEW DEFAULT)
    ========================================================================== */
 @media (min-width: 768px) {
     .stock-container {
-        max-width: 960px;
+        max-width: 100%;
         padding-top: 16px;
         padding-bottom: 40px;
     }
 
     .stock-layout-grid {
-        display: grid;
-        grid-template-columns: 340px 1fr;
-        gap: 24px;
-        align-items: start;
-    }
-
-    .stock-layout-side {
-        position: sticky;
-        top: calc(var(--header-height) + 16px);
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
     }
 
     .stock-primary-actions {
-        max-width: 340px;
+        max-width: 100%;
     }
 
-    /* Add Product Modal Centered on Tablet & Desktop */
+    /* Add Product Modal Centered on Desktop */
     .modal-overlay {
         display: flex;
-        align-items: center;
+        align-items: flex-end;
         justify-content: center;
-        padding: 24px;
     }
 
     .prod-modal-container {
-        width: min(560px, calc(100vw - 48px));
-        max-width: 600px;
+        width: 100%;
+        max-width: 480px;
         max-height: 90dvh;
-        border-radius: 18px;
+        border-radius: 24px 24px 0 0;
         border: 1px solid var(--border);
         box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
-        transform: scale(0.96);
-        opacity: 0;
-        transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
     }
 
-    .modal-overlay.active .prod-modal-container {
-        transform: scale(1);
-        opacity: 1;
-    }
-
-    /* 2-Column Fields Grid on Tablet/Desktop */
-    .prod-grid-2 {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 12px;
-    }
-
-    /* Centered Custom Picker Popover on Tablet/Desktop */
+    /* Centered Custom Picker Popover on Desktop */
     .custom-picker-container {
-        max-width: 440px;
-        border-radius: 16px;
-        border: 1px solid var(--border);
-        box-shadow: 0 20px 48px rgba(0, 0, 0, 0.3);
-        transform: scale(0.96);
-        opacity: 0;
-        transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
-    }
-
-    .custom-picker-overlay.active .custom-picker-container {
-        transform: scale(1);
-        opacity: 1;
+        max-width: 480px;
+        width: 100%;
+        border-radius: 24px 24px 0 0;
     }
 }
 
 @media (min-width: 1024px) {
     .stock-container {
-        max-width: 1080px;
+        max-width: 100%;
     }
 
     .stock-layout-grid {
-        grid-template-columns: 380px 1fr;
-        gap: 28px;
+        display: flex;
+        flex-direction: column;
     }
 
     .stock-primary-actions {
-        max-width: 380px;
+        max-width: 100%;
     }
 
     .prod-modal-container {
-        max-width: 600px;
+        max-width: 480px;
     }
 }
 
