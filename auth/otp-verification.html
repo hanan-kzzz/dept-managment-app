@@ -1,7 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <script>window.BASE_PATH = '../';</script>
+  <script>
+    (function() {
+      try {
+        var p = window.location.pathname;
+        if (p.endsWith('/index.html')) {
+          window.history.replaceState(null, '', (p.slice(0, -10) || '/') + window.location.search + window.location.hash);
+        } else if (p.endsWith('.html')) {
+          window.history.replaceState(null, '', p.slice(0, -5) + window.location.search + window.location.hash);
+        }
+      } catch(e) {}
+    })();
+    window.BASE_PATH = '../';
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>OTP Verification - Cashly</title>

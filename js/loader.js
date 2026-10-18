@@ -1,13 +1,88 @@
 /**
- * Universal PhonePe-Style Page Loader with 3D Flipping Logo Entrance - Cashly
+ * Universal Page Loader & Navigation Transition Manager - Cashly
  */
 
 (function() {
+    // Clean .html and /index.html from browser URL address bar only on production hosts
+    try {
+        const isLocalDev = Boolean(
+            window.location.hostname === 'localhost' ||
+            window.location.hostname === '127.0.0.1' ||
+            window.location.hostname === '[::1]' ||
+            window.location.protocol === 'file:'
+        );
+        if (!isLocalDev) {
+            const p = window.location.pathname;
+            if (p.endsWith('/index.html')) {
+                const clean = p.slice(0, -10) || '/';
+                window.history.replaceState(null, '', clean + window.location.search + window.location.hash);
+            } else if (p.endsWith('.html')) {
+                const clean = p.slice(0, -5);
+                window.history.replaceState(null, '', clean + window.location.search + window.location.hash);
+            }
+        }
+    } catch (e) {}
+
+    // Auto-inject PWA manifest, mobile web app meta tags, and PWA manager script
+    try {
+        const path = (window.location.pathname || '').replace(/\\/g, '/').toLowerCase();
+        let base = '';
+        if (path.includes('/pages/settings/') && !path.endsWith('/pages/settings/settings.html') && !path.endsWith('/pages/settings/notifications.html') && !path.endsWith('/pages/settings/settings') && !path.endsWith('/pages/settings/notifications')) {
+            base = '../../../';
+        } else if (path.includes('/pages/customers/') || path.includes('/pages/inventory/') || path.includes('/pages/sales/') || path.includes('/pages/settings/')) {
+            base = '../../';
+        } else if (path.includes('/auth/')) {
+            base = '../';
+        }
+
+        // Ensure manifest link exists
+        if (!document.querySelector('link[rel="manifest"]')) {
+            const manifestLink = document.createElement('link');
+            manifestLink.rel = 'manifest';
+            manifestLink.href = base + 'manifest.json';
+            document.head.appendChild(manifestLink);
+        }
+
+        // Ensure meta theme-color exists
+        if (!document.querySelector('meta[name="theme-color"]')) {
+            const themeMeta = document.createElement('meta');
+            themeMeta.name = 'theme-color';
+            themeMeta.content = '#2563EB';
+            document.head.appendChild(themeMeta);
+        }
+
+        // Ensure iOS Safari / PWA meta tags
+        if (!document.querySelector('meta[name="apple-mobile-web-app-capable"]')) {
+            const appleCap = document.createElement('meta');
+            appleCap.name = 'apple-mobile-web-app-capable';
+            appleCap.content = 'yes';
+            document.head.appendChild(appleCap);
+
+            const appleStatus = document.createElement('meta');
+            appleStatus.name = 'apple-mobile-web-app-status-bar-style';
+            appleStatus.content = 'black-translucent';
+            document.head.appendChild(appleStatus);
+
+            const appleTitle = document.createElement('meta');
+            appleTitle.name = 'apple-mobile-web-app-title';
+            appleTitle.content = 'Cashly';
+            document.head.appendChild(appleTitle);
+        }
+
+        // Ensure pwa-manager.js script is loaded
+        if (!document.getElementById('pwa-manager-script')) {
+            const pwaScript = document.createElement('script');
+            pwaScript.id = 'pwa-manager-script';
+            pwaScript.src = base + 'js/pwa-manager.js';
+            document.head.appendChild(pwaScript);
+        }
+    } catch (e) {}
+
     const LOADER_ID = 'page-preloader';
-    const MIN_LOADER_TIME = 600; // Smooth display duration for 3D logo flip entrance
-    const MAX_SAFETY_TIMEOUT = 1200;
+    const MIN_LOADER_TIME = 250; // Minimum time in ms to display loader
     const startTime = Date.now();
 
+    // Inject strict inline CSS into <head> immediately to guarantee correct sizing & fixed positioning
     function injectLoaderStyles() {
         if (document.getElementById('page-preloader-inline-styles')) return;
         const styleEl = document.createElement('style');
@@ -17,164 +92,89 @@
                 position: fixed !important;
                 top: 0 !important;
                 left: 0 !important;
+                right: 0 !important;
+                bottom: 0 !important;
                 width: 100vw !important;
                 height: 100vh !important;
-                background: linear-gradient(135deg, #1b0933 0%, #5f259f 50%, #3e126e 100%) !important;
-                z-index: 99999999 !important;
+                background-color: var(--page-bg, #f4f6f8) !important;
+                z-index: 999999 !important;
                 display: flex !important;
-                flex-direction: column !important;
                 align-items: center !important;
                 justify-content: center !important;
                 opacity: 1 !important;
                 visibility: visible !important;
-                transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.4s !important;
-                pointer-events: none !important;
+                pointer-events: auto !important;
                 margin: 0 !important;
                 padding: 0 !important;
             }
+            [data-theme="dark"] .page-preloader {
+                background-color: var(--page-bg, #090d16) !important;
+            }
             .page-preloader.fade-out {
                 opacity: 0 !important;
-                transform: scale(1.08) !important;
                 visibility: hidden !important;
+                pointer-events: none !important;
                 display: none !important;
             }
-            .phonepe-loader-container {
-                position: relative !important;
+            .preloader-content {
                 display: flex !important;
                 flex-direction: column !important;
                 align-items: center !important;
                 justify-content: center !important;
-                gap: 18px !important;
+                gap: 14px !important;
             }
-            .phonepe-badge-wrap {
+            .preloader-logo-ring {
                 position: relative !important;
-                width: 84px !important;
-                height: 84px !important;
-                perspective: 800px !important;
+                width: 72px !important;
+                height: 72px !important;
                 display: flex !important;
                 align-items: center !important;
                 justify-content: center !important;
             }
-            .phonepe-badge {
-                position: relative !important;
-                width: 76px !important;
-                height: 76px !important;
+            .preloader-spinner-outer {
+                position: absolute !important;
+                inset: 0 !important;
                 border-radius: 50% !important;
-                background: rgba(255, 255, 255, 0.14) !important;
-                backdrop-filter: blur(12px) !important;
-                -webkit-backdrop-filter: blur(12px) !important;
-                border: 2px solid rgba(255, 255, 255, 0.3) !important;
+                border: 3px solid rgba(37, 99, 235, 0.12) !important;
+                border-top-color: var(--primary, #2563eb) !important;
+                border-right-color: #06b6d4 !important;
+                animation: preloaderSpin 0.9s linear infinite !important;
+            }
+            .preloader-spinner-inner {
+                position: absolute !important;
+                inset: 7px !important;
+                border-radius: 50% !important;
+                border: 2px solid transparent !important;
+                border-bottom-color: var(--primary, #2563eb) !important;
+                animation: preloaderSpinReverse 1.3s linear infinite !important;
+            }
+            .preloader-icon {
+                width: 28px !important;
+                height: 28px !important;
+                max-width: 28px !important;
+                max-height: 28px !important;
+                color: var(--primary, #2563eb) !important;
                 display: flex !important;
                 align-items: center !important;
                 justify-content: center !important;
-                box-shadow: 0 14px 40px rgba(0, 0, 0, 0.35) !important;
-                animation: phonepeLogoFlipEntrance 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards, phonepeIconSpinFlip 2.4s 0.7s ease-in-out infinite alternate !important;
-                transform-style: preserve-3d !important;
-                z-index: 2 !important;
+                animation: preloaderPulse 1.4s ease-in-out infinite alternate !important;
             }
-            .phonepe-icon-wrap {
-                color: #ffffff !important;
-                display: flex !important;
-                align-items: center !important;
-                justify-content: center !important;
-            }
-            .phonepe-icon-wrap svg {
-                width: 34px !important;
-                height: 34px !important;
+            .preloader-icon svg {
+                width: 26px !important;
+                height: 26px !important;
+                max-width: 26px !important;
+                max-height: 26px !important;
                 flex-shrink: 0 !important;
                 display: block !important;
-                filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.25)) !important;
             }
-            .phonepe-spinner-arc {
-                position: absolute !important;
-                inset: -6px !important;
-                border-radius: 50% !important;
-                border: 3px solid transparent !important;
-                border-top-color: #00d2ff !important;
-                border-right-color: #ffffff !important;
-                animation: phonepeArcSpin 0.85s linear infinite !important;
-                z-index: 3 !important;
-            }
-            .phonepe-ripple-ring {
-                position: absolute !important;
-                top: 50% !important;
-                left: 50% !important;
-                width: 76px !important;
-                height: 76px !important;
-                border-radius: 50% !important;
-                background: rgba(255, 255, 255, 0.12) !important;
-                transform: translate(-50%, -50%) scale(1) !important;
-                animation: phonepeRipple 1.8s cubic-bezier(0.1, 0.8, 0.3, 1) infinite !important;
-                pointer-events: none !important;
-                z-index: 1 !important;
-            }
-            .phonepe-ripple-ring.ring-2 {
-                animation-delay: 0.6s !important;
-            }
-            .phonepe-brand-title {
-                font-size: 1.55rem !important;
-                font-weight: 900 !important;
-                color: #ffffff !important;
+            .preloader-brand {
+                font-size: 1.25rem !important;
+                font-weight: 800 !important;
+                color: var(--text-primary, #0f172a) !important;
                 letter-spacing: -0.4px !important;
-                font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif !important;
-                text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2) !important;
-                animation: phonepeTitleSlideUp 0.6s 0.2s cubic-bezier(0.25, 1, 0.5, 1) both !important;
             }
-            .phonepe-dots-loader {
-                display: flex !important;
-                gap: 8px !important;
-                align-items: center !important;
-                margin-top: 2px !important;
-                animation: phonepeTitleSlideUp 0.6s 0.3s cubic-bezier(0.25, 1, 0.5, 1) both !important;
-            }
-            .phonepe-dots-loader span {
-                width: 8px !important;
-                height: 8px !important;
-                border-radius: 50% !important;
-                background-color: #ffffff !important;
-                opacity: 0.4 !important;
-                animation: phonepeDotBounce 1.2s ease-in-out infinite !important;
-            }
-            .phonepe-dots-loader span:nth-child(2) {
-                animation-delay: 0.2s !important;
-            }
-            .phonepe-dots-loader span:nth-child(3) {
-                animation-delay: 0.4s !important;
-            }
-            @keyframes phonepeLogoFlipEntrance {
-                0% {
-                    opacity: 0;
-                    transform: perspective(800px) rotateY(-180deg) scale(0.2);
-                }
-                70% {
-                    opacity: 1;
-                    transform: perspective(800px) rotateY(15deg) scale(1.12);
-                }
-                100% {
-                    opacity: 1;
-                    transform: perspective(800px) rotateY(0deg) scale(1);
-                }
-            }
-            @keyframes phonepeIconSpinFlip {
-                0% { transform: perspective(600px) rotateY(0deg); }
-                50% { transform: perspective(600px) rotateY(180deg); }
-                100% { transform: perspective(600px) rotateY(360deg); }
-            }
-            @keyframes phonepeTitleSlideUp {
-                0% { opacity: 0; transform: translateY(16px); }
-                100% { opacity: 1; transform: translateY(0); }
-            }
-            @keyframes phonepeArcSpin {
-                0% { transform: rotate(0deg); }
-                100% { transform: rotate(360deg); }
-            }
-            @keyframes phonepeRipple {
-                0% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.6; }
-                100% { transform: translate(-50%, -50%) scale(2.3); opacity: 0; }
-            }
-            @keyframes phonepeDotBounce {
-                0%, 100% { transform: translateY(0); opacity: 0.4; }
-                50% { transform: translateY(-6px); opacity: 1; background-color: #00d2ff; }
+            [data-theme="dark"] .preloader-brand {
+                color: #f8fafc !important;
             }
         `;
         (document.head || document.documentElement).appendChild(styleEl);
@@ -182,24 +182,19 @@
 
     function getPreloaderHtml() {
         return `
-            <div class="phonepe-loader-container">
-                <div class="phonepe-badge-wrap">
-                    <div class="phonepe-ripple-ring ring-1"></div>
-                    <div class="phonepe-ripple-ring ring-2"></div>
-                    <div class="phonepe-badge">
-                        <div class="phonepe-icon-wrap">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/></svg>
-                        </div>
-                        <div class="phonepe-spinner-arc"></div>
+            <div class="preloader-content">
+                <div class="preloader-logo-ring">
+                    <div class="preloader-spinner-outer"></div>
+                    <div class="preloader-spinner-inner"></div>
+                    <div class="preloader-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width: 26px !important; height: 26px !important; max-width: 26px !important; max-height: 26px !important;"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/></svg>
                     </div>
                 </div>
-
-                <div class="phonepe-brand-title">Cashly</div>
-                
-                <div class="phonepe-dots-loader">
-                    <span></span>
-                    <span></span>
-                    <span></span>
+                <div class="preloader-brand">Cashly</div>
+                <div class="preloader-dots">
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
                 </div>
             </div>
         `;
@@ -215,47 +210,71 @@
             loader.innerHTML = getPreloaderHtml();
             if (document.body) {
                 document.body.insertBefore(loader, document.body.firstChild);
-            } else if (document.documentElement) {
-                document.documentElement.appendChild(loader);
+            } else {
+                document.addEventListener('DOMContentLoaded', () => {
+                    if (!document.getElementById(LOADER_ID)) {
+                        document.body.insertBefore(loader, document.body.firstChild);
+                    }
+                });
+            }
+        } else {
+            // Fix existing loader svg sizing attributes
+            const svg = loader.querySelector('.preloader-icon svg');
+            if (svg) {
+                svg.setAttribute('width', '26');
+                svg.setAttribute('height', '26');
+                svg.style.cssText = 'width: 26px !important; height: 26px !important; max-width: 26px !important; max-height: 26px !important;';
             }
         }
         return loader;
     }
 
     injectLoaderStyles();
-    ensureLoaderElement();
 
-    let isHidden = false;
-    function hideLoaderNow() {
-        if (isHidden) return;
+    // Ensure loader is present & properly hidden when page loads
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', ensureLoaderElement);
+    } else {
+        ensureLoaderElement();
+    }
+
+    function hideLoader() {
         const elapsedTime = Date.now() - startTime;
         const remainingTime = Math.max(0, MIN_LOADER_TIME - elapsedTime);
 
         setTimeout(() => {
-            if (isHidden) return;
-            isHidden = true;
             const loader = document.getElementById(LOADER_ID);
             if (loader) {
                 loader.classList.add('fade-out');
-                loader.style.setProperty('display', 'none', 'important');
-                setTimeout(() => {
-                    try { loader.remove(); } catch(e) {}
-                }, 400);
+                loader.style.display = 'none';
             }
         }, remainingTime);
     }
 
-    if (document.readyState === 'complete') {
-        hideLoaderNow();
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        hideLoader();
     } else {
-        document.addEventListener('DOMContentLoaded', hideLoaderNow);
-        window.addEventListener('load', hideLoaderNow);
+        window.addEventListener('load', hideLoader);
     }
-    setTimeout(hideLoaderNow, MAX_SAFETY_TIMEOUT);
+    // Safety fallback
+    setTimeout(hideLoader, 300);
 
     // Global APIs
-    window.showPageLoader = function() {};
-    window.hidePageLoader = hideLoaderNow;
+    window.showPageLoader = function(message) {
+        const loader = ensureLoaderElement();
+        if (loader) {
+            const brandEl = loader.querySelector('.preloader-brand');
+            if (brandEl && message) {
+                brandEl.textContent = message;
+            }
+            loader.style.display = 'flex';
+            loader.classList.remove('fade-out');
+        }
+    };
+
+    window.hidePageLoader = function() {
+        hideLoader();
+    };
 
     window.showBtnSpinner = function(btn) {
         if (!btn || btn.classList.contains('btn-loading')) return;

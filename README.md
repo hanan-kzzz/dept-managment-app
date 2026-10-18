@@ -147,7 +147,7 @@ Traditionally, millions of small businesses worldwide manage customer credit, st
 
 ### 6. 🔔 Automated Multi-Channel Messaging
 - **In-App Notification Center**: Centralized inbox for low stock alerts, due dates, and payment receipts.
-- **Automated WhatsApp Reminders**: Node.js Express microservice (`whatsapp-server`) connects via `whatsapp-web.js` to dispatch automated WhatsApp balance reminders directly to customer phones.
+- **Automated WhatsApp Reminders**: Node.js Express microservice (`whatsapp-server`) connects via `@whiskeysockets/baileys` to dispatch automated WhatsApp balance reminders directly to customer phones.
 - **Telegram Bot Webhook Integration**: Receive critical low-stock and daily sales summaries directly in your shop's Telegram channel.
 
 ### 7. 🔐 Role-Based Access Control (RBAC) & Auth
@@ -178,7 +178,7 @@ graph TD
     end
 
     subgraph Node.js Microservices [Optional Automation Layer]
-        WAS[WhatsApp Web Express Server]
+        WAS[WhatsApp Baileys Express Server]
         TG[Telegram Bot Webhook]
     end
 
@@ -201,7 +201,7 @@ graph TD
 - **PWA Capabilities**: Service Worker API, Cache API, Web App Manifest (`manifest.json`).
 - **Local Storage Engine**: Custom Object Abstraction Layer (`js/storage.js`).
 - **Barcode Engine**: Camera MediaDevices API & QuaggaJS Barcode Decoder.
-- **Automation Backend**: Node.js, Express, Cors, `whatsapp-web.js`, Puppeteer, QRCode-Terminal.
+- **Automation Backend**: Node.js, Express, Cors, `@whiskeysockets/baileys`, QRCode-Terminal.
 - **Deployment Platform**: Netlify Edge Network with `netlify.toml` URL redirection rules.
 
 ---
@@ -377,7 +377,7 @@ All store state is managed via `Storage` object in `js/storage.js` using isolate
 
 ## 🤖 WhatsApp Automation Microservice (`whatsapp-server`)
 
-The `whatsapp-server` folder contains a standalone Node.js microservice that links your store's WhatsApp account directly to the web app using `whatsapp-web.js`.
+The `whatsapp-server` folder contains a standalone Node.js microservice that links your store's WhatsApp account directly to the web app using `@whiskeysockets/baileys` (a fast, lightweight WebSocket-based WhatsApp Web protocol connection requiring no Puppeteer or Chromium).
 
 ### Setup & Pairing
 
@@ -580,7 +580,7 @@ This project is open-source and available under the [MIT License](LICENSE).
 - [Vercel Capsule Render](https://github.com/koushikkook/github-readme-capsule-render) for README header graphics.
 - [Tarikul Islam Anik](https://github.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis) for Animated 3D Fluent Emojis.
 - [Shields.io](https://shields.io/) for status badges.
-- [whatsapp-web.js](https://wwebjs.dev/) for WhatsApp protocol automation.
+- [@whiskeysockets/baileys](https://github.com/WhiskeySockets/Baileys) for WhatsApp protocol automation.
 - [Mermaid.js](https://mermaid.js.org/) for architecture & sequence diagrams.
 
 ---

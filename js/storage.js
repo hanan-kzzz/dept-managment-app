@@ -3,6 +3,19 @@
  * Abstracted functions for reading and writing data, making it ready to substitute with a backend database.
  */
 
+(function cleanUrl() {
+    try {
+        const p = window.location.pathname;
+        if (p.endsWith('/index.html')) {
+            const clean = p.slice(0, -10) || '/';
+            window.history.replaceState(null, '', clean + window.location.search + window.location.hash);
+        } else if (p.endsWith('.html')) {
+            const clean = p.slice(0, -5);
+            window.history.replaceState(null, '', clean + window.location.search + window.location.hash);
+        }
+    } catch (e) {}
+})();
+
 const KEYS = {
     CUSTOMERS: 'grocery_customers',
     PRODUCTS: 'grocery_products',
@@ -526,12 +539,12 @@ const Storage = {
 
     // --- SALES / TRANSACTIONS ---
     getSales() {
-        let sales = this._get(KEYS.SALES, null);
-        if (sales === null) {
+        let sales = this._get(KEYS.SALES, []);
+        if ((!sales || sales.length === 0) && !this._isSeedingDemo) {
             this.loadDemoData();
             sales = this._get(KEYS.SALES, []);
         }
-        return sales;
+        return sales || [];
     },
 
     saveSales(sales) {
@@ -816,11 +829,10 @@ const Storage = {
 
     // --- DEMO DATA LOAD / REMOVE ---
     loadDemoData() {
-        this.clearAllData();
-        localStorage.setItem(KEYS.CUSTOMERS, JSON.stringify([]));
-        localStorage.setItem(KEYS.PRODUCTS, JSON.stringify([]));
-        localStorage.setItem(KEYS.SALES, JSON.stringify([]));
-        localStorage.setItem(KEYS.PAYMENTS, JSON.stringify([]));
+        if (this._isSeedingDemo) return false;
+        this._isSeedingDemo = true;
+        try {
+            this.clearAllData();
 
         const demoCustomers = [
             {
@@ -1026,7 +1038,6 @@ const Storage = {
 
         // Reset invoice sequence
         localStorage.setItem(KEYS.INVOICE_SEQ, '1');
-        localStorage.setItem(KEYS.SALES, JSON.stringify([]));
 
         if (arun && rice && sugar) {
             // Sale 1: Arun bought rice and sugar on credit
@@ -1168,6 +1179,9 @@ const Storage = {
         this.runStockCheckAndNotify();
 
         return true;
+        } finally {
+            this._isSeedingDemo = false;
+        }
     },
 
     clearAllData() {

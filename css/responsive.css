@@ -313,94 +313,164 @@
 }
 
 /* ==========================================================================
-   PWA & MOBILE OFFLINE ENGINE STYLES
+   PWA & MOBILE OFFLINE UX STYLES
    ========================================================================== */
 
-/* Network Status Banner (Offline / Online Toast) */
-.pwa-network-banner {
-    position: fixed;
-    top: 12px;
-    left: 50%;
-    transform: translate(-50%, -150%);
-    z-index: 10000;
-    background: var(--surface, #ffffff);
-    color: var(--text-primary, #1e293b);
-    padding: 8px 16px;
-    border-radius: 999px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18), 0 0 0 1px var(--border, rgba(0,0,0,0.08));
-    font-size: 0.82rem;
-    font-weight: 600;
-    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
-    opacity: 0;
-    pointer-events: none;
-    max-width: 90vw;
+/* Touch & Mobile UX Optimizations */
+html, body {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
 }
 
-.pwa-network-banner.show {
-    transform: translate(-50%, 0);
+@media (max-width: 767px) {
+    /* Prevent iOS Safari auto-zoom on input focus by maintaining minimum 16px font-size */
+    input[type="text"],
+    input[type="number"],
+    input[type="email"],
+    input[type="password"],
+    input[type="search"],
+    input[type="tel"],
+    select,
+    textarea {
+        font-size: 16px !important;
+    }
+    
+    .container,
+    .sales-container,
+    .stock-container,
+    .customer-profile-container,
+    .settings-container {
+        padding-bottom: max(115px, calc(100px + env(safe-area-inset-bottom))) !important;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .bottom-nav {
+        bottom: max(12px, calc(6px + env(safe-area-inset-bottom))) !important;
+    }
+}
+
+/* 1. Network Status Banner (Offline / Online Toast) */
+.cashly-network-banner {
+    position: fixed;
+    top: -60px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100000;
+    width: calc(100% - 32px);
+    max-width: 380px;
+    padding: 10px 16px;
+    border-radius: 14px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    transition: top 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+    opacity: 0;
+    pointer-events: none;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.cashly-network-banner.show {
+    top: 14px;
     opacity: 1;
     pointer-events: auto;
 }
 
-.pwa-banner-content {
+@media (min-width: 768px) {
+    .cashly-network-banner.show {
+        top: 52px; /* Position below phone status bar in desktop mockup frame */
+    }
+}
+
+.cashly-network-banner.offline-mode {
+    background: rgba(245, 158, 11, 0.95);
+    color: #0f172a;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.cashly-network-banner.online-mode {
+    background: rgba(16, 185, 129, 0.95);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.network-banner-content {
     display: flex;
     align-items: center;
     gap: 8px;
-    white-space: nowrap;
 }
 
-.pwa-dot {
+.pulse-offline-dot {
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    display: inline-block;
-    flex-shrink: 0;
+    background-color: #ef4444;
+    animation: pulseDot 1.5s infinite;
 }
 
-.pwa-dot.orange {
-    background-color: #f59e0b;
-    box-shadow: 0 0 8px rgba(245, 158, 11, 0.6);
+.pulse-online-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #ffffff;
+    animation: pulseDot 1.5s infinite;
 }
 
-.pwa-dot.green {
-    background-color: #10b981;
-    box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+@keyframes pulseDot {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
+    70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(255, 255, 255, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
 }
 
-/* PWA Mobile Install Banner Prompt */
+/* 2. PWA Mobile Install Banner */
 .pwa-install-banner {
     position: fixed;
-    bottom: max(24px, calc(env(safe-area-inset-bottom, 0px) + 24px));
+    bottom: -120px;
     left: 50%;
-    transform: translate(-50%, 150%);
-    z-index: 9999;
-    width: calc(100% - 32px);
-    max-width: 400px;
-    background: var(--surface, #ffffff);
-    border: 1px solid var(--border, #e2e8f0);
-    border-radius: 18px;
-    padding: 12px 14px;
-    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.2);
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+    transform: translateX(-50%);
+    z-index: 99999;
+    width: calc(100% - 24px);
+    max-width: 380px;
+    transition: bottom 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
     opacity: 0;
     pointer-events: none;
 }
 
 .pwa-install-banner.show {
-    transform: translate(-50%, 0);
+    bottom: 84px;
     opacity: 1;
     pointer-events: auto;
 }
 
+.pwa-install-card {
+    background: var(--surface, #ffffff);
+    color: var(--text, #0f172a);
+    border: 1px solid var(--border, rgba(0, 0, 0, 0.1));
+    border-radius: 20px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.22);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+}
+
+[data-theme="dark"] .pwa-install-card {
+    background: rgba(30, 41, 59, 0.94);
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+}
+
 .pwa-install-icon {
-    width: 40px;
-    height: 40px;
+    width: 42px;
+    height: 42px;
     border-radius: 12px;
-    background: var(--primary-tint, #EAF3FF);
-    color: var(--primary, #087FF5);
+    background: linear-gradient(135deg, #2563eb, #06b6d4);
+    color: #ffffff;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -409,22 +479,26 @@
 
 .pwa-install-info {
     flex: 1;
-    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
 }
 
 .pwa-install-title {
-    font-size: 0.88rem;
+    font-size: 0.9rem;
     font-weight: 700;
-    color: var(--text-primary, #0f172a);
-    margin-bottom: 2px;
+    color: var(--text, #0f172a);
+    letter-spacing: -0.2px;
+}
+
+[data-theme="dark"] .pwa-install-title {
+    color: #f8fafc;
 }
 
 .pwa-install-desc {
     font-size: 0.74rem;
-    color: var(--text-secondary, #64748b);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    color: var(--text-muted, #64748b);
+    line-height: 1.25;
 }
 
 .pwa-install-actions {
@@ -434,56 +508,29 @@
 }
 
 .btn-pwa-install {
-    background: var(--primary, #087FF5);
+    background: var(--primary, #2563eb);
     color: #ffffff;
     border: none;
-    padding: 8px 14px;
+    padding: 7px 14px;
     border-radius: 10px;
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     font-weight: 700;
     cursor: pointer;
-    transition: background-color 0.2s;
-    min-height: 36px;
+    transition: transform 0.15s ease, background-color 0.15s ease;
 }
 
 .btn-pwa-install:active {
-    background: var(--primary-hover, #066FD6);
+    transform: scale(0.95);
 }
 
 .btn-pwa-dismiss {
     background: transparent;
-    border: none;
     color: var(--text-muted, #94a3b8);
-    font-size: 1.4rem;
-    cursor: pointer;
+    border: none;
+    font-size: 1.3rem;
     line-height: 1;
-    padding: 4px;
-}
-
-/* Mobile Safe Areas & Touch Target Enhancements (<768px) */
-@media (max-width: 767px) {
-    body {
-        padding-bottom: env(safe-area-inset-bottom, 0px);
-    }
-    
-    .bottom-nav {
-        padding-bottom: env(safe-area-inset-bottom, 0px);
-    }
-
-    /* Scrollable tables on mobile */
-    .table-responsive {
-        width: 100%;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        border-radius: var(--radius-md, 12px);
-    }
-
-    /* Ensure touch targets are at least 44px */
-    .btn,
-    .icon-btn,
-    .form-control,
-    .bottom-nav-item {
-        min-height: 44px;
-    }
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 50%;
 }
 

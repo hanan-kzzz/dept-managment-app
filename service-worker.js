@@ -1,8 +1,76 @@
-const CACHE_NAME = 'cashly-pwa-v1.0';
+const CACHE_NAME = 'cashly-pwa-v9';
 
 const ASSETS_TO_CACHE = [
   './',
   'index.html',
+  
+  // Sales Pages
+  'pages/sales/sales.html',
+  'pages/sales/new-sale.html',
+  'pages/sales/dues.html',
+  
+  // Inventory Pages
+  'pages/inventory/stock.html',
+  'pages/inventory/product-details.html',
+  'pages/inventory/barcode-management.html',
+  'pages/inventory/market-prices.html',
+  
+  // Customer Pages
+  'pages/customers/customers.html',
+  'pages/customers/customer-details.html',
+  
+  // Settings Pages
+  'pages/settings/settings.html',
+  'pages/settings/notifications.html',
+  'pages/settings/notifications/index.html',
+  'pages/settings/shop-profile/index.html',
+  'pages/settings/business-details/index.html',
+  'pages/settings/bill-settings/index.html',
+  'pages/settings/appearance/index.html',
+  'pages/settings/currency/index.html',
+  'pages/settings/backup/index.html',
+  'pages/settings/language/index.html',
+  'pages/settings/about/index.html',
+  'pages/settings/whatsapp/index.html',
+  'pages/settings/telegram/index.html',
+  
+  // Auth Pages
+  'auth/login.html',
+  'auth/signup.html',
+  'auth/welcome.html',
+  'auth/forgot-password.html',
+  'auth/otp-verification.html',
+  'auth/reset-password.html',
+  
+  // CSS Files
+  'css/style.css',
+  'css/dashboard.css',
+  'css/customers.css',
+  'css/stock.css',
+  'css/settings.css',
+  'css/market-prices.css',
+  'css/auth.css',
+  'css/responsive.css',
+  
+  // JS Files
+  'js/loader.js',
+  'js/app.js',
+  'js/storage.js',
+  'js/utils.js',
+  'js/pwa-manager.js',
+  'js/notifications.js',
+  'js/customers.js',
+  'js/stock.js',
+  'js/sales.js',
+  'js/dues.js',
+  'js/settings.js',
+  'js/barcode.js',
+  'js/barcode-management.js',
+  'js/scanner.js',
+  'js/market-prices.js',
+  'js/marketPriceService.js',
+  
+  // Manifest & Icons
   'manifest.json',
   'favicon.ico',
   'favicon.png',
@@ -11,96 +79,41 @@ const ASSETS_TO_CACHE = [
   'assets/icons/icon-192.png',
   'assets/icons/icon-512.png',
   
-  // HTML Pages
-  'pages/customers/customers.html',
-  'pages/customers/customer-details.html',
-  'pages/inventory/stock.html',
-  'pages/inventory/product-details.html',
-  'pages/inventory/barcode-management.html',
-  'pages/inventory/market-prices.html',
-  'pages/sales/sales.html',
-  'pages/sales/new-sale.html',
-  'pages/sales/dues.html',
-  'pages/settings/settings.html',
-  'pages/settings/notifications.html',
-  'pages/settings/about/index.html',
-  'pages/settings/appearance/index.html',
-  'pages/settings/backup/index.html',
-  'pages/settings/bill-settings/index.html',
-  'pages/settings/business-details/index.html',
-  'pages/settings/currency/index.html',
-  'pages/settings/language/index.html',
-  'pages/settings/notifications/index.html',
-  'pages/settings/shop-profile/index.html',
-  'pages/settings/telegram/index.html',
-  'pages/settings/whatsapp/index.html',
-  
-  // Auth Pages
-  'auth/login.html',
-  'auth/signup.html',
-  'auth/welcome.html',
-  'auth/forgot-password.html',
-  'auth/reset-password.html',
-  'auth/otp-verification.html',
-  
-  // CSS Files
-  'css/style.css',
-  'css/dashboard.css',
-  'css/customers.css',
-  'css/stock.css',
-  'css/responsive.css',
-  'css/auth.css',
-  'css/market-prices.css',
-  'css/settings.css',
-  
-  // JS Files
-  'js/app.js',
-  'js/storage.js',
-  'js/utils.js',
-  'js/pwa.js',
-  'js/loader.js',
-  'js/notifications.js',
-  'js/customers.js',
-  'js/customer-details.js',
-  'js/stock.js',
-  'js/product-details.js',
-  'js/sales.js',
-  'js/new-sale.js',
-  'js/dues.js',
-  'js/settings.js',
-  'js/barcode.js',
-  'js/barcode-management.js',
-  'js/scanner.js',
-  'js/market-prices.js',
-  'js/marketPriceService.js'
+  // Key Graphics
+  'images/login_hero_bg.jpg',
+  'images/login_hero_bg_borderless.jpg',
+  'images/login_hero_wallet.jpg',
+  'images/login_ill.jpg',
+  'images/signup_ill.jpg',
+  'images/bg_growth.jpg'
 ];
 
-// Install Service Worker and resiliently cache static resources
+// Install Service Worker and cache resources
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => {
-        console.log('[Service Worker] Caching App Shell assets');
+        console.log('[Cashly SW] Caching App Shell assets');
         return Promise.allSettled(
-          ASSETS_TO_CACHE.map((url) => {
-            return cache.add(url).catch((err) => {
-              console.warn('[Service Worker] Could not pre-cache asset:', url, err);
-            });
-          })
+          ASSETS_TO_CACHE.map(url => 
+            cache.add(url).catch(err => {
+              console.warn('[Cashly SW] Failed to cache:', url, err);
+            })
+          )
         );
       })
       .then(() => self.skipWaiting())
   );
 });
 
-// Activate event (clean up old caches and claim clients)
+// Activate event (clean up old caches)
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames.map((cache) => {
           if (cache !== CACHE_NAME) {
-            console.log('[Service Worker] Clearing old cache:', cache);
+            console.log('[Cashly SW] Clearing old cache:', cache);
             return caches.delete(cache);
           }
         })
@@ -109,67 +122,75 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Fetch event (Network-first for navigation, Cache-first with stale-while-revalidate for static assets)
+// Navigation Fallback Helper
+async function getNavigationFallback(request, url) {
+  const path = url.pathname;
+  const relativePath = path.replace(/^\//, '');
+
+  const matches = [
+    request,
+    path,
+    path + '.html',
+    relativePath,
+    relativePath + '.html',
+    'index.html'
+  ];
+
+  for (const item of matches) {
+    const match = await caches.match(item);
+    if (match) return match;
+  }
+  return null;
+}
+
+// Fetch event (Network First with fallback to Cache & Dynamic CDN caching)
 self.addEventListener('fetch', (event) => {
-  // Only handle GET requests and http/https schemes
-  if (event.request.method !== 'GET' || !event.request.url.startsWith('http')) {
+  // Only handle GET requests
+  if (event.request.method !== 'GET') {
     return;
   }
 
-  const isNavigationRequest = event.request.mode === 'navigate';
+  const url = new URL(event.request.url);
 
-  if (isNavigationRequest) {
-    // Navigation (HTML pages): Network first, fallback to cache
-    event.respondWith(
-      fetch(event.request)
-        .then((response) => {
-          if (response && response.status === 200) {
-            const copy = response.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
-          }
-          return response;
-        })
-        .catch(() => {
-          return caches.match(event.request).then((cachedResponse) => {
-            if (cachedResponse) {
-              return cachedResponse;
-            }
-            // Fallback to main index if page is missing from cache offline
-            return caches.match('index.html') || caches.match('./');
+  // Skip browser-extension or chrome-extension schemes
+  if (!url.protocol.startsWith('http')) {
+    return;
+  }
+
+  event.respondWith(
+    (async () => {
+      try {
+        const response = await fetch(event.request);
+
+        // If server returned 404 for a navigation request (e.g. clean URL on static dev server)
+        if (response.status === 404 && event.request.mode === 'navigate') {
+          const fallback = await getNavigationFallback(event.request, url);
+          if (fallback) return fallback;
+        }
+
+        // Cache valid responses dynamically (including CORS/opaque CDNs)
+        if (response && (response.status === 200 || response.type === 'opaque' || response.type === 'cors')) {
+          const responseToCache = response.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, responseToCache).catch(() => {});
           });
-        })
-    );
-  } else {
-    // Static resources (CSS, JS, Images, Fonts): Cache first, fallback to network
-    event.respondWith(
-      caches.match(event.request).then((cachedResponse) => {
+        }
+        return response;
+      } catch (err) {
+        // Network failed - attempt cache fallback
+        const cachedResponse = await caches.match(event.request);
         if (cachedResponse) {
-          // Fetch update in background (Stale-While-Revalidate)
-          fetch(event.request).then((networkResponse) => {
-            if (networkResponse && networkResponse.status === 200) {
-              caches.open(CACHE_NAME).then((cache) => cache.put(event.request, networkResponse));
-            }
-          }).catch(() => { /* silent fail when offline */ });
-          
           return cachedResponse;
         }
 
-        // Cache miss: fetch from network and cache
-        return fetch(event.request).then((networkResponse) => {
-          if (!networkResponse || networkResponse.status !== 200 || networkResponse.type !== 'basic') {
-            return networkResponse;
-          }
+        // Navigation fallback for offline mode
+        if (event.request.mode === 'navigate') {
+          const fallback = await getNavigationFallback(event.request, url);
+          if (fallback) return fallback;
+        }
 
-          const responseToCache = networkResponse.clone();
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, responseToCache);
-          });
-
-          return networkResponse;
-        }).catch((err) => {
-          console.log('[Service Worker] Resource fetch failed offline:', event.request.url, err);
-        });
-      })
-    );
-  }
+        console.warn('[Cashly SW] Resource offline fetch failed:', event.request.url);
+      }
+    })()
+  );
 });

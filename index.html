@@ -6,6 +6,15 @@
     <title>Cashly - Dashboard</title>
     <script>
       (function() {
+        try {
+          var p = window.location.pathname;
+          if (p.endsWith('/index.html')) {
+            window.history.replaceState(null, '', (p.slice(0, -10) || '/') + window.location.search + window.location.hash);
+          } else if (p.endsWith('.html')) {
+            window.history.replaceState(null, '', p.slice(0, -5) + window.location.search + window.location.hash);
+          }
+        } catch(e) {}
+
         var t = localStorage.getItem('theme');
         if (!t) {
           try {
@@ -34,7 +43,7 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/dashboard.css">
     <link rel="stylesheet" href="css/responsive.css">
-    <meta name="theme-color" content="#087FF5">
+    <meta name="theme-color" content="#2563EB">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -47,6 +56,8 @@
     <link rel="manifest" href="manifest.json">
 </head>
 <body data-page="home">
+
+    <div id="app-header"></div>
 
     <!-- Main Dashboard Container -->
     <main class="container" style="padding-top: 10px; padding-bottom: 110px;">
@@ -305,7 +316,6 @@
 
     <!-- Application Scripts -->
     <script src="js/storage.js"></script>
-    <script src="js/pwa.js"></script>
     <script src="js/utils.js"></script>
     <script src="js/barcode.js"></script>
     <script src="js/scanner.js"></script>

@@ -1,4 +1,17 @@
 
+(function cleanUrl() {
+    try {
+        const p = window.location.pathname;
+        if (p.endsWith('/index.html')) {
+            const clean = p.slice(0, -10) || '/';
+            window.history.replaceState(null, '', clean + window.location.search + window.location.hash);
+        } else if (p.endsWith('.html')) {
+            const clean = p.slice(0, -5);
+            window.history.replaceState(null, '', clean + window.location.search + window.location.hash);
+        }
+    } catch (e) {}
+})();
+
 window.routeMap = {"index.html":"","sales.html":"pages/sales/","new-sale.html":"pages/sales/","dues.html":"pages/sales/","stock.html":"pages/inventory/","product-details.html":"pages/inventory/","barcode-management.html":"pages/inventory/","market-prices.html":"pages/inventory/","customers.html":"pages/customers/","customer-details.html":"pages/customers/","settings.html":"pages/settings/","notifications.html":"pages/settings/","login.html":"auth/","signup.html":"auth/","forgot-password.html":"auth/","reset-password.html":"auth/","otp-verification.html":"auth/"};
 
 window.computeBasePath = function() {
@@ -258,9 +271,6 @@ const Utils = {
 
     // --- APP SHELL INJECTION ---
     initAppLayout(activePage = 'home') {
-        if (typeof PWA !== 'undefined' && PWA.init) {
-            PWA.init();
-        }
         const settings = Storage.getSettings();
         const unreadCount = Storage.getNotifications().filter(n => !n.read).length;
 
