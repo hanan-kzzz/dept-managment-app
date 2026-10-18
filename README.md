@@ -479,7 +479,7 @@ Simply open [https://dept-mangemnet.netlify.app](https://dept-mangemnet.netlify.
 
 ---
 
-### Deploying to Netlify
+### Deploying to Netlify (Static Frontend Only)
 
 This application is fully optimized for Netlify deployment via the included `netlify.toml` file.
 
@@ -489,6 +489,29 @@ This application is fully optimized for Netlify deployment via the included `net
 4. Select your GitHub repository.
 5. Set **Publish directory** to `.` (the root directory).
 6. Click **Deploy Site**. Netlify will automatically build clean URLs and route paths.
+
+---
+
+### Deploying to Render (Full-Stack Web App + WhatsApp Automation)
+
+Deploy both the PWA frontend and the WhatsApp Baileys automation service together on [Render](https://render.com) with 1 click:
+
+#### Method 1: Using Render Blueprint (`render.yaml`)
+1. Log into your [Render Dashboard](https://dashboard.render.com/).
+2. Click **New +** -> **Blueprint**.
+3. Connect your GitHub repository `hanan-kzzz/dept-managment-app`.
+4. Render will read `render.yaml` automatically. Click **Apply**.
+
+#### Method 2: Manual Web Service Setup
+1. In Render Dashboard, click **New +** -> **Web Service**.
+2. Connect your GitHub repository `hanan-kzzz/dept-managment-app`.
+3. Configure the service:
+   - **Environment**: `Node`
+   - **Build Command**: `npm install`
+   - **Start Command**: `npm start`
+   - **Plan**: `Free`
+4. Click **Deploy Web Service**.
+5. Once deployed, open your live Render URL (e.g., `https://dept-management-app.onrender.com`), go to **Settings > WhatsApp Integration**, and scan your QR code!
 
 ---
 

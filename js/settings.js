@@ -628,9 +628,10 @@ function setupMockConnections() {
         const qrLoading = document.getElementById('wa-qr-loading');
         const qrContent = document.getElementById('wa-qr-content');
         const qrImage = document.getElementById('wa-qr-image');
-        const btnConnectWA = document.getElementById('btn-connect-whatsapp');
-        
-        fetch('http://localhost:3000/status')
+        const apiBase = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+            ? (window.location.port === '3000' || window.location.port === '' ? '' : 'http://localhost:3000')
+            : '';
+        fetch(`${apiBase}/status`)
             .then(res => res.json())
             .then(data => {
                 isFetchingStatus = false;

@@ -13,7 +13,7 @@ const { Boom } = require('@hapi/boom');
 const pino = require('pino');
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 // Enable CORS and JSON parsing
 app.use(cors());

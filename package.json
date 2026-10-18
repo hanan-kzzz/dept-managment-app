@@ -1,0 +1,21 @@
+﻿{
+  "name": "dept-management-app",
+  "version": "1.0.0",
+  "description": "Debt Management & Grocery POS Web Application with WhatsApp Automation",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "@hapi/boom": "^10.0.1",
+    "@whiskeysockets/baileys": "^6.7.24",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "pino": "^8.19.0",
+    "qrcode-terminal": "^0.12.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

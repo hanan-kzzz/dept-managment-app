@@ -65,8 +65,11 @@ const NotificationQueue = {
                     } else if (item.channel === 'whatsapp') {
                         const settings = Storage.getSettings();
                         if (settings.whatsappConnected) {
-                            // Call local Node.js server
-                            fetch('http://localhost:3000/send-message', {
+                            // Call Node.js server (dynamic URL for Render / local)
+                            const apiBase = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+                                ? (window.location.port === '3000' || window.location.port === '' ? '' : 'http://localhost:3000')
+                                : '';
+                            fetch(`${apiBase}/send-message`, {
                                 method: 'POST',
                                 headers: { 'Content-Type': 'application/json' },
                                 body: JSON.stringify({
